@@ -31,18 +31,14 @@ public:
     void setupInputPassScreen()
     {
         this->screen.clear();
-        this->screen.setCursor(0, 0);
-        this->screen.print("Ingrese clave:");
+        showMessaggeInLine(0, "Ingrese clave:");
         this->screen.setCursor(0, 1);
     }
 
     void resetInputPassScreen()
     {
         cursorPos = 0;
-        this->screen.clear();
-        this->screen.setCursor(0, 0);
-        this->screen.print("Ingrese clave:");
-        this->screen.setCursor(0, 1);
+        setupInputPassScreen();
     }
 
     // Messages
@@ -72,7 +68,6 @@ public:
                 this->screen.write(line.c_str());
                 this->screen.setCursor(0, 1);
                 startPos += firstNoSpace + lineLength;
-                Serial.println(line);
             }
         }
     }
@@ -97,10 +92,6 @@ public:
             int lineLength = std::min(MAX_LCD_LENGTH, length - firstNoSpace);
 
             String line = message.substring(firstNoSpace, firstNoSpace + lineLength);
-            Serial.println("DEbug");
-            Serial.println(firstNoSpace);
-
-            Serial.println(line);
             
             if (line.length() > MAX_LCD_LENGTH)
             {
@@ -108,9 +99,6 @@ public:
             }
 
             this->screen.write(line.c_str());
-            Serial.println(line);
-            Serial.println(lineLength);
-
         }
     }
 
