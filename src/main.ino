@@ -4,11 +4,10 @@ LCD lcd = LCD();
 KeyPad keypad = KeyPad();
 Lock lock = Lock("1A");
 
-
 void setup()
 {
     Serial.begin(115200);
-    
+
     lcd.setupInputPassScreen();
 }
 
@@ -45,13 +44,13 @@ void optionEnterKeyPressed()
     {
         lcd.showMessaggeInLine(0, "Ya puede empujar");
         lcd.showMessaggeInLine(1, "la puerta");
-        Buzzer::activateSuccessBuzzer();
+        Buzzer::activateSuccessSound();
     }
     else
     {
         lcd.showMessaggeInLine(0, "Contrasena");
         lcd.showMessaggeInLine(1, "incorrecta");
-        Buzzer::activateFailBuzzer();
+        Buzzer::activateFailSound();
     }
     delay(BUZZER_FAIL_DURATION);
     lock.resetPassEntered();
@@ -60,7 +59,7 @@ void optionEnterKeyPressed()
 
 void optionNoInput()
 {
-    if(lcd.checkCursorInterval() == UPDATE_CURSOR && lock.getLengthPassEntered() <= MAX_PASSWORD_LENGTH)
+    if (lcd.checkCursorInterval() == UPDATE_CURSOR && lock.getLengthPassEntered() <= MAX_PASSWORD_LENGTH)
     {
         lcd.updateInactiveCursor();
     }
@@ -68,7 +67,7 @@ void optionNoInput()
 
 void optionKeyPressed(char keyPressed)
 {
-    tone(BUZZER_PIN, BUZZER_KEY_FREQ, BUZZER_KEY_DURATION);
+    Buzzer::activateKeyPressedSound();
     lock.loadCharacter(keyPressed);
     lcd.showKeyPressed(keyPressed);
     Serial.println(lock.getPassEntered());

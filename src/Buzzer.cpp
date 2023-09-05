@@ -11,13 +11,18 @@
 class Buzzer
 {
 public:
-    static void activateSuccessBuzzer()
+    static void activateSuccessSound()
     {
         tone(BUZZER_PIN, BUZZER_SUCCESS_FREQ, BUZZER_SUCCESS_DURATION);
     }
 
-    static void activateFailBuzzer()
+    static void activateFailSound()
     {
         tone(BUZZER_PIN, BUZZER_FAIL_FREQ, BUZZER_FAIL_DURATION);
+    }
+
+    static void activateKeyPressedSound()
+    {
+        tone(BUZZER_PIN, BUZZER_KEY_FREQ, BUZZER_KEY_DURATION);
     }
 };
