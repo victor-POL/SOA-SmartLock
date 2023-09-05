@@ -1,38 +1,5 @@
 #include "main.h"
-// Keypad
-const int ROWS_KEYPAD = 4;
-const int COLS_KEYPAD = 4;
 
-char keys[ROWS_KEYPAD][COLS_KEYPAD] = {
-    {'1',
-     '2',
-     '3',
-     'A'},
-    {'4',
-     '5',
-     '6',
-     'B'},
-    {'7',
-     '8',
-     '9',
-     'C'},
-    {'*',
-     '0',
-     '#',
-     'D'}};
-
-uint8_t rowPins[ROWS_KEYPAD] = {
-    19,
-    18,
-    5,
-    17};
-uint8_t columnPins[COLS_KEYPAD] = {
-    16,
-    4,
-    2,
-    15};
-
-Keypad keypad = Keypad(makeKeymap(keys), rowPins, columnPins, ROWS_KEYPAD, COLS_KEYPAD);
 
 // Password
 char passEntered[MAX_PASSWORD_LENGTH + 1];
@@ -40,6 +7,8 @@ char validPassword[] = "1234A";
 int passPos = 0;
 
 LCD lcd = LCD();
+KeyPad keypad = KeyPad();
+
 
 void setup()
 {
@@ -50,7 +19,7 @@ void setup()
 
 void loop()
 {
-    char keyPressed = keypad.getKey();
+    char keyPressed = keypad.getPressedKey();
 
     switch (keyPressed)
     {
