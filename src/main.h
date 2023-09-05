@@ -4,4 +4,4 @@
 #include "LCD.cpp"
 #include "Buzzer.cpp"
 #include "Servo.ino"
-#include "Password.ino"
+#include "Lock.cpp"

@@ -1,13 +1,8 @@
 #include "main.h"
 
-
-// Password
-char passEntered[MAX_PASSWORD_LENGTH + 1];
-char validPassword[] = "1234A";
-int passPos = 0;
-
 LCD lcd = LCD();
 KeyPad keypad = KeyPad();
+Lock lock = Lock("1A");
 
 
 void setup()
@@ -40,13 +35,13 @@ void loop()
 // Funciones
 void optionClearKeyPressed()
 {
-    resetPassEntered();
+    lock.resetPassEntered();
     lcd.resetInputPassScreen();
 }
 
 void optionEnterKeyPressed()
 {
-    if (validatePassword(passEntered) == VALID_PASS)
+    if (lock.unlock() == VALID_PASS)
     {
         lcd.showMessaggeInLine(0, "Ya puede empujar");
         lcd.showMessaggeInLine(1, "la puerta");
@@ -59,13 +54,13 @@ void optionEnterKeyPressed()
         Buzzer::activateFailBuzzer();
     }
     delay(BUZZER_FAIL_DURATION);
-    resetPassEntered();
+    lock.resetPassEntered();
     lcd.resetInputPassScreen();
 }
 
 void optionNoInput()
 {
-    if(lcd.checkCursorInterval() == UPDATE_CURSOR && strlen(passEntered) != MAX_PASSWORD_LENGTH)
+    if(lcd.checkCursorInterval() == UPDATE_CURSOR && lock.getLengthPassEntered() <= MAX_PASSWORD_LENGTH)
     {
         lcd.updateInactiveCursor();
     }
@@ -74,37 +69,7 @@ void optionNoInput()
 void optionKeyPressed(char keyPressed)
 {
     tone(BUZZER_PIN, BUZZER_KEY_FREQ, BUZZER_KEY_DURATION);
-    loadPassword(keyPressed);
+    lock.loadCharacter(keyPressed);
     lcd.showKeyPressed(keyPressed);
-    Serial.println(passEntered);
-}
-
-// Password
-
-bool validatePassword(char passEntered[])
-{
-    if (strcmp(passEntered, validPassword) == 0)
-    {
-        return VALID_PASS;
-    }
-    else
-    {
-        return INVALID_PASS;
-    }
-}
-
-void resetPassEntered()
-{
-    passPos = 0;
-    passEntered[0] = '\0';
-}
-
-void loadPassword(char keyPressed)
-{
-    if (strlen(passEntered) < 16)
-    {
-        passEntered[passPos] = keyPressed;
-        passEntered[passPos + 1] = '\0';
-        passPos++;
-    }
+    Serial.println(lock.getPassEntered());
 }
