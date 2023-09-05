@@ -3,6 +3,6 @@
 
 #include "KeyPad.ino"
 #include "LCD.cpp"
-#include "Buzzer.ino"
+#include "Buzzer.cpp"
 #include "Servo.ino"
 #include "Password.ino"

@@ -34,16 +34,11 @@ uint8_t columnPins[COLS_KEYPAD] = {
 
 Keypad keypad = Keypad(makeKeymap(keys), rowPins, columnPins, ROWS_KEYPAD, COLS_KEYPAD);
 
-// Buzzer
-int canal = 0, frec = 2000, resolucion = 8;
-unsigned long previousMillisBuzzer = 0;
-
 // Password
 char passEntered[MAX_PASSWORD_LENGTH + 1];
 char validPassword[] = "1234A";
 int passPos = 0;
 
-// Servo
 LCD lcd = LCD();
 
 void setup()
@@ -51,8 +46,6 @@ void setup()
     Serial.begin(115200);
     
     lcd.setupInputPassScreen();
-
-    setupBuzzer();
 }
 
 void loop()
@@ -88,13 +81,13 @@ void optionEnterKeyPressed()
     {
         lcd.showMessaggeInLine(0, "Ya puede empujar");
         lcd.showMessaggeInLine(1, "la puerta");
-        activateSuccessBuzzer();
+        Buzzer::activateSuccessBuzzer();
     }
     else
     {
         lcd.showMessaggeInLine(0, "Contrasena");
         lcd.showMessaggeInLine(1, "incorrecta");
-        activateFailBuzzer();
+        Buzzer::activateFailBuzzer();
     }
     delay(BUZZER_FAIL_DURATION);
     resetPassEntered();
@@ -145,24 +138,4 @@ void loadPassword(char keyPressed)
         passEntered[passPos + 1] = '\0';
         passPos++;
     }
-}
-
-// Buzzer
-
-void activateSuccessBuzzer()
-{
-    tone(BUZZER_PIN, BUZZER_SUCCESS_FREQ, BUZZER_SUCCESS_DURATION);
-}
-
-void activateFailBuzzer()
-{
-    tone(BUZZER_PIN, BUZZER_FAIL_FREQ, BUZZER_FAIL_DURATION);
-}
-
-// Setups
-
-void setupBuzzer()
-{
-    ledcSetup(canal, frec, resolucion);
-    ledcAttachPin(BUZZER_PIN, 0);
 }
