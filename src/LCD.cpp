@@ -1,7 +1,7 @@
 using namespace std;
 
 #include <Arduino.h>
-#include <LiquidCrystal.h>
+#include <LiquidCrystal_I2C.h>
 #include <string>
 
 #define MAX_LCD_LENGTH 16
@@ -11,7 +11,7 @@ using namespace std;
 class LCD
 {
 private:
-    LiquidCrystal screen = LiquidCrystal(14, 27, 26, 25, 33, 32);
+    LiquidCrystal_I2C screen = LiquidCrystal_I2C(0x27, 16, 2);
 
     int cursorPos;
     bool cursorVisible;
@@ -23,9 +23,15 @@ public:
         this->cursorPos = 0;
         this->cursorVisible = true;
         this->previousMillis = 0;
-        this->screen.begin(16, 2);
     }
 
+    void setup()
+    {
+        this->screen.init();
+        this->screen.backlight();
+        this->screen.clear();
+    }
+    
     // Input Pass Screen
 
     void setupInputPassScreen()
@@ -65,7 +71,7 @@ public:
                     line = line.substring(0, MAX_LCD_LENGTH);
                 }
 
-                this->screen.write(line.c_str());
+                this->screen.print(line.c_str());
                 this->screen.setCursor(0, 1);
                 startPos += firstNoSpace + lineLength;
             }
@@ -98,7 +104,7 @@ public:
                 line = line.substring(0, MAX_LCD_LENGTH);
             }
 
-            this->screen.write(line.c_str());
+            this->screen.print(line.c_str());
         }
     }
 

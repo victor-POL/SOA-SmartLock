@@ -9,6 +9,8 @@ void setup()
 {
     Serial.begin(115200);
 
+    lcd.setup();
+
     lcd.setupInputPassScreen();
     
     servo.setup();
@@ -32,6 +34,7 @@ void loop()
     default:
         optionKeyPressed(keyPressed);
     }
+    delay(10);
 }
 
 // Funciones
