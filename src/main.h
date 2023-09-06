@@ -3,5 +3,5 @@
 #include "KeyPad.cpp"
 #include "LCD.cpp"
 #include "Buzzer.cpp"
-#include "Servo.ino"
+#include "Servo.cpp"
 #include "Lock.cpp"

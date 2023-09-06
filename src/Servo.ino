@@ -1,1 +1,0 @@
-#define SERVO_PIN 23

@@ -23,7 +23,7 @@
       "attrs": { "volume": "0.1" }
     },
     { "type": "wokwi-relay-module", "id": "relay1", "top": -248.05, "left": 507.2, "attrs": {} },
-    { "type": "wokwi-servo", "id": "servo1", "top": -46.16, "left": 373.01, "attrs": {} }
+    { "type": "wokwi-servo", "id": "servo1", "top": -42.79, "left": 296.85, "attrs": {} }
   ],
   "connections": [
     [ "esp:TX0", "$serialMonitor:RX", "", [] ],
@@ -44,12 +44,15 @@
     [ "lcd1:D4", "esp:D26", "orange", [ "v0" ] ],
     [ "esp:D27", "lcd1:E", "cyan", [ "h0" ] ],
     [ "esp:D14", "lcd1:RS", "yellow", [ "h0" ] ],
-    [ "esp:D12", "bz1:2", "red", [ "h-78.7", "v297.71" ] ],
     [ "bz1:1", "bb1:bn.2", "blue", [ "v18.01", "h402.24" ] ],
     [ "lcd1:K", "bb1:tn.1", "blue", [ "v398.82", "h410.34" ] ],
     [ "bb1:tp.2", "lcd1:A", "red", [ "v-37.78", "h-438.1" ] ],
     [ "vcc1:VCC", "bb1:tp.50", "red", [ "h-32.13", "v-163.79" ] ],
-    [ "gnd1:GND", "bb1:tn.50", "black", [ "v0" ] ]
+    [ "gnd1:GND", "bb1:tn.50", "black", [ "v0" ] ],
+    [ "bz1:2", "esp:D13", "red", [ "v-1.87", "h92.07", "v-327.4" ] ],
+    [ "servo1:PWM", "esp:D12", "#8f4814", [ "h-349.46", "v-101.46" ] ],
+    [ "servo1:V+", "bb1:tp.5", "red", [ "h0" ] ],
+    [ "servo1:GND", "bb1:tn.4", "blue", [ "h0" ] ]
   ],
   "dependencies": {}
 }

@@ -3,12 +3,15 @@
 LCD lcd = LCD();
 KeyPad keypad = KeyPad();
 Lock lock = Lock("1A");
+MyServo servo = MyServo();
 
 void setup()
 {
     Serial.begin(115200);
 
     lcd.setupInputPassScreen();
+    
+    servo.setup();
 }
 
 void loop()
@@ -42,6 +45,7 @@ void optionEnterKeyPressed()
 {
     if (lock.unlock() == VALID_PASS)
     {
+        servo.changeOrientation(179);
         lcd.showMessaggeInLine(0, "Ya puede empujar");
         lcd.showMessaggeInLine(1, "la puerta");
         Buzzer::activateSuccessSound();
@@ -53,6 +57,7 @@ void optionEnterKeyPressed()
         Buzzer::activateFailSound();
     }
     delay(BUZZER_FAIL_DURATION);
+    servo.changeOrientation(0);
     lock.resetPassEntered();
     lcd.resetInputPassScreen();
 }
