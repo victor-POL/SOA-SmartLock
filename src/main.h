@@ -5,3 +5,9 @@
 #include "Buzzer.cpp"
 #include "Servo.cpp"
 #include "Lock.cpp"
+#include "Ultrasonic.cpp"
+
+#define TRIGGER_PIN_SENSOR_1 32
+#define TRIGGER_PIN_SENSOR_2 33
+#define ECHO_PIN_SENSOR_1 34
+#define ECHO_PIN_SENSOR_2 35

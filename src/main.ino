@@ -4,6 +4,8 @@ LCD lcd = LCD();
 KeyPad keypad = KeyPad();
 Lock lock = Lock("1A");
 MyServo servo = MyServo();
+Ultrasonic sensor1 = Ultrasonic(TRIGGER_PIN_SENSOR_1, ECHO_PIN_SENSOR_1);
+Ultrasonic sensor2 = Ultrasonic(TRIGGER_PIN_SENSOR_2, ECHO_PIN_SENSOR_2);
 
 void setup()
 {
@@ -12,8 +14,11 @@ void setup()
     lcd.setup();
 
     lcd.setupInputPassScreen();
-    
+
     servo.setup();
+
+    sensor1.setup();
+    sensor2.setup();
 }
 
 void loop()
@@ -34,6 +39,18 @@ void loop()
     default:
         optionKeyPressed(keyPressed);
     }
+
+    float distance1 = sensor1.getDistance();
+    float distance2 = sensor2.getDistance();
+
+    Serial.print("distanceA: ");
+    Serial.print(distance1);
+    Serial.println(" cm      ");
+
+    Serial.print("distanceB: ");
+    Serial.print(distance2);
+    Serial.println(" cm      ");
+
     delay(10);
 }
 
