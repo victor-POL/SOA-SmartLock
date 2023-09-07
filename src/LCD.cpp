@@ -16,13 +16,23 @@ private:
     int cursorPos;
     bool cursorVisible;
     unsigned long previousMillis;
+    static LCD* instance;
 
-public:
     LCD()
     {
         this->cursorPos = 0;
         this->cursorVisible = true;
         this->previousMillis = 0;
+    }
+
+public:
+    static LCD* getInstance()
+    {
+        if (instance == NULL)
+        {
+            instance = new LCD();
+        }
+        return instance;
     }
 
     void setup()

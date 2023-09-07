@@ -1,6 +1,7 @@
 #include "main.h"
 
-LCD lcd = LCD();
+LCD* LCD::instance = NULL;
+LCD lcd = *LCD::getInstance();
 KeyPad keypad = KeyPad();
 Lock lock = Lock("1A");
 MyServo servo = MyServo();
