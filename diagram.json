@@ -8,8 +8,8 @@
     {
       "type": "wokwi-membrane-keypad",
       "id": "keypad1",
-      "top": -504.47,
-      "left": 530.71,
+      "top": -526.09,
+      "left": 684.14,
       "attrs": {}
     },
     { "type": "wokwi-gnd", "id": "gnd1", "top": 183.51, "left": 903.26, "attrs": {} },
@@ -21,13 +21,13 @@
       "left": 224.61,
       "attrs": { "volume": "0.1" }
     },
-    { "type": "wokwi-relay-module", "id": "relay1", "top": 103.1, "left": 1014.84, "attrs": {} },
+    { "type": "wokwi-relay-module", "id": "relay1", "top": 395.73, "left": 466.29, "attrs": {} },
     { "type": "wokwi-servo", "id": "servo1", "top": -69.85, "left": -233.29, "attrs": {} },
     {
       "type": "wokwi-lcd1602",
       "id": "lcd1",
-      "top": -46.34,
-      "left": 413.97,
+      "top": -51.49,
+      "left": 877.34,
       "attrs": { "pins": "i2c" }
     },
     {
@@ -35,9 +35,29 @@
       "id": "ultrasonic1",
       "top": 102.44,
       "left": -789.97,
-      "attrs": { "distance": "237" }
+      "attrs": { "distance": "39" }
     },
-    { "type": "wokwi-hc-sr04", "id": "ultrasonic2", "top": 107.42, "left": -500.56, "attrs": {} }
+    {
+      "type": "wokwi-hc-sr04",
+      "id": "ultrasonic2",
+      "top": 107.42,
+      "left": -500.56,
+      "attrs": { "distance": "400" }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "led1",
+      "top": 358.1,
+      "left": 642.95,
+      "attrs": { "color": "red" }
+    },
+    {
+      "type": "wokwi-photoresistor-sensor",
+      "id": "ldr1",
+      "top": -334.45,
+      "left": 275.93,
+      "attrs": {}
+    }
   ],
   "connections": [
     [ "esp:TX0", "$serialMonitor:RX", "", [] ],
@@ -47,9 +67,6 @@
     [ "keypad1:C2", "esp:D4", "green", [ "v0" ] ],
     [ "keypad1:C1", "esp:RX2", "gold", [ "v0" ] ],
     [ "keypad1:R4", "esp:TX2", "orange", [ "v0" ] ],
-    [ "keypad1:R3", "esp:D5", "gray", [ "v0" ] ],
-    [ "keypad1:R2", "esp:D18", "#8f4814", [ "v0" ] ],
-    [ "keypad1:R1", "esp:D19", "black", [ "v0" ] ],
     [ "vcc1:VCC", "bb1:bp.50", "red", [ "h-32.13", "v88.31" ] ],
     [ "vcc1:VCC", "bb1:tp.50", "red", [ "h-32.13", "v-163.79" ] ],
     [ "gnd1:GND", "bb1:tn.50", "blue", [ "v0" ] ],
@@ -75,7 +92,34 @@
     [ "ultrasonic1:ECHO", "esp:D34", "violet", [ "v19.8", "h157.35", "v-386.95" ] ],
     [ "ultrasonic1:TRIG", "esp:D32", "gray", [ "v36.68", "h184.24", "v-361.62" ] ],
     [ "ultrasonic2:ECHO", "esp:D35", "violet", [ "v16.02", "h107.54", "v-360.86" ] ],
-    [ "ultrasonic2:TRIG", "esp:D33", "gray", [ "v30.51", "h124.13", "v-359.55" ] ]
+    [ "ultrasonic2:TRIG", "esp:D33", "gray", [ "v30.51", "h124.13", "v-359.55" ] ],
+    [ "bb1:bn.19", "relay1:GND", "blue", [ "v0" ] ],
+    [ "bb1:bp.20", "relay1:VCC", "red", [ "v0" ] ],
+    [ "bb1:bp.34", "relay1:COM", "red", [ "v0" ] ],
+    [ "relay1:NO", "led1:A", "red", [ "h0" ] ],
+    [ "led1:C", "bb1:bn.35", "blue", [ "v24.47", "h-27.24" ] ],
+    [ "ldr1:AO", "esp:VN", "green", [ "h9.19", "v52.43", "h-487.95", "v70.23" ] ],
+    [ "ldr1:GND", "bb1:tn.23", "blue", [ "h0" ] ],
+    [ "ldr1:VCC", "bb1:tp.24", "red", [ "h0" ] ],
+    [ "esp:D14", "relay1:IN", "green", [ "h-47.3", "v155.07", "h418.85", "v375.13" ] ],
+    [
+      "keypad1:R1",
+      "esp:D25",
+      "black",
+      [ "v28.9", "h-249.71", "v-58.21", "h-576.71", "v101.19" ]
+    ],
+    [
+      "keypad1:R2",
+      "esp:D26",
+      "#8f4814",
+      [ "v45.24", "h-281.16", "v-66.24", "h-569.87", "v99.82" ]
+    ],
+    [
+      "keypad1:R3",
+      "esp:D27",
+      "gray",
+      [ "v63.39", "h-346.92", "v-102.54", "h-526.31", "v123.41" ]
+    ]
   ],
   "dependencies": {}
 }

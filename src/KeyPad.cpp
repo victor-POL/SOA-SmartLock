@@ -30,16 +30,16 @@ private:
          '#',
          'D'}};
 
-    uint8_t rowPins[ROWS_KEYPAD] = {
-        19,
-        18,
-        5,
+   uint8_t rowPins[ROWS_KEYPAD] = {
+        25,
+        26,
+        27,
         17};
     uint8_t columnPins[COLS_KEYPAD] = {
         16,
         4,
         2,
-        15};
+        15}; 
 
 public:
     KeyPad()
