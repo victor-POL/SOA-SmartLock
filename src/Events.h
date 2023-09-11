@@ -6,3 +6,6 @@
 #define EVENTO_VALIDAR_CLAVE                        1004
 #define EVENTO_CLEAR_CLAVE_INGRESADA                1005
 #define EVENTO_CARACTER_INGRESADO                   1006
+#define EVENTO_TIMEOUT                              1007
+#define EVENTO_CLAVE_VALIDA                         1008
+#define EVENTO_CLAVE_INVALIDA                       1009

@@ -7,6 +7,7 @@ Relay light = Relay();
 Photoresistor lightSensor = Photoresistor();
 KeyPad keypad = KeyPad();
 Lock lock = Lock();
+MyServo entranceDoor = MyServo();
 
 int state;
 int event;
@@ -32,7 +33,7 @@ void generateEvent()
         timeout = false;
         lastCurrentTime = currentTime;
 
-        if (entranceSensor.checkStatus() || keypad.checkStatus())
+        if (entranceSensor.checkStatus() || keypad.checkStatus() || lock.checkStatus())
         {
             return;
         }
@@ -44,6 +45,8 @@ void generateEvent()
 void setup()
 {
     Serial.begin(115200);
+
+    entranceDoor.setup();
 
     lcd.setup();
 
@@ -132,6 +135,8 @@ void loop()
 
             Buzzer::activateKeyPressedSound();
 
+            lock.changeUnlockInProgress(true);
+
             state = ESTADO_VALIDACION_CLAVE;
         }
         break;
@@ -173,8 +178,53 @@ void loop()
     }
     break;
     case ESTADO_VALIDACION_CLAVE:
+        switch(event)
+        {
+            case EVENTO_TIMEOUT:
+            {
+                showActualState("ESTADO_VALIDACION_CLAVE", "EVENTO_TIMEOUT");
+
+                Buzzer::activateErrorSound();
+
+                lcd.showTimeoutMessage();
+
+                state = ESTADO_ESPERANDO_INGRESO_CONTRASENA;
+            }
+            break;
+            case EVENTO_CLAVE_VALIDA:
+            {
+                showActualState("ESTADO_VALIDACION_CLAVE", "EVENTO_CLAVE_VALIDA");
+
+                Buzzer::activateSuccessSound();
+
+                lcd.showValidPassMessage();
+
+                entranceDoor.unlock();
+
+                state = ESTADO_ESPERANDO_APERTURA_PUERTA;
+            }
+            break;
+            case EVENTO_CLAVE_INVALIDA:
+            {
+                showActualState("ESTADO_VALIDACION_CLAVE", "EVENTO_CLAVE_INVALIDA");
+                lcd.showInvalidPassMessage();
+                Buzzer::activateErrorSound();
+                lcd.resetInputPassScreen();
+                lock.resetPassEntered();
+                state = ESTADO_ESPERANDO_INGRESO_CONTRASENA;
+            }
+            case EVENTO_CONTINUE:
+            {
+                state = ESTADO_VALIDACION_CLAVE;
+            }
+            break;
+        }
         break;
     case ESTADO_ESPERANDO_APERTURA_PUERTA:
+        case EVENTO_CONTINUE:
+        {
+            state = ESTADO_ESPERANDO_APERTURA_PUERTA;
+        }
         break;
     case ESTADO_ESPERANDO_ENTRADA_PERSONA:
         break;

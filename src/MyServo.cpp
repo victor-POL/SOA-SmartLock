@@ -21,6 +21,16 @@ public:
 
     void changeOrientation(int angle)
     {
-        servo.write(angle);
+        this->servo.write(angle);
+    }
+
+    void unlock()
+    {
+        this->servo.write(179);
+    }
+
+    void lock()
+    {
+        this->servo.write(0);
     }
 };

@@ -2,7 +2,7 @@
 
 #define BUZZER_KEY_DURATION 15
 #define BUZZER_SUCCESS_DURATION 3000
-#define BUZZER_FAIL_DURATION 3000
+#define BUZZER_FAIL_DURATION 10000
 #define BUZZER_PIN 13
 #define BUZZER_SUCCESS_FREQ 1661
 #define BUZZER_FAIL_FREQ 110
@@ -16,7 +16,7 @@ public:
         tone(BUZZER_PIN, BUZZER_SUCCESS_FREQ, BUZZER_SUCCESS_DURATION);
     }
 
-    static void activateFailSound()
+    static void activateErrorSound()
     {
         tone(BUZZER_PIN, BUZZER_FAIL_FREQ, BUZZER_FAIL_DURATION);
     }

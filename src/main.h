@@ -3,7 +3,7 @@
 #include "KeyPad.cpp"
 #include "LCD.cpp"
 #include "Buzzer.cpp"
-#include "Servo.cpp"
+#include "MyServo.cpp"
 #include "Lock.cpp"
 #include "Ultrasonic.cpp"
 #include "Relay.cpp"

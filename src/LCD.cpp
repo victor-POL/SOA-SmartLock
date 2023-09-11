@@ -116,6 +116,27 @@ public:
         }
     }
 
+    void showTimeoutMessage()
+    {
+        this->screen.clear();
+        this->screen.setCursor(0, 0);
+        this->screen.print("Timeout");
+    }
+
+    void showValidPassMessage()
+    {
+        this->screen.clear();
+        this->screen.setCursor(0, 0);
+        this->screen.print("Empuje la puerta");
+    }
+
+    void showInvalidPassMessage()
+    {
+        this->screen.clear();
+        this->screen.setCursor(0, 0);
+        this->screen.print("Clave invalida");
+    }
+
     int findFirstNotSpace(const String &str)
     {
         int length = str.length();
