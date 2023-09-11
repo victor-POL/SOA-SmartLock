@@ -2,118 +2,129 @@
 
 LCD *LCD::instance = NULL;
 LCD lcd = *LCD::getInstance();
-KeyPad keypad = KeyPad();
-Lock lock = Lock("1A");
-MyServo servo = MyServo();
-Ultrasonic sensor1 = Ultrasonic(TRIGGER_PIN_SENSOR_1, ECHO_PIN_SENSOR_1);
-Ultrasonic sensor2 = Ultrasonic(TRIGGER_PIN_SENSOR_2, ECHO_PIN_SENSOR_2);
-Relay relay = Relay();
-Photoresistor photoresistor = Photoresistor();
+Ultrasonic entranceSensor = Ultrasonic(TRIGGER_PIN_SENSOR_1, ECHO_PIN_SENSOR_1);
 
-const float GAMMA = 0.7;
-const float RL10 = 50;
+int state;
+int event;
+bool timeout;
+long lastCurrentTime;
+
+void showActualState(String strState, String strEvent)
+{
+    Serial.println("-----------------------------------------------------");
+    Serial.println("Estado: " + String(strState));
+    Serial.println("Evento: " + String(strEvent));
+    Serial.println("-----------------------------------------------------");
+}
+
+void generateEvent()
+{
+    long currentTime = millis();
+    int diff = currentTime - lastCurrentTime;
+    timeout = (diff > UMBRAL_DIFERENCIA_TIMEOUT) ? true : false;
+
+    if (timeout)
+    {
+        timeout = false;
+        lastCurrentTime = currentTime;
+
+        if (entranceSensor.checkStatus())
+        {
+            return;
+        }
+    }
+
+    event = EVENTO_CONTINUE;
+}
 
 void setup()
 {
     Serial.begin(115200);
 
     lcd.setup();
-    lcd.setupInputPassScreen();
 
-    servo.setup();
+    entranceSensor.setup();
 
-    sensor1.setup();
-    sensor2.setup();
-
-    relay.setup();
-
-    photoresistor.setup();
-
-    pinMode(LIGHT_SEN_PIN, INPUT);
+    state = ESTADO_CERRADURA_INIT;
+    event = EVENTO_CONTINUE;
+    timeout = false;
+    lastCurrentTime = millis();
 }
 
 void loop()
 {
-    char keyPressed = keypad.getPressedKey();
+    generateEvent();
 
-    // Distance
-    float distance1 = sensor1.getDistance();
-    float distance2 = sensor2.getDistance();
-
-    if (distance1 < 30)
+    switch (state)
     {
-        digitalWrite(RELAY_PIN, HIGH);
-    }
-    else
+    case ESTADO_CERRADURA_INIT:
     {
-        digitalWrite(RELAY_PIN, LOW);
+        switch (event)
+        {
+        case EVENTO_CONTINUE:
+        {
+            showActualState("ESTADO_CERRADURA_INIT", "EVENTO_CONTINUE");
+
+            lcd.turnOff();
+
+            state = ESTADO_BLOQUEADO_ESPERANDO_VISITA;
+        }
+        break;
+        }
     }
-
-    // Light
-    int analogValue = analogRead(LIGHT_SEN_PIN);
-    float voltage = analogValue / 1024. * 5;
-    float resistance = 2000 * voltage / (1 - voltage / 5);
-    float lux = pow(RL10 * 1e3 * pow(10, GAMMA) / resistance, (1 / GAMMA));
-
-    // Keypad
-    switch (keyPressed)
+    case ESTADO_BLOQUEADO_ESPERANDO_VISITA:
     {
-    case KEY_CLEAR:
-        optionClearKeyPressed();
-        break;
-    case KEY_ENTER:
-        optionEnterKeyPressed();
-        break;
-    case NO_PRESSED_KEY:
-        optionNoInput();
-        break;
-    default:
+        switch (event)
+        {
+        case EVENTO_PERSONA_DETECTADA:
+        {
+            showActualState("ESTADO_BLOQUEADO_ESPERANDO_VISITA", "EVENTO_PERSONA_DETECTADA");
 
-        optionKeyPressed(keyPressed);
+            lcd.turnOn();
+            lcd.setupInputPassScreen();
+
+            state = ESTADO_ESPERANDO_INGRESO_CONTRASENA;
+        }
+        break;
+        case EVENTO_PERSONA_NO_DETECTADA:
+        {
+            showActualState("ESTADO_BLOQUEADO_ESPERANDO_VISITA", "EVENTO_PERSONA_NO_DETECTADA");
+        }
+        break;
+        case EVENTO_CONTINUE:
+            state = ESTADO_BLOQUEADO_ESPERANDO_VISITA;
+            break;
+        }
     }
+    break;
+    case ESTADO_ESPERANDO_INGRESO_CONTRASENA:
+    {
+        switch (event)
+        {
+        case EVENTO_PERSONA_SE_FUE:
+        {
+            showActualState("ESTADO_BLOQUEADO_ESPERANDO_VISITA", "EVENTO_PERSONA_SE_FUE");
+
+            lcd.turnOff();
+
+            state = ESTADO_BLOQUEADO_ESPERANDO_VISITA;
+        }
+        break;
+        case EVENTO_CONTINUE:
+        {
+            state = ESTADO_ESPERANDO_INGRESO_CONTRASENA;
+        }
+        break;
+        }
+    }
+    break;
+    case ESTADO_VALIDACION_CLAVE:
+        break;
+    case ESTADO_ESPERANDO_APERTURA_PUERTA:
+        break;
+    case ESTADO_ESPERANDO_ENTRADA_PERSONA:
+        break;
+    }
+
     delay(10);
-}
-
-// Funciones
-void optionClearKeyPressed()
-{
-    lock.resetPassEntered();
-    lcd.resetInputPassScreen();
-}
-
-void optionEnterKeyPressed()
-{
-    if (lock.unlock() == VALID_PASS)
-    {
-        servo.changeOrientation(179);
-        lcd.showMessaggeInLine(0, "Ya puede empujar");
-        lcd.showMessaggeInLine(1, "la puerta");
-        Buzzer::activateSuccessSound();
-    }
-    else
-    {
-        lcd.showMessaggeInLine(0, "Contrasena");
-        lcd.showMessaggeInLine(1, "incorrecta");
-        Buzzer::activateFailSound();
-    }
-    delay(BUZZER_FAIL_DURATION);
-    servo.changeOrientation(0);
-    lock.resetPassEntered();
-    lcd.resetInputPassScreen();
-}
-
-void optionNoInput()
-{
-    if (lcd.checkCursorInterval() == UPDATE_CURSOR && lock.getLengthPassEntered() <= MAX_PASSWORD_LENGTH)
-    {
-        lcd.updateInactiveCursor();
-    }
-}
-
-void optionKeyPressed(char keyPressed)
-{
-    Buzzer::activateKeyPressedSound();
-    lock.loadCharacter(keyPressed);
-    lcd.showKeyPressed(keyPressed);
-    Serial.println(lock.getPassEntered());
 }

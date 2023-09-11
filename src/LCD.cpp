@@ -167,4 +167,16 @@ public:
             this->screen.print(' ');
         }
     }
+
+    void turnOff()
+    {
+        this->screen.clear();
+        this->screen.noBacklight();
+    }
+
+    void turnOn()
+    {
+        this->screen.clear();
+        this->screen.backlight();
+    }
 };

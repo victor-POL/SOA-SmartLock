@@ -9,7 +9,12 @@
 #include "Relay.cpp"
 #include "Photoresistor.cpp"
 
-#define TRIGGER_PIN_SENSOR_1 32
-#define TRIGGER_PIN_SENSOR_2 33
-#define ECHO_PIN_SENSOR_1 34
-#define ECHO_PIN_SENSOR_2 35
+#include "States.h"
+#include "Events.h"
+
+#define TRIGGER_PIN_SENSOR_1                        32
+#define TRIGGER_PIN_SENSOR_2                        33
+#define ECHO_PIN_SENSOR_1                           34
+#define ECHO_PIN_SENSOR_2                           35
+
+#define UMBRAL_DIFERENCIA_TIMEOUT                   50
