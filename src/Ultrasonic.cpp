@@ -51,35 +51,18 @@ public:
         if (actualDistance != previousDistance)
         {
             this->previousDistance = actualDistance;
-
-            if (personDetected)
+            
+            if(actualDistance < UMBRAL_PERSONA_DETECTADA)
             {
-                if (actualDistance > UMBRAL_PERSONA_DETECTADA)
-                {
-                    personDetected = false;
-                    event = EVENTO_PERSONA_SE_FUE;
-                }
-                else
-                {
-                    if (actualDistance < UMBRAL_PERSONA_DETECTADA)
-                    {
-                        event = EVENTO_CONTINUE;
-                    }
-                }
+                personDetected = true;
+                event = EVENTO_PERSONA_DETECTADA;
             }
-
             else
             {
-                if (actualDistance < UMBRAL_PERSONA_DETECTADA)
-                {
-                    personDetected = true;
-                    event = EVENTO_PERSONA_DETECTADA;
-                }
-                else
-                {
-                    event = EVENTO_CONTINUE;
-                }
+                personDetected = false;
+                event = EVENTO_PERSONA_NO_DETECTADA;
             }
+
             return true;
         }
 

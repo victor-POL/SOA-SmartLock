@@ -5,6 +5,7 @@ LCD lcd = *LCD::getInstance();
 Ultrasonic entranceSensor = Ultrasonic(TRIGGER_PIN_SENSOR_1, ECHO_PIN_SENSOR_1);
 Relay light = Relay();
 Photoresistor lightSensor = Photoresistor();
+KeyPad keypad = KeyPad();
 
 int state;
 int event;
@@ -87,7 +88,7 @@ void loop()
             lcd.turnOn();
             lcd.setupInputPassScreen();
 
-            if (lightSensor.getLight() < UMBRAL_LUZ_APAGADA && light.getIsOn() == false)
+            if (lightSensor.getLight() < UMBRAL_LUZ_APAGADA)
             {
                 light.turnOn();
             }
@@ -98,6 +99,8 @@ void loop()
         case EVENTO_PERSONA_NO_DETECTADA:
         {
             showActualState("ESTADO_BLOQUEADO_ESPERANDO_VISITA", "EVENTO_PERSONA_NO_DETECTADA");
+
+            state = ESTADO_BLOQUEADO_ESPERANDO_VISITA;
         }
         break;
         case EVENTO_CONTINUE:
@@ -110,18 +113,38 @@ void loop()
     {
         switch (event)
         {
-        case EVENTO_PERSONA_SE_FUE:
+        case EVENTO_PERSONA_DETECTADA:
         {
-            showActualState("ESTADO_BLOQUEADO_ESPERANDO_VISITA", "EVENTO_PERSONA_SE_FUE");
+            showActualState("ESTADO_ESPERANDO_INGRESO_CONTRASENA", "EVENTO_PERSONA_DETECTADA");
+
+            state = ESTADO_ESPERANDO_INGRESO_CONTRASENA;
+        }
+        break;
+        case EVENTO_PERSONA_NO_DETECTADA:
+        {
+            showActualState("ESTADO_ESPERANDO_INGRESO_CONTRASENA", "EVENTO_PERSONA_NO_DETECTADA");
 
             lcd.turnOff();
 
-            if (light.getIsOn() == true)
-            {
-                light.turnOff();
-            }
+            light.turnOff();
 
             state = ESTADO_BLOQUEADO_ESPERANDO_VISITA;
+        }
+        break;
+        case EVENTO_VALIDAR_CLAVE:
+        {
+            showActualState("ESTADO_ESPERANDO_INGRESO_CONTRASENA", "EVENTO_VALIDAR_CLAVE");
+
+            state = ESTADO_VALIDACION_CLAVE;
+        }
+        break;
+        case EVENTO_CLEAR_CLAVE_INGRESADA:
+        {
+            showActualState("ESTADO_ESPERANDO_INGRESO_CONTRASENA", "EVENTO_CLEAR_CLAVE_INGRESADA");
+
+            lcd.setupInputPassScreen();
+
+            state = ESTADO_ESPERANDO_INGRESO_CONTRASENA;
         }
         break;
         case EVENTO_CONTINUE:
@@ -139,6 +162,8 @@ void loop()
     case ESTADO_ESPERANDO_ENTRADA_PERSONA:
         break;
     }
+
+    event = EVENTO_CONTINUE;
 
     delay(10);
 }

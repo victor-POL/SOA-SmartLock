@@ -1,11 +1,15 @@
 #include <Arduino.h>
 #include <Keypad.h>
+#include "States.h"
+#include "Events.h"
 
 #define NO_PRESSED_KEY 0
 #define KEY_CLEAR '*'
 #define KEY_ENTER '#'
 #define ROWS_KEYPAD 4
 #define COLS_KEYPAD 4
+
+extern int event;
 
 class KeyPad
 {
@@ -49,5 +53,27 @@ public:
     char getPressedKey()
     {
         return this->keypad.getKey();
+    }
+
+    char checkStatus()
+    {
+        char pressedKey = getPressedKey();
+
+        if(pressedKey != NO_PRESSED_KEY)
+        {
+            switch(pressedKey)
+            {
+                case KEY_CLEAR:
+                    event = EVENTO_CLEAR_CLAVE_INGRESADA;
+                    break;
+                case KEY_ENTER:
+                    event = EVENTO_VALIDAR_CLAVE;
+                    break;
+            }
+
+            return true;
+        }
+
+        return false;;
     }
 };
