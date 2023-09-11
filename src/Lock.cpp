@@ -13,7 +13,7 @@ private:
     int passPos;
 
 public:
-    Lock(String validPassword)
+    Lock(String validPassword="A")
     {
         this->validPassword = validPassword;
         passPos = 0;

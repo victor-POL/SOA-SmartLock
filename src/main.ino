@@ -6,6 +6,7 @@ Ultrasonic entranceSensor = Ultrasonic(TRIGGER_PIN_SENSOR_1, ECHO_PIN_SENSOR_1);
 Relay light = Relay();
 Photoresistor lightSensor = Photoresistor();
 KeyPad keypad = KeyPad();
+Lock lock = Lock();
 
 int state;
 int event;
@@ -31,7 +32,7 @@ void generateEvent()
         timeout = false;
         lastCurrentTime = currentTime;
 
-        if (entranceSensor.checkStatus())
+        if (entranceSensor.checkStatus() || keypad.checkStatus())
         {
             return;
         }
@@ -113,16 +114,10 @@ void loop()
     {
         switch (event)
         {
-        case EVENTO_PERSONA_DETECTADA:
-        {
-            showActualState("ESTADO_ESPERANDO_INGRESO_CONTRASENA", "EVENTO_PERSONA_DETECTADA");
-
-            state = ESTADO_ESPERANDO_INGRESO_CONTRASENA;
-        }
-        break;
         case EVENTO_PERSONA_NO_DETECTADA:
         {
             showActualState("ESTADO_ESPERANDO_INGRESO_CONTRASENA", "EVENTO_PERSONA_NO_DETECTADA");
+
 
             lcd.turnOff();
 
@@ -135,12 +130,34 @@ void loop()
         {
             showActualState("ESTADO_ESPERANDO_INGRESO_CONTRASENA", "EVENTO_VALIDAR_CLAVE");
 
+            Buzzer::activateKeyPressedSound();
+
             state = ESTADO_VALIDACION_CLAVE;
+        }
+        break;
+        case EVENTO_PERSONA_DETECTADA:
+        {
+            showActualState("ESTADO_ESPERANDO_INGRESO_CONTRASENA", "EVENTO_PERSONA_DETECTADA");
+
+            state = ESTADO_ESPERANDO_INGRESO_CONTRASENA;
+        }
+        break;
+        case EVENTO_CARACTER_INGRESADO:
+        {
+            showActualState("ESTADO_ESPERANDO_INGRESO_CONTRASENA", "EVENTO_CARACTER_INGRESADO");
+
+            Buzzer::activateKeyPressedSound();
+            lock.loadCharacter(keypad.getLastKeyPressed());
+            lcd.showKeyPressed(keypad.getLastKeyPressed());
+
+            state = ESTADO_ESPERANDO_INGRESO_CONTRASENA;
         }
         break;
         case EVENTO_CLEAR_CLAVE_INGRESADA:
         {
             showActualState("ESTADO_ESPERANDO_INGRESO_CONTRASENA", "EVENTO_CLEAR_CLAVE_INGRESADA");
+
+            Buzzer::activateKeyPressedSound();
 
             lcd.setupInputPassScreen();
 

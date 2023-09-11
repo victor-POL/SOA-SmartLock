@@ -45,6 +45,8 @@ private:
         2,
         15}; 
 
+    char lastKeyPressed = NO_PRESSED_KEY;
+
 public:
     KeyPad()
     {
@@ -55,13 +57,15 @@ public:
         return this->keypad.getKey();
     }
 
-    char checkStatus()
+    bool checkStatus()
     {
-        char pressedKey = getPressedKey();
+        char actualPressedKey = getPressedKey();
 
-        if(pressedKey != NO_PRESSED_KEY)
+        if(actualPressedKey != NO_PRESSED_KEY)
         {
-            switch(pressedKey)
+            lastKeyPressed = actualPressedKey;
+
+            switch(actualPressedKey)
             {
                 case KEY_CLEAR:
                     event = EVENTO_CLEAR_CLAVE_INGRESADA;
@@ -69,11 +73,18 @@ public:
                 case KEY_ENTER:
                     event = EVENTO_VALIDAR_CLAVE;
                     break;
+                default:
+                    event = EVENTO_CARACTER_INGRESADO;
             }
 
             return true;
         }
 
         return false;;
+    }
+
+    char getLastKeyPressed()
+    {
+        return lastKeyPressed;
     }
 };
