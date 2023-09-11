@@ -18,3 +18,4 @@
 #define ECHO_PIN_SENSOR_2                           35
 
 #define UMBRAL_DIFERENCIA_TIMEOUT                   50
+#define UMBRAL_LUZ_APAGADA                          1000

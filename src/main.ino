@@ -3,6 +3,8 @@
 LCD *LCD::instance = NULL;
 LCD lcd = *LCD::getInstance();
 Ultrasonic entranceSensor = Ultrasonic(TRIGGER_PIN_SENSOR_1, ECHO_PIN_SENSOR_1);
+Relay light = Relay();
+Photoresistor lightSensor = Photoresistor();
 
 int state;
 int event;
@@ -45,6 +47,8 @@ void setup()
 
     entranceSensor.setup();
 
+    light.setup();
+
     state = ESTADO_CERRADURA_INIT;
     event = EVENTO_CONTINUE;
     timeout = false;
@@ -83,6 +87,11 @@ void loop()
             lcd.turnOn();
             lcd.setupInputPassScreen();
 
+            if (lightSensor.getLight() < UMBRAL_LUZ_APAGADA && light.getIsOn() == false)
+            {
+                light.turnOn();
+            }
+
             state = ESTADO_ESPERANDO_INGRESO_CONTRASENA;
         }
         break;
@@ -106,6 +115,11 @@ void loop()
             showActualState("ESTADO_BLOQUEADO_ESPERANDO_VISITA", "EVENTO_PERSONA_SE_FUE");
 
             lcd.turnOff();
+
+            if (light.getIsOn() == true)
+            {
+                light.turnOff();
+            }
 
             state = ESTADO_BLOQUEADO_ESPERANDO_VISITA;
         }

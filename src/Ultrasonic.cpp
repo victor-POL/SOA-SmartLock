@@ -85,4 +85,9 @@ public:
 
         return false;
     }
+
+    bool getPersonDetected()
+    {
+        return personDetected;
+    }
 };
