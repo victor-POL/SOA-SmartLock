@@ -6,6 +6,8 @@
 #include "Servo.cpp"
 #include "Lock.cpp"
 #include "Ultrasonic.cpp"
+#include "Relay.cpp"
+#include "Photoresistor.cpp"
 
 #define TRIGGER_PIN_SENSOR_1 32
 #define TRIGGER_PIN_SENSOR_2 33
