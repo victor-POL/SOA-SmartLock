@@ -3,9 +3,7 @@
 class UltrasonicDoor : public Ultrasonic
 {
 public:
-    UltrasonicDoor(int triggerPin, int echoPin) : Ultrasonic(triggerPin, echoPin)
-    {
-    };
+    UltrasonicDoor(int triggerPin, int echoPin) : Ultrasonic(triggerPin, echoPin){};
 
     bool isDoorOpen()
     {
@@ -24,7 +22,7 @@ public:
         float previousDistance = this->previousDistance;
         if (currentDistance != previousDistance)
         {
-            event = isDoorOpen()? EVENTO_PUERTA_ABIERTA : event;
+            event = isDoorOpen() ? EVENTO_PUERTA_ABIERTA : event;
             return true;
         }
         return false;
