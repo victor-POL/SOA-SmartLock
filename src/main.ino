@@ -75,14 +75,14 @@ void loop()
         case EVENTO_CONTINUE:
         {
             showActualState("ESTADO_CERRADURA_INIT", "EVENTO_CONTINUE");
-
             lcd.turnOff();
-
             state = ESTADO_BLOQUEADO_ESPERANDO_VISITA;
         }
         break;
         }
     }
+    break;
+
     case ESTADO_BLOQUEADO_ESPERANDO_VISITA:
     {
         switch (event)
@@ -90,31 +90,33 @@ void loop()
         case EVENTO_PERSONA_DETECTADA:
         {
             showActualState("ESTADO_BLOQUEADO_ESPERANDO_VISITA", "EVENTO_PERSONA_DETECTADA");
-
             lcd.turnOn();
-            lcd.setupInputPassScreen();
-
+            lcd.resetInputPassScreen();
+            lock.resetPassEntered();
             if (lightSensor.getLight() < UMBRAL_LUZ_APAGADA)
             {
                 light.turnOn();
             }
-
             state = ESTADO_ESPERANDO_INGRESO_CONTRASENA;
         }
         break;
+
         case EVENTO_PERSONA_NO_DETECTADA:
         {
             showActualState("ESTADO_BLOQUEADO_ESPERANDO_VISITA", "EVENTO_PERSONA_NO_DETECTADA");
-
             state = ESTADO_BLOQUEADO_ESPERANDO_VISITA;
         }
         break;
+
         case EVENTO_CONTINUE:
+        {
             state = ESTADO_BLOQUEADO_ESPERANDO_VISITA;
-            break;
+        }
+        break;
         }
     }
     break;
+
     case ESTADO_ESPERANDO_INGRESO_CONTRASENA:
     {
         switch (event)
@@ -122,55 +124,48 @@ void loop()
         case EVENTO_PERSONA_NO_DETECTADA:
         {
             showActualState("ESTADO_ESPERANDO_INGRESO_CONTRASENA", "EVENTO_PERSONA_NO_DETECTADA");
-
-
             lcd.turnOff();
-
             light.turnOff();
-
             state = ESTADO_BLOQUEADO_ESPERANDO_VISITA;
         }
         break;
+
         case EVENTO_VALIDAR_CLAVE:
         {
             showActualState("ESTADO_ESPERANDO_INGRESO_CONTRASENA", "EVENTO_VALIDAR_CLAVE");
-
             Buzzer::activateKeyPressedSound();
-
             lock.changeUnlockInProgress(true);
-
             state = ESTADO_VALIDACION_CLAVE;
         }
         break;
+
         case EVENTO_PERSONA_DETECTADA:
         {
             showActualState("ESTADO_ESPERANDO_INGRESO_CONTRASENA", "EVENTO_PERSONA_DETECTADA");
-
             state = ESTADO_ESPERANDO_INGRESO_CONTRASENA;
         }
         break;
+
         case EVENTO_CARACTER_INGRESADO:
         {
             showActualState("ESTADO_ESPERANDO_INGRESO_CONTRASENA", "EVENTO_CARACTER_INGRESADO");
-
             Buzzer::activateKeyPressedSound();
             lock.loadCharacter(keypad.getLastKeyPressed());
             lcd.showKeyPressed(keypad.getLastKeyPressed());
-
             state = ESTADO_ESPERANDO_INGRESO_CONTRASENA;
         }
         break;
+
         case EVENTO_CLEAR_CLAVE_INGRESADA:
         {
             showActualState("ESTADO_ESPERANDO_INGRESO_CONTRASENA", "EVENTO_CLEAR_CLAVE_INGRESADA");
-
             Buzzer::activateKeyPressedSound();
-
-            lcd.setupInputPassScreen();
-
+            lcd.resetInputPassScreen();
+            lock.resetPassEntered();
             state = ESTADO_ESPERANDO_INGRESO_CONTRASENA;
         }
         break;
+
         case EVENTO_CONTINUE:
         {
             state = ESTADO_ESPERANDO_INGRESO_CONTRASENA;
@@ -179,72 +174,82 @@ void loop()
         }
     }
     break;
+
     case ESTADO_VALIDACION_CLAVE:
-        switch(event)
+    {
+        switch (event)
         {
-            case EVENTO_TIMEOUT:
-            {
-                showActualState("ESTADO_VALIDACION_CLAVE", "EVENTO_TIMEOUT");
-
-                Buzzer::activateErrorSound();
-
-                lcd.showTimeoutMessage();
-
-                state = ESTADO_ESPERANDO_INGRESO_CONTRASENA;
-            }
-            break;
-            case EVENTO_CLAVE_VALIDA:
-            {
-                showActualState("ESTADO_VALIDACION_CLAVE", "EVENTO_CLAVE_VALIDA");
-                //timeout
-                Buzzer::activateSuccessSound();
-                lcd.showValidPassMessage();
-                entranceDoor.unlock();
-                state = ESTADO_ESPERANDO_APERTURA_PUERTA;
-            }
-            break;
-            case EVENTO_CLAVE_INVALIDA:
-            {
-                showActualState("ESTADO_VALIDACION_CLAVE", "EVENTO_CLAVE_INVALIDA");
-                lcd.showInvalidPassMessage();
-                Buzzer::activateErrorSound();
-                lcd.resetInputPassScreen();
-                lock.resetPassEntered();
-                state = ESTADO_ESPERANDO_INGRESO_CONTRASENA;
-            }
-            break;
-            case EVENTO_CONTINUE:
-            {
-                state = ESTADO_VALIDACION_CLAVE;
-            }
-            break;
+        case EVENTO_TIMEOUT:
+        {
+            showActualState("ESTADO_VALIDACION_CLAVE", "EVENTO_TIMEOUT");
+            lcd.showTimeoutMessage();
+            Buzzer::activateErrorSound();
+            state = ESTADO_ESPERANDO_INGRESO_CONTRASENA;
         }
         break;
-    case ESTADO_ESPERANDO_APERTURA_PUERTA:
-        case EVENTO_CONTINUE:
+
+        case EVENTO_CLAVE_VALIDA:
         {
+            showActualState("ESTADO_VALIDACION_CLAVE", "EVENTO_CLAVE_VALIDA");
+            Buzzer::activateSuccessSound();
+            lcd.showValidPassMessage();
+            entranceDoor.unlock();
             state = ESTADO_ESPERANDO_APERTURA_PUERTA;
         }
         break;
+
+        case EVENTO_CLAVE_INVALIDA:
+        {
+            showActualState("ESTADO_VALIDACION_CLAVE", "EVENTO_CLAVE_INVALIDA");
+            lcd.showInvalidPassMessage();
+            Buzzer::activateErrorSound();
+            lcd.resetInputPassScreen();
+            lock.resetPassEntered();
+            state = ESTADO_ESPERANDO_INGRESO_CONTRASENA;
+        }
+        break;
+
+        case EVENTO_CONTINUE:
+        {
+            state = ESTADO_VALIDACION_CLAVE;
+        }
+        break;
+        }
+    }
+    break;
+
+    case ESTADO_ESPERANDO_APERTURA_PUERTA:
+    {
+        switch (event)
+        {
         case TIMEOUT_APERTURA_PUERTA:
         {
             showActualState("ESTADO_ESPERANDO_ENTRADA_PERSONA", "TIMEOUT_APERTURA_PUERTA");
-
             entranceDoor.lock();
-
+            lcd.resetInputPassScreen();
+            lock.resetPassEntered();
             state = ESTADO_BLOQUEADO_ESPERANDO_VISITA;
         }
         break;
+
         case EVENTO_PUERTA_ABIERTA:
         {
             showActualState("ESTADO_ESPERANDO_ENTRADA_PERSONA", "EVENTO_PUERTA_ABIERTA");
             state = ESTADO_ESPERANDO_ENTRADA_PERSONA;
         }
         break;
-    case ESTADO_ESPERANDO_ENTRADA_PERSONA:
 
+        case EVENTO_CONTINUE:
+        {
+            state = ESTADO_ESPERANDO_APERTURA_PUERTA;
+        }
         break;
+        }
+    }
     break;
+
+    case ESTADO_ESPERANDO_ENTRADA_PERSONA:
+        break;
     }
 
     event = EVENTO_CONTINUE;
