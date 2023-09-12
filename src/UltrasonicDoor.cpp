@@ -3,9 +3,9 @@
 class UltrasonicDoor : public Ultrasonic
 {
 public:
-    UltrasonicEntrance(int triggerPin, int echoPin) : Ultrasonic(triggerPin, echoPin)
+    UltrasonicDoor(int triggerPin, int echoPin) : Ultrasonic(triggerPin, echoPin)
     {
-    }
+    };
 
     bool isDoorOpen()
     {

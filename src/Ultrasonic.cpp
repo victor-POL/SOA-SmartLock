@@ -1,3 +1,6 @@
+#ifndef ULTRASONIC_H
+#define ULTRASONIC_H
+
 #include <Arduino.h>
 #include "States.h"
 #include "Events.h"
@@ -51,3 +54,5 @@ public:
         previousDistance = distance;
     }
 };
+
+#endif
