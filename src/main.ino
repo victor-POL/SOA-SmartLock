@@ -34,7 +34,7 @@ void generateEvent()
         timeout = false;
         lastCurrentTime = currentTime;
 
-        if (entranceSensor.checkStatus() || keypad.checkStatus() || lock.checkStatus())
+        if (entranceSensor.checkStatus() || keypad.checkStatus() || lock.checkStatus() || doorSensor.checkStatus())
         {
             return;
         }
