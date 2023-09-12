@@ -179,7 +179,7 @@ void loop()
     {
         switch (event)
         {
-        case EVENTO_TIMEOUT:
+        case EVENTO_TIMEOUT_VALIDACION_CLAVE:
         {
             showActualState("ESTADO_VALIDACION_CLAVE", "EVENTO_TIMEOUT");
             lcd.showTimeoutMessage();
