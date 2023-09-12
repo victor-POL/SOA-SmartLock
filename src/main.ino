@@ -7,7 +7,7 @@ UltrasonicDoor doorSensor = UltrasonicDoor(TRIGGER_PIN_SENSOR_2, ECHO_PIN_SENSOR
 Relay light = Relay();
 Photoresistor lightSensor = Photoresistor();
 KeyPad keypad = KeyPad();
-Lock lock = Lock();
+Lock doorLock = Lock();
 MyServo entranceDoor = MyServo();
 
 int state;
@@ -34,7 +34,7 @@ void generateEvent()
         timeout = false;
         lastCurrentTime = currentTime;
 
-        if (entranceSensor.checkStatus() || keypad.checkStatus() || lock.checkStatus() || doorSensor.checkStatus())
+        if (entranceSensor.checkStatus() || keypad.checkStatus() || doorLock.checkStatus() || doorSensor.checkStatus())
         {
             return;
         }
@@ -46,16 +46,11 @@ void generateEvent()
 void setup()
 {
     Serial.begin(115200);
-
     entranceDoor.setup();
-
     lcd.setup();
-
     entranceSensor.setup();
     doorSensor.setup();
-
     light.setup();
-
     state = ESTADO_CERRADURA_INIT;
     event = EVENTO_CONTINUE;
     timeout = false;
@@ -92,7 +87,6 @@ void loop()
             showActualState("ESTADO_BLOQUEADO_ESPERANDO_VISITA", "EVENTO_PERSONA_DETECTADA");
             lcd.turnOn();
             lcd.resetInputPassScreen();
-            lock.resetPassEntered();
             if (lightSensor.getLight() < UMBRAL_LUZ_APAGADA)
             {
                 light.turnOn();
@@ -126,6 +120,7 @@ void loop()
             showActualState("ESTADO_ESPERANDO_INGRESO_CONTRASENA", "EVENTO_PERSONA_NO_DETECTADA");
             lcd.turnOff();
             light.turnOff();
+            doorLock.resetPassEntered();
             state = ESTADO_BLOQUEADO_ESPERANDO_VISITA;
         }
         break;
@@ -134,7 +129,7 @@ void loop()
         {
             showActualState("ESTADO_ESPERANDO_INGRESO_CONTRASENA", "EVENTO_VALIDAR_CLAVE");
             Buzzer::activateKeyPressedSound();
-            lock.changeUnlockInProgress(true);
+            doorLock.changeUnlockInProgress(true);
             state = ESTADO_VALIDACION_CLAVE;
         }
         break;
@@ -150,7 +145,7 @@ void loop()
         {
             showActualState("ESTADO_ESPERANDO_INGRESO_CONTRASENA", "EVENTO_CARACTER_INGRESADO");
             Buzzer::activateKeyPressedSound();
-            lock.loadCharacter(keypad.getLastKeyPressed());
+            doorLock.loadCharacter(keypad.getLastKeyPressed());
             lcd.showKeyPressed(keypad.getLastKeyPressed());
             state = ESTADO_ESPERANDO_INGRESO_CONTRASENA;
         }
@@ -161,7 +156,7 @@ void loop()
             showActualState("ESTADO_ESPERANDO_INGRESO_CONTRASENA", "EVENTO_CLEAR_CLAVE_INGRESADA");
             Buzzer::activateKeyPressedSound();
             lcd.resetInputPassScreen();
-            lock.resetPassEntered();
+            doorLock.resetPassEntered();
             state = ESTADO_ESPERANDO_INGRESO_CONTRASENA;
         }
         break;
@@ -191,8 +186,8 @@ void loop()
         case EVENTO_CLAVE_VALIDA:
         {
             showActualState("ESTADO_VALIDACION_CLAVE", "EVENTO_CLAVE_VALIDA");
-            Buzzer::activateSuccessSound();
             lcd.showValidPassMessage();
+            Buzzer::activateSuccessSound();
             entranceDoor.unlock();
             state = ESTADO_ESPERANDO_APERTURA_PUERTA;
         }
@@ -204,7 +199,7 @@ void loop()
             lcd.showInvalidPassMessage();
             Buzzer::activateErrorSound();
             lcd.resetInputPassScreen();
-            lock.resetPassEntered();
+            doorLock.resetPassEntered();
             state = ESTADO_ESPERANDO_INGRESO_CONTRASENA;
         }
         break;
@@ -227,8 +222,8 @@ void loop()
             showActualState("ESTADO_ESPERANDO_ENTRADA_PERSONA", "TIMEOUT_APERTURA_PUERTA");
             entranceDoor.lock();
             lcd.resetInputPassScreen();
-            lock.resetPassEntered();
-            state = ESTADO_BLOQUEADO_ESPERANDO_VISITA;
+            doorLock.lock();
+            state = ESTADO_ESPERANDO_INGRESO_CONTRASENA;
         }
         break;
 

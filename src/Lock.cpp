@@ -14,7 +14,6 @@ class Lock
 private:
     String passEntered;
     String validPassword;
-    int passPos;
     bool isLocked;
     bool unlockInProgress;
     int timeUnlocked;
@@ -35,15 +34,9 @@ public:
     Lock(String validPassword = "A")
     {
         this->validPassword = validPassword;
-        passPos = 0;
         isLocked = true;
         unlockInProgress = false;
         timeUnlocked = 0;
-    }
-
-    bool getLengthPassEntered()
-    {
-        return passEntered.length();
     }
 
     bool unlock()
@@ -60,9 +53,13 @@ public:
         }
     }
 
+    void lock()
+    {
+        isLocked = true;
+    }
+
     void resetPassEntered()
     {
-        passPos = 0;
         passEntered = "";
     }
 
