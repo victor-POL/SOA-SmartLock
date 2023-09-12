@@ -9,3 +9,5 @@
 #define EVENTO_TIMEOUT                              1007
 #define EVENTO_CLAVE_VALIDA                         1008
 #define EVENTO_CLAVE_INVALIDA                       1009
+#define TIMEOUT_APERTURA_PUERTA                     1010
+#define EVENTO_PUERTA_ABIERTA                       1011

@@ -5,6 +5,7 @@
 #define MAX_PASSWORD_LENGTH 16
 #define VALID_PASS true
 #define INVALID_PASS false
+#define UMBRAL_TIMEOUT_PUERTA 10000
 
 extern int event;
 
@@ -16,14 +17,28 @@ private:
     int passPos;
     bool isLocked;
     bool unlockInProgress;
+    int timeUnlocked;
+
+    void startTimer()
+    {
+        timeUnlocked = millis();
+    }
+
+    bool reachedTimeout()
+    {
+        int currentTime = millis();
+        int timeElapsed = currentTime - timeUnlocked;
+        return timeElapsed > UMBRAL_TIMEOUT_PUERTA;
+    }
 
 public:
-    Lock(String validPassword="A")
+    Lock(String validPassword = "A")
     {
         this->validPassword = validPassword;
         passPos = 0;
         isLocked = true;
         unlockInProgress = false;
+        timeUnlocked = 0;
     }
 
     bool getLengthPassEntered()
@@ -36,6 +51,7 @@ public:
         if (strcmp(passEntered.c_str(), validPassword.c_str()) == 0)
         {
             isLocked = false;
+            startTimer();
             return VALID_PASS;
         }
         else
@@ -65,11 +81,11 @@ public:
 
     bool checkStatus()
     {
-        if(unlockInProgress == true)
+        if (unlockInProgress == true)
         {
             unlockInProgress = false;
 
-            if(unlock() == VALID_PASS)
+            if (unlock() == VALID_PASS)
             {
                 event = EVENTO_CLAVE_VALIDA;
             }
@@ -78,6 +94,11 @@ public:
                 event = EVENTO_CLAVE_INVALIDA;
             }
 
+            return true;
+        }
+        else if (isLocked == false && reachedTimeout())
+        {
+            event = TIMEOUT_APERTURA_PUERTA;
             return true;
         }
 

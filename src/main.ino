@@ -2,7 +2,8 @@
 
 LCD *LCD::instance = NULL;
 LCD lcd = *LCD::getInstance();
-Ultrasonic entranceSensor = Ultrasonic(TRIGGER_PIN_SENSOR_1, ECHO_PIN_SENSOR_1);
+UltrasonicEntrance entranceSensor = UltrasonicEntrance(TRIGGER_PIN_SENSOR_1, ECHO_PIN_SENSOR_1);
+UltrasonicDoor doorSensor = UltrasonicDoor(TRIGGER_PIN_SENSOR_2, ECHO_PIN_SENSOR_2);
 Relay light = Relay();
 Photoresistor lightSensor = Photoresistor();
 KeyPad keypad = KeyPad();
@@ -51,6 +52,7 @@ void setup()
     lcd.setup();
 
     entranceSensor.setup();
+    doorSensor.setup();
 
     light.setup();
 
@@ -194,13 +196,10 @@ void loop()
             case EVENTO_CLAVE_VALIDA:
             {
                 showActualState("ESTADO_VALIDACION_CLAVE", "EVENTO_CLAVE_VALIDA");
-
+                //timeout
                 Buzzer::activateSuccessSound();
-
                 lcd.showValidPassMessage();
-
                 entranceDoor.unlock();
-
                 state = ESTADO_ESPERANDO_APERTURA_PUERTA;
             }
             break;
@@ -227,8 +226,25 @@ void loop()
             state = ESTADO_ESPERANDO_APERTURA_PUERTA;
         }
         break;
-    case ESTADO_ESPERANDO_ENTRADA_PERSONA:
+        case TIMEOUT_APERTURA_PUERTA:
+        {
+            showActualState("ESTADO_ESPERANDO_ENTRADA_PERSONA", "TIMEOUT_APERTURA_PUERTA");
+
+            entranceDoor.lock();
+
+            state = ESTADO_BLOQUEADO_ESPERANDO_VISITA;
+        }
         break;
+        case EVENTO_PUERTA_ABIERTA:
+        {
+            showActualState("ESTADO_ESPERANDO_ENTRADA_PERSONA", "EVENTO_PUERTA_ABIERTA");
+            state = ESTADO_ESPERANDO_ENTRADA_PERSONA;
+        }
+        break;
+    case ESTADO_ESPERANDO_ENTRADA_PERSONA:
+
+        break;
+    break;
     }
 
     event = EVENTO_CONTINUE;
