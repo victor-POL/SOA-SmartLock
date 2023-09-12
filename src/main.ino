@@ -213,6 +213,7 @@ void loop()
                 lock.resetPassEntered();
                 state = ESTADO_ESPERANDO_INGRESO_CONTRASENA;
             }
+            break;
             case EVENTO_CONTINUE:
             {
                 state = ESTADO_VALIDACION_CLAVE;
