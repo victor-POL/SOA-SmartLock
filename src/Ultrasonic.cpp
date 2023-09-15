@@ -16,7 +16,7 @@ protected:
     int triggerPinSelected;
     int echoPinSelected;
 
-    float previousDistance;
+    int previousDistance;
 
 public:
     Ultrasonic(int echoPin, int triggerPrin)
@@ -31,17 +31,17 @@ public:
         pinMode(echoPinSelected, INPUT);
     }
 
-    float getDistance()
+    int getDistance()
     {
+        digitalWrite(triggerPinSelected, LOW);
+        delayMicroseconds(2);
+
         digitalWrite(triggerPinSelected, HIGH);
         delayMicroseconds(10);
+
         digitalWrite(triggerPinSelected, LOW);
 
-        long duration_us = pulseIn(echoPinSelected, HIGH);
-
-        float distance_cm = 0.017 * duration_us;
-
-        return distance_cm;
+        return 0.01723 * pulseIn(echoPinSelected, HIGH);
     }
 
     float getPreviousDistance()
