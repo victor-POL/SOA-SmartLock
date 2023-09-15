@@ -38,11 +38,10 @@ public:
     {
         this->screen.init();
     }
-    
-    // Input Pass Screen
 
-    void setupInputPassScreen()
+    void loadInputPassScreen()
     {
+        cursorPos = 0;
         this->screen.clear();
         showMessaggeInLine(0, "Ingrese clave:");
         this->screen.setCursor(0, 1);
@@ -51,7 +50,12 @@ public:
     void resetInputPassScreen()
     {
         cursorPos = 0;
-        setupInputPassScreen();
+        this->screen.setCursor(0, 1);
+        for (int i = 0; i < MAX_LCD_LENGTH; i++)
+        {
+            this->screen.print(' ');
+        }
+        this->screen.setCursor(0, 1);
     }
 
     // Messages
@@ -198,5 +202,10 @@ public:
     {
         this->screen.clear();
         this->screen.backlight();
+    }
+
+    void clear()
+    {
+        this->screen.clear();
     }
 };
