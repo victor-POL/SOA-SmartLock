@@ -1,5 +1,5 @@
 #include <Arduino.h>
-#define RELAY_PIN 14
+#define RELAY_PIN 25
 
 class Relay
 {

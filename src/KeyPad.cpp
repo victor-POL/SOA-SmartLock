@@ -35,9 +35,9 @@ private:
          'D'}};
 
    uint8_t rowPins[ROWS_KEYPAD] = {
-        25,
-        26,
-        27,
+        13,
+        14,
+        12,
         17};
     uint8_t columnPins[COLS_KEYPAD] = {
         16,

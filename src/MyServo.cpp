@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include <ESP32Servo.h>
 
-#define SERVO_PIN 12
+#define SERVO_PIN 26
 
 class MyServo
 {
