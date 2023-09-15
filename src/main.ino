@@ -95,10 +95,6 @@ void loop()
             showActualState("ESTADO_BLOQUEADO_ESPERANDO_VISITA", "EVENTO_PERSONA_DETECTADA");
             lcd.turnOn();
             lcd.resetInputPassScreen();
-            if (lightSensor.getLight() < UMBRAL_LUZ_APAGADA)
-            {
-                light.turnOn();
-            }
             state = ESTADO_ESPERANDO_INGRESO_CONTRASENA;
         }
         break;
