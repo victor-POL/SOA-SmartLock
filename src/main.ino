@@ -74,7 +74,6 @@ void stateMachine()
         case EVENTO_CONTINUE:
         {
             showActualState("ESTADO_CERRADURA_INIT", "EVENTO_CONTINUE");
-            lcd.turnOff();
             state = ESTADO_BLOQUEADO_ESPERANDO_VISITA;
         }
         break;
@@ -267,3 +266,4 @@ void showActualState(String strState, String strEvent)
     Serial.println("Evento: " + String(strEvent));
     Serial.println("-----------------------------------------------------");
 }
+

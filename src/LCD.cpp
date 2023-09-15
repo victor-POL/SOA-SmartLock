@@ -37,8 +37,6 @@ public:
     void setup()
     {
         this->screen.init();
-        this->screen.backlight();
-        this->screen.clear();
     }
     
     // Input Pass Screen
