@@ -22,12 +22,23 @@ int event;
 bool timeout;
 long lastCurrentTime;
 
-void showActualState(String strState, String strEvent)
+void doInit()
 {
-    Serial.println("-----------------------------------------------------");
-    Serial.println("Estado: " + String(strState));
-    Serial.println("Evento: " + String(strEvent));
-    Serial.println("-----------------------------------------------------");
+    Serial.begin(115200);
+
+    entranceDoor.setup();
+    entranceSensor.setup();
+    doorSensor.setup();
+    
+    buzzer.setup();
+    light.setup();
+    lcd.setup();
+
+    state = ESTADO_CERRADURA_INIT;
+    event = EVENTO_CONTINUE;
+
+    timeout = false;
+    lastCurrentTime = millis();
 }
 
 void generateEvent()
@@ -50,22 +61,7 @@ void generateEvent()
     event = EVENTO_CONTINUE;
 }
 
-void setup()
-{
-    Serial.begin(115200);
-    entranceDoor.setup();
-    lcd.setup();
-    entranceSensor.setup();
-    doorSensor.setup();
-    light.setup();
-    buzzer.setup();
-    state = ESTADO_CERRADURA_INIT;
-    event = EVENTO_CONTINUE;
-    timeout = false;
-    lastCurrentTime = millis();
-}
-
-void loop()
+void stateMachine()
 {
     generateEvent();
 
@@ -252,6 +248,22 @@ void loop()
     }
 
     event = EVENTO_CONTINUE;
+}
 
-    delay(10);
+void setup()
+{
+    doInit();
+}
+
+void loop()
+{
+    stateMachine();
+}
+
+void showActualState(String strState, String strEvent)
+{
+    Serial.println("-----------------------------------------------------");
+    Serial.println("Estado: " + String(strState));
+    Serial.println("Evento: " + String(strEvent));
+    Serial.println("-----------------------------------------------------");
 }
