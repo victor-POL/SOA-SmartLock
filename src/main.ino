@@ -28,7 +28,7 @@ void doInit()
     entranceDoor.setup();
     entranceSensor.setup();
     doorSensor.setup();
-    
+
     buzzer.setup();
     light.setup();
     lcd.setup();
@@ -87,9 +87,8 @@ void stateMachine()
         case EVENTO_PERSONA_DETECTADA_DIA:
         {
             showActualState("ESTADO_BLOQUEADO_ESPERANDO_VISITA", "EVENTO_PERSONA_DETECTADA_DIA");
-            lcd.turnOn();
-            lcd.resetInputPassScreen();
-            light.turnOff();
+            initializeScreenToInputPassword();
+            turnOffEntranceLight();
             state = ESTADO_ESPERANDO_INGRESO_CONTRASENA;
         }
         break;
@@ -97,9 +96,8 @@ void stateMachine()
         case EVENTO_PERSONA_DETECTADA_NOCHE:
         {
             showActualState("ESTADO_BLOQUEADO_ESPERANDO_VISITA", "EVENTO_PERSONA_DETECTADA_NOCHE");
-            lcd.turnOn();
-            lcd.resetInputPassScreen();
-            light.turnOn();
+            initializeScreenToInputPassword();
+            turnOnEntranceLight();
             state = ESTADO_ESPERANDO_INGRESO_CONTRASENA;
         }
         break;
@@ -127,9 +125,9 @@ void stateMachine()
         case EVENTO_PERSONA_NO_DETECTADA:
         {
             showActualState("ESTADO_ESPERANDO_INGRESO_CONTRASENA", "EVENTO_PERSONA_NO_DETECTADA");
-            lcd.turnOff();
-            light.turnOff();
-            doorLock.resetPassEntered();
+            shutdownScreen();
+            turnOffEntranceLight();
+            clearPassEnteredIntoLock();
             state = ESTADO_BLOQUEADO_ESPERANDO_VISITA;
         }
         break;
@@ -137,32 +135,18 @@ void stateMachine()
         case EVENTO_VALIDAR_CLAVE:
         {
             showActualState("ESTADO_ESPERANDO_INGRESO_CONTRASENA", "EVENTO_VALIDAR_CLAVE");
-            buzzer.activateKeyPressedSound();
-            doorLock.changeUnlockInProgress(true);
+            reproduceKeyPressedSoundInBuzzer();
+            startPasswordValidation();
             state = ESTADO_VALIDACION_CLAVE;
-        }
-        break;
-
-        case EVENTO_PERSONA_DETECTADA_DIA:
-        {
-            showActualState("ESTADO_ESPERANDO_INGRESO_CONTRASENA", "EVENTO_PERSONA_DETECTADA_DIA");
-            state = ESTADO_ESPERANDO_INGRESO_CONTRASENA;
-        }
-        break;
-
-        case EVENTO_PERSONA_DETECTADA_NOCHE:
-        {
-            showActualState("ESTADO_ESPERANDO_INGRESO_CONTRASENA", "EVENTO_PERSONA_DETECTADA_NOCHE");
-            state = ESTADO_ESPERANDO_INGRESO_CONTRASENA;
         }
         break;
 
         case EVENTO_CARACTER_INGRESADO:
         {
             showActualState("ESTADO_ESPERANDO_INGRESO_CONTRASENA", "EVENTO_CARACTER_INGRESADO");
-            buzzer.activateKeyPressedSound();
-            doorLock.loadCharacter(keypad.getLastKeyPressed());
-            lcd.showKeyPressed(keypad.getLastKeyPressed());
+            reproduceKeyPressedSoundInBuzzer();
+            showPasswordCharPressedOnScreen();
+            loadPasswordCharPressedIntoLock();
             state = ESTADO_ESPERANDO_INGRESO_CONTRASENA;
         }
         break;
@@ -170,9 +154,25 @@ void stateMachine()
         case EVENTO_CLEAR_CLAVE_INGRESADA:
         {
             showActualState("ESTADO_ESPERANDO_INGRESO_CONTRASENA", "EVENTO_CLEAR_CLAVE_INGRESADA");
-            buzzer.activateKeyPressedSound();
-            lcd.resetInputPassScreen();
-            doorLock.resetPassEntered();
+            reproduceKeyPressedSoundInBuzzer();
+            clearPassEnteredOnScreen();
+            clearPassEnteredIntoLock();
+            state = ESTADO_ESPERANDO_INGRESO_CONTRASENA;
+        }
+        break;
+
+        case EVENTO_PERSONA_DETECTADA_DIA:
+        {
+            showActualState("ESTADO_ESPERANDO_INGRESO_CONTRASENA", "EVENTO_PERSONA_DETECTADA_DIA");
+            turnOffEntranceLight();
+            state = ESTADO_ESPERANDO_INGRESO_CONTRASENA;
+        }
+        break;
+
+        case EVENTO_PERSONA_DETECTADA_NOCHE:
+        {
+            showActualState("ESTADO_ESPERANDO_INGRESO_CONTRASENA", "EVENTO_PERSONA_DETECTADA_NOCHE");
+            turnOnEntranceLight();
             state = ESTADO_ESPERANDO_INGRESO_CONTRASENA;
         }
         break;
@@ -193,8 +193,6 @@ void stateMachine()
         case EVENTO_TIMEOUT_VALIDACION_CLAVE:
         {
             showActualState("ESTADO_VALIDACION_CLAVE", "EVENTO_TIMEOUT");
-            lcd.showTimeoutMessage();
-            buzzer.activateErrorSound();
             state = ESTADO_ESPERANDO_INGRESO_CONTRASENA;
         }
         break;
@@ -202,9 +200,10 @@ void stateMachine()
         case EVENTO_CLAVE_VALIDA:
         {
             showActualState("ESTADO_VALIDACION_CLAVE", "EVENTO_CLAVE_VALIDA");
-            lcd.showValidPassMessage();
-            buzzer.activateSuccessSound();
-            entranceDoor.unlock();
+            reproduceValidPassSoundInBuzzer();
+            unlockEntranceDoor();
+            showValidPassMessageOnScreen();
+            clearPassEnteredIntoLock();
             state = ESTADO_ESPERANDO_APERTURA_PUERTA;
         }
         break;
@@ -212,10 +211,9 @@ void stateMachine()
         case EVENTO_CLAVE_INVALIDA:
         {
             showActualState("ESTADO_VALIDACION_CLAVE", "EVENTO_CLAVE_INVALIDA");
-            lcd.showInvalidPassMessage();
-            buzzer.activateErrorSound();
-            lcd.resetInputPassScreen();
-            doorLock.resetPassEntered();
+            reproduceInvalidPassSoundInBuzzer();
+            clearPassEnteredOnScreen();
+            clearPassEnteredIntoLock();
             state = ESTADO_ESPERANDO_INGRESO_CONTRASENA;
         }
         break;
@@ -236,9 +234,8 @@ void stateMachine()
         case TIMEOUT_APERTURA_PUERTA:
         {
             showActualState("ESTADO_ESPERANDO_ENTRADA_PERSONA", "TIMEOUT_APERTURA_PUERTA");
-            entranceDoor.lock();
-            lcd.resetInputPassScreen();
-            doorLock.lock();
+            lockEntranceDoor();
+            initializeScreenToInputPassword();
             state = ESTADO_ESPERANDO_INGRESO_CONTRASENA;
         }
         break;
@@ -282,4 +279,89 @@ void showActualState(String strState, String strEvent)
     Serial.println("Estado: " + String(strState));
     Serial.println("Evento: " + String(strEvent));
     Serial.println("-----------------------------------------------------");
+}
+
+void initializeScreenToInputPassword()
+{
+    lcd.turnOn();
+    lcd.loadInputPassScreen();
+}
+
+void clearPassEnteredOnScreen()
+{
+    lcd.resetInputPassScreen();
+}
+
+void showPasswordCharPressedOnScreen()
+{
+    lcd.showKeyPressed(keypad.getLastKeyPressed());
+}
+
+void showValidPassMessageOnScreen()
+{
+    lcd.clear();
+    lcd.showMessaggeInLine(0, "Clave correcta");
+    lcd.showMessaggeInLine(1, "Puerta abierta");
+}
+
+void shutdownScreen()
+{
+    lcd.clear();
+    lcd.turnOff();
+}
+
+void turnOnEntranceLight()
+{
+    if (light.getIsOn() == false)
+    {
+        light.turnOn();
+    }
+}
+
+void turnOffEntranceLight()
+{
+    if (light.getIsOn() == true)
+    {
+        light.turnOff();
+    }
+}
+
+void clearPassEnteredIntoLock()
+{
+    doorLock.resetPassEntered();
+}
+
+void reproduceInvalidPassSoundInBuzzer()
+{
+    buzzer.activateErrorSound();
+}
+
+void reproduceValidPassSoundInBuzzer()
+{
+    buzzer.activateSuccessSound();
+}
+
+void reproduceKeyPressedSoundInBuzzer()
+{
+    buzzer.activateKeyPressedSound();
+}
+
+void startPasswordValidation()
+{
+    doorLock.changeUnlockInProgress(true);
+}
+
+void loadPasswordCharPressedIntoLock()
+{
+    doorLock.loadCharacter(keypad.getLastKeyPressed());
+}
+
+void unlockEntranceDoor()
+{
+    entranceDoor.unlock();
+}
+
+void lockEntranceDoor()
+{
+    entranceDoor.lock();
 }
