@@ -1,8 +1,6 @@
 #include <Arduino.h>
 #include "Component.cpp"
 
-
-
 class Photoresistor : public Component
 {
 private:
@@ -22,7 +20,7 @@ public:
         pinMode(this->pinSelected, INPUT);
     }
 
-    int getLight()
+    int getLuminosity()
     {
         int analogValue = analogRead(this->pinSelected);
         float voltage = analogValue / 1024. * 3.3;

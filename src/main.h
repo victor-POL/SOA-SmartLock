@@ -8,11 +8,9 @@
 #include "UltrasonicEntrance.cpp"
 #include "UltrasonicDoor.cpp"
 #include "Relay.cpp"
-#include "Photoresistor.cpp"
 
 #include "States.h"
 #include "Events.h"
 #include "Connections.h"
 
 #define UMBRAL_DIFERENCIA_TIMEOUT 50
-#define UMBRAL_LUZ_APAGADA 1000

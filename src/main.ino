@@ -3,7 +3,6 @@
 // Sensors
 UltrasonicEntrance entranceSensor = UltrasonicEntrance(ENTRANCE_SENSOR_TRIGGER_PIN, ENTRANCE_SENSOR_ECHO_PIN);
 UltrasonicDoor doorSensor = UltrasonicDoor(DOOR_SENSOR_TRIGGER_PIN, DOOR_SENSOR_ECHO_PIN);
-Photoresistor lightSensor = Photoresistor(PHOTORESISTOR_PIN);
 KeyPad keypad = KeyPad();
 
 // Actuators
@@ -85,11 +84,22 @@ void stateMachine()
     {
         switch (event)
         {
-        case EVENTO_PERSONA_DETECTADA:
+        case EVENTO_PERSONA_DETECTADA_DIA:
         {
-            showActualState("ESTADO_BLOQUEADO_ESPERANDO_VISITA", "EVENTO_PERSONA_DETECTADA");
+            showActualState("ESTADO_BLOQUEADO_ESPERANDO_VISITA", "EVENTO_PERSONA_DETECTADA_DIA");
             lcd.turnOn();
             lcd.resetInputPassScreen();
+            light.turnOff();
+            state = ESTADO_ESPERANDO_INGRESO_CONTRASENA;
+        }
+        break;
+
+        case EVENTO_PERSONA_DETECTADA_NOCHE:
+        {
+            showActualState("ESTADO_BLOQUEADO_ESPERANDO_VISITA", "EVENTO_PERSONA_DETECTADA_NOCHE");
+            lcd.turnOn();
+            lcd.resetInputPassScreen();
+            light.turnOn();
             state = ESTADO_ESPERANDO_INGRESO_CONTRASENA;
         }
         break;
@@ -133,9 +143,16 @@ void stateMachine()
         }
         break;
 
-        case EVENTO_PERSONA_DETECTADA:
+        case EVENTO_PERSONA_DETECTADA_DIA:
         {
-            showActualState("ESTADO_ESPERANDO_INGRESO_CONTRASENA", "EVENTO_PERSONA_DETECTADA");
+            showActualState("ESTADO_ESPERANDO_INGRESO_CONTRASENA", "EVENTO_PERSONA_DETECTADA_DIA");
+            state = ESTADO_ESPERANDO_INGRESO_CONTRASENA;
+        }
+        break;
+
+        case EVENTO_PERSONA_DETECTADA_NOCHE:
+        {
+            showActualState("ESTADO_ESPERANDO_INGRESO_CONTRASENA", "EVENTO_PERSONA_DETECTADA_NOCHE");
             state = ESTADO_ESPERANDO_INGRESO_CONTRASENA;
         }
         break;
@@ -266,4 +283,3 @@ void showActualState(String strState, String strEvent)
     Serial.println("Evento: " + String(strEvent));
     Serial.println("-----------------------------------------------------");
 }
-
