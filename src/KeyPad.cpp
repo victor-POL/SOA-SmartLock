@@ -2,54 +2,50 @@
 #include <Keypad.h>
 #include "States.h"
 #include "Events.h"
+#include "Connections.h"
 
 #define NO_PRESSED_KEY 0
 #define KEY_CLEAR '*'
 #define KEY_ENTER '#'
 #define ROWS_KEYPAD 4
 #define COLS_KEYPAD 4
+#define KEYS_ROW_1 '1', '2', '3', 'A'
+#define KEYS_ROW_2 '4', '5', '6', 'B'
+#define KEYS_ROW_3 '7', '8', '9', 'C'
+#define KEYS_ROW_4 '*', '0', '#', 'D'
 
 extern int event;
 
 class KeyPad
 {
 private:
-    Keypad keypad = Keypad(makeKeymap(keys), rowPins, columnPins, ROWS_KEYPAD, COLS_KEYPAD);
+    Keypad keypad;
 
     char keys[ROWS_KEYPAD][COLS_KEYPAD] = {
-        {'1',
-         '2',
-         '3',
-         'A'},
-        {'4',
-         '5',
-         '6',
-         'B'},
-        {'7',
-         '8',
-         '9',
-         'C'},
-        {'*',
-         '0',
-         '#',
-         'D'}};
+        {KEYS_ROW_1},
+        {KEYS_ROW_2},
+        {KEYS_ROW_3},
+        {KEYS_ROW_4}};
 
-   uint8_t rowPins[ROWS_KEYPAD] = {
-        13,
-        14,
-        12,
-        17};
+    uint8_t rowPins[ROWS_KEYPAD] = {
+        KEYPAD_ROW_1_PIN,
+        KEYPAD_ROW_2_PIN,
+        KEYPAD_ROW_3_PIN,
+        KEYPAD_ROW_4_PIN,
+    };
     uint8_t columnPins[COLS_KEYPAD] = {
-        16,
-        4,
-        2,
-        15}; 
+        KEYPAD_COLUMN_1_PIN,
+        KEYPAD_COLUMN_2_PIN,
+        KEYPAD_COLUMN_3_PIN,
+        KEYPAD_COLUMN_4_PIN,
+    };
 
-    char lastKeyPressed = NO_PRESSED_KEY;
+    char lastKeyPressed;
 
 public:
-    KeyPad()
+    KeyPad() : keypad(makeKeymap(keys), rowPins, columnPins, ROWS_KEYPAD, COLS_KEYPAD)
     {
+        this->lastKeyPressed = NO_PRESSED_KEY;
     }
 
     char getPressedKey()
@@ -61,26 +57,27 @@ public:
     {
         char actualPressedKey = getPressedKey();
 
-        if(actualPressedKey != NO_PRESSED_KEY)
+        if (actualPressedKey != NO_PRESSED_KEY)
         {
             lastKeyPressed = actualPressedKey;
 
-            switch(actualPressedKey)
+            switch (actualPressedKey)
             {
-                case KEY_CLEAR:
-                    event = EVENTO_CLEAR_CLAVE_INGRESADA;
-                    break;
-                case KEY_ENTER:
-                    event = EVENTO_VALIDAR_CLAVE;
-                    break;
-                default:
-                    event = EVENTO_CARACTER_INGRESADO;
+            case KEY_CLEAR:
+                event = EVENTO_CLEAR_CLAVE_INGRESADA;
+                break;
+            case KEY_ENTER:
+                event = EVENTO_VALIDAR_CLAVE;
+                break;
+            default:
+                event = EVENTO_CARACTER_INGRESADO;
             }
 
             return true;
         }
 
-        return false;;
+        return false;
+        ;
     }
 
     char getLastKeyPressed()

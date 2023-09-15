@@ -4,6 +4,7 @@
 #include <Arduino.h>
 #include "States.h"
 #include "Events.h"
+#include "Connections.h"
 
 #define UMBRAL_PERSONA_DETECTADA 50
 #define UMBRAL_PUERTA_ABIERTA 20
@@ -15,14 +16,14 @@ class Ultrasonic
 protected:
     int triggerPinSelected;
     int echoPinSelected;
-
     int previousDistance;
 
 public:
     Ultrasonic(int echoPin, int triggerPrin)
     {
-        triggerPinSelected = echoPin;
-        echoPinSelected = triggerPrin;
+        this->triggerPinSelected = echoPin;
+        this->echoPinSelected = triggerPrin;
+        this->previousDistance = 0;
     }
 
     void setup()

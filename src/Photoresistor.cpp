@@ -1,8 +1,9 @@
 #include <Arduino.h>
+#include "Component.cpp"
 
-#define LIGHT_SEN_PIN 39
 
-class Photoresistor
+
+class Photoresistor : public Component
 {
 private:
     const float GAMMA = 0.7;
@@ -11,21 +12,22 @@ private:
     float previousLux;
 
 public:
-    Photoresistor()
+    Photoresistor(int pinSelected) : Component(pinSelected)
     {
+        this->previousLux = 0;
     }
 
     void setup()
     {
-        pinMode(LIGHT_SEN_PIN, INPUT);
+        pinMode(this->pinSelected, INPUT);
     }
 
     int getLight()
     {
-        int analogValue = analogRead(LIGHT_SEN_PIN);
+        int analogValue = analogRead(this->pinSelected);
         float voltage = analogValue / 1024. * 3.3;
         float resistance = 5000 * voltage / (1 - voltage / 3.3);
-        float lux = pow(RL10 * 1e3 * pow(10, GAMMA) / resistance, (1 / GAMMA));
+        float lux = pow(RL10 * 1e3 * pow(10, this->GAMMA) / resistance, (1 / this->GAMMA));
         return lux;
     }
 };

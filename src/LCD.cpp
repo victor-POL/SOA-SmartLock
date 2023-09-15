@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include <LiquidCrystal_I2C.h>
 #include <string>
+#include "Connections.h"
 
 #define MAX_LCD_LENGTH 16
 #define CURSOR_INTERVAL 500
@@ -9,20 +10,20 @@
 class LCD
 {
 private:
-    LiquidCrystal_I2C screen = LiquidCrystal_I2C(0x27, 16, 2);
+    LiquidCrystal_I2C screen;
 
     int cursorPos;
     bool cursorVisible;
     unsigned long previousMillis;
     static LCD* instance;
-
-    LCD()
+    
+    LCD() : screen(LCD_ADDRESS, LCD_COLUMNS, LCD_ROWS)
     {
         this->cursorPos = 0;
         this->cursorVisible = true;
         this->previousMillis = 0;
     }
-
+    
 public:
     static LCD* getInstance()
     {

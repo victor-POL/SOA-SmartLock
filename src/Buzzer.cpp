@@ -1,11 +1,10 @@
 #include <Arduino.h>
+#include "Component.cpp"
 
-#define BUZZER_PIN 27
-
-#define BUZZER_KEY_STATUS 10
-#define BUZZER_SUCCESS_STATUS 11
-#define BUZZER_FAIL_STATUS 12
-#define BUZZER_NO_SOUND_STATUS 13
+#define STATUS_KEY_SOUND 10
+#define STATUS_SUCESS_SOUND 11
+#define STATUS_FAIL_SOUND 12
+#define STATUS_NO_SOUND 13
 
 #define BUZZER_KEY_DURATION 15
 #define BUZZER_SUCCESS_DURATION 3000
@@ -19,7 +18,7 @@
 #define BUZZER_RESOLUTION 8
 #define BUZZER_FREQUENCY 2000
 
-class Buzzer
+class Buzzer : public Component
 {
 private:
     int status;
@@ -38,13 +37,13 @@ private:
 
         switch(status)
         {
-            case BUZZER_KEY_STATUS:
+            case STATUS_KEY_SOUND:
                 limit = BUZZER_KEY_DURATION;
                 break;
-            case BUZZER_SUCCESS_STATUS:
+            case STATUS_SUCESS_SOUND:
                 limit = BUZZER_SUCCESS_DURATION;
                 break;
-            case BUZZER_FAIL_STATUS:
+            case STATUS_FAIL_SOUND:
                 limit = BUZZER_FAIL_DURATION;
                 break;
         }
@@ -53,51 +52,51 @@ private:
     }
 
 public:
-    Buzzer()
+    Buzzer(int pinSelected) : Component(pinSelected)
     {
-        status = -1;
-        timeSoundActivated = 0;
+        this->status = STATUS_NO_SOUND;
+        this->timeSoundActivated = 0;
     }
 
     void setup()
     {
         ledcSetup(BUZZER_CHANNEL, BUZZER_FREQUENCY, BUZZER_RESOLUTION);
-        ledcAttachPin(BUZZER_PIN, BUZZER_CHANNEL);
+        ledcAttachPin(this->pinSelected, BUZZER_CHANNEL);
     }
 
     void activateSuccessSound()
     {
-        status = BUZZER_SUCCESS_STATUS;
+        this->status = STATUS_SUCESS_SOUND;
         startTimer();
         ledcWriteTone(BUZZER_CHANNEL, BUZZER_SUCCESS_FREQ);
     }
 
     void activateErrorSound()
     {
-        status = BUZZER_FAIL_STATUS;
+        this->status = STATUS_FAIL_SOUND;
         startTimer();
         ledcWriteTone(BUZZER_CHANNEL, BUZZER_FAIL_FREQ);
     }
 
     void activateKeyPressedSound()
     {
-        status = BUZZER_KEY_STATUS;
+        this->status = STATUS_KEY_SOUND;
         startTimer();
         ledcWriteTone(BUZZER_CHANNEL, BUZZER_KEY_FREQ);
     }
 
     void deactivateSound()
     {
-        status = -1;
+        this->status = STATUS_NO_SOUND;
         ledcWriteTone(BUZZER_CHANNEL, 0);
     }
 
     bool checkStatus()
     {
-        if (status != BUZZER_NO_SOUND_STATUS && reachedTimeout() == true)
+        if (status != STATUS_NO_SOUND && reachedTimeout() == true)
         {
             deactivateSound();
-            status = BUZZER_NO_SOUND_STATUS;
+            status = STATUS_NO_SOUND;
             return true;
         }
 

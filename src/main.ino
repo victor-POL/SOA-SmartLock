@@ -1,16 +1,22 @@
 #include "main.h"
 
+// Sensors
+UltrasonicEntrance entranceSensor = UltrasonicEntrance(ENTRANCE_SENSOR_TRIGGER_PIN, ENTRANCE_SENSOR_ECHO_PIN);
+UltrasonicDoor doorSensor = UltrasonicDoor(DOOR_SENSOR_TRIGGER_PIN, DOOR_SENSOR_ECHO_PIN);
+Photoresistor lightSensor = Photoresistor(PHOTORESISTOR_PIN);
+KeyPad keypad = KeyPad();
+
+// Actuators
+MyServo entranceDoor = MyServo(SERVO_PIN);
+Buzzer buzzer = Buzzer(BUZZER_PIN);
+Relay light = Relay(RELAY_PIN);
 LCD *LCD::instance = NULL;
 LCD lcd = *LCD::getInstance();
-UltrasonicEntrance entranceSensor = UltrasonicEntrance(TRIGGER_PIN_SENSOR_1, ECHO_PIN_SENSOR_1);
-UltrasonicDoor doorSensor = UltrasonicDoor(TRIGGER_PIN_SENSOR_2, ECHO_PIN_SENSOR_2);
-Relay light = Relay();
-Photoresistor lightSensor = Photoresistor();
-KeyPad keypad = KeyPad();
-Lock doorLock = Lock();
-MyServo entranceDoor = MyServo();
-Buzzer buzzer = Buzzer();
 
+// Lock
+Lock doorLock = Lock();
+
+// Global
 int state;
 int event;
 bool timeout;

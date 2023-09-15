@@ -1,21 +1,21 @@
 #include <Arduino.h>
 #include <ESP32Servo.h>
+#include "Component.cpp"
 
-#define SERVO_PIN 26
-
-class MyServo
+class MyServo : public Component
 {
 private:
-    Servo servo = Servo();
+    Servo servo;
 
 public:
-    MyServo()
+    MyServo(int pinSelected) : Component(pinSelected)
     {
+        this->servo = Servo();
     }
 
     void setup()
     {
-        this->servo.attach(SERVO_PIN, 500, 2500);
+        this->servo.attach(this->pinSelected, 500, 2500);
         this->servo.write(0);
     }
 

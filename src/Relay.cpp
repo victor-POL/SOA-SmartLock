@@ -1,31 +1,31 @@
 #include <Arduino.h>
-#define RELAY_PIN 25
+#include "Component.cpp"
 
-class Relay
+class Relay : public Component
 {
 private:
     bool isOn;
 public:
-    Relay()
+    Relay(int pinSelected) : Component(pinSelected)
     {
         this->isOn = false;
     }
 
     void setup()
     {
-        pinMode(RELAY_PIN, OUTPUT);
+        pinMode(this->pinSelected, OUTPUT);
     }
 
     void turnOn()
     {
-        isOn = true;;
-        digitalWrite(RELAY_PIN, HIGH);
+        this->isOn = true;
+        digitalWrite(this->pinSelected, HIGH);
     }
 
     void turnOff()
     {
-        isOn = false;
-        digitalWrite(RELAY_PIN, LOW);
+        this->isOn = false;
+        digitalWrite(this->pinSelected, LOW);
     }
 
     bool getIsOn()

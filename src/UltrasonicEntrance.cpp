@@ -3,7 +3,10 @@
 class UltrasonicEntrance : public Ultrasonic
 {
 public:
-    UltrasonicEntrance(int triggerPin, int echoPin) : Ultrasonic(triggerPin, echoPin) {};
+    UltrasonicEntrance(int triggerPin, int echoPin) : Ultrasonic(triggerPin, echoPin) 
+    {
+        
+    }
 
     bool checkStatus()
     {
