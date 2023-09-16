@@ -1,8 +1,6 @@
 #include "Ultrasonic.cpp"
 #include "Photoresistor.cpp"
 
-#define UMBRAL_LUX_NOCHE 200
-
 class UltrasonicEntrance : public Ultrasonic
 {
 private:
@@ -17,29 +15,21 @@ public:
     {
         float currentDistance = getDistance();
         float previousDistance = this->previousDistance;
-        int luminosity;
 
         if (currentDistance != previousDistance)
         {
             this->previousDistance = currentDistance;
-            luminosity = photoresistor.getLuminosity();
-
             if (currentDistance > UMBRAL_PERSONA_DETECTADA)
             {
                 event = EVENTO_PERSONA_NO_DETECTADA;
+                return true;
             }
-            else if (luminosity > UMBRAL_LUX_NOCHE)
+            else if (photoresistor.statusChanged() == true)
             {
-                event = EVENTO_PERSONA_DETECTADA_DIA;
+                event = photoresistor.getStatus() == "DAY" ? EVENTO_PERSONA_DETECTADA_DIA : EVENTO_PERSONA_DETECTADA_NOCHE;
+                return true;
             }
-            else
-            {
-                event = EVENTO_PERSONA_DETECTADA_NOCHE;
-            }
-
-            return true;
         }
-
         return false;
     }
 };

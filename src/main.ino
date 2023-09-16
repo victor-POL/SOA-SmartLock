@@ -51,6 +51,9 @@ void generateEvent()
         timeout = false;
         lastCurrentTime = currentTime;
         buzzer.checkStatus();
+        // FIXME: prioritize doorSensor when door is open
+        // BUG: if the door is open and the entrance sensor stops detecting a person, the state will change to ESTADO_BLOQUEADO_ESPERANDO_VISITA
+        // when it should remain in ESTADO_ESPERANDO_CIERRE_PUERTA
         if (entranceSensor.checkStatus() || keypad.checkStatus() || doorLock.checkStatus() || doorSensor.checkStatus())
         {
             return;
@@ -193,6 +196,8 @@ void stateMachine()
         case EVENTO_TIMEOUT_VALIDACION_CLAVE:
         {
             showActualState("ESTADO_VALIDACION_CLAVE", "EVENTO_TIMEOUT");
+            // there may be an issue reading NFC card
+            lcd.showMessageFullScreen("Error validando clave");
             state = ESTADO_ESPERANDO_INGRESO_CONTRASENA;
         }
         break;
@@ -231,11 +236,23 @@ void stateMachine()
     {
         switch (event)
         {
-        case TIMEOUT_APERTURA_PUERTA:
+        case EVENTO_PERSONA_NO_DETECTADA:
+        {
+            showActualState("ESTADO_ESPERANDO_APERTURA_PUERTA", "EVENTO_PERSONA_NO_DETECTADA");
+            shutdownScreen();
+            turnOffEntranceLight();
+            clearPassEnteredIntoLock();
+            lockEntranceDoor();
+            state = ESTADO_BLOQUEADO_ESPERANDO_VISITA;
+        }
+        break;
+
+        case EVENTO_TIMEOUT_APERTURA_PUERTA:
         {
             showActualState("ESTADO_ESPERANDO_ENTRADA_PERSONA", "TIMEOUT_APERTURA_PUERTA");
             lockEntranceDoor();
             initializeScreenToInputPassword();
+            reproduceInvalidPassSoundInBuzzer();
             state = ESTADO_ESPERANDO_INGRESO_CONTRASENA;
         }
         break;
@@ -243,6 +260,7 @@ void stateMachine()
         case EVENTO_PUERTA_ABIERTA:
         {
             showActualState("ESTADO_ESPERANDO_ENTRADA_PERSONA", "EVENTO_PUERTA_ABIERTA");
+            lcd.showMessageFullScreen("Puerta abierta - Pase");
             state = ESTADO_ESPERANDO_ENTRADA_PERSONA;
         }
         break;
@@ -265,16 +283,51 @@ void stateMachine()
             shutdownScreen();
             turnOffEntranceLight();
             clearPassEnteredIntoLock();
+            state = ESTADO_ESPERANDO_CIERRE_PUERTA;
+        }
+        break;
+        case EVENTO_PUERTA_CERRADA:
+        {
+            showActualState("ESTADO_ESPERANDO_ENTRADA_PERSONA", "EVENTO_PUERTA_CERRADA");
+            shutdownScreen();
+            turnOffEntranceLight();
+            clearPassEnteredIntoLock();
             lockEntranceDoor();
             state = ESTADO_BLOQUEADO_ESPERANDO_VISITA;
         }
         break;
-        case EVENTO_TIMEOUT_APERTURA_PUERTA:
+
+        case EVENTO_CONTINUE:
         {
-            showActualState("ESTADO_ESPERANDO_ENTRADA_PERSONA", "EVENTO_TIMEOUT_APERTURA_PUERTA");
+            state = ESTADO_ESPERANDO_ENTRADA_PERSONA;
+        }
+        break;
+        }
+    break;
+
+    case ESTADO_ESPERANDO_CIERRE_PUERTA:
+        switch (event)
+        {
+        case EVENTO_PUERTA_CERRADA:
+        {
+            showActualState("ESTADO_ESPERANDO_CIERRE_PUERTA", "EVENTO_PUERTA_CERRADA");
+            shutdownScreen();
+            turnOffEntranceLight();
+            clearPassEnteredIntoLock();
             lockEntranceDoor();
-            initializeScreenToInputPassword();
-            state = ESTADO_ESPERANDO_INGRESO_CONTRASENA;
+            state = ESTADO_BLOQUEADO_ESPERANDO_VISITA;
+        }
+        break;
+        case EVENTO_PERSONA_NO_DETECTADA:
+        {
+            showActualState("ESTADO_ESPERANDO_CIERRE_PUERTA", "EVENTO_PERSONA_NO_DETECTADA");
+            state = ESTADO_ESPERANDO_CIERRE_PUERTA;
+        }
+        break;
+
+        case EVENTO_CONTINUE:
+        {
+            state = ESTADO_ESPERANDO_CIERRE_PUERTA;
         }
         break;
         }

@@ -95,7 +95,7 @@ public:
         }
         else if (isLocked == false && reachedTimeout())
         {
-            event = TIMEOUT_APERTURA_PUERTA;
+            event = EVENTO_TIMEOUT_APERTURA_PUERTA;
             return true;
         }
 

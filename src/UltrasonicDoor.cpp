@@ -2,16 +2,19 @@
 
 class UltrasonicDoor : public Ultrasonic
 {
+private:
+    bool doorOpen;
+
 public:
     UltrasonicDoor(int triggerPin, int echoPin) : Ultrasonic(triggerPin, echoPin)
     {
-        
+        doorOpen = false;
     }
 
     bool isDoorOpen()
     {
         float currentDistance = getDistance();
-        float previousDistance = this->previousDistance;
+        this->previousDistance = currentDistance;
         if (currentDistance > UMBRAL_PUERTA_ABIERTA)
         {
             return true;
@@ -25,8 +28,18 @@ public:
         float previousDistance = this->previousDistance;
         if (currentDistance != previousDistance)
         {
-            event = isDoorOpen() ? EVENTO_PUERTA_ABIERTA : event;
-            return true;
+            if (isDoorOpen() && !doorOpen)
+            {
+                doorOpen = true;
+                event = EVENTO_PUERTA_ABIERTA;
+                return true;
+            }
+            else if (!isDoorOpen() && doorOpen)
+            {
+                doorOpen = false;
+                event = EVENTO_PUERTA_CERRADA;
+                return true;
+            }
         }
         return false;
     }
