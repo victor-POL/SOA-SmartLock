@@ -257,7 +257,28 @@ void stateMachine()
     break;
 
     case ESTADO_ESPERANDO_ENTRADA_PERSONA:
+        switch (event)
+        {
+        case EVENTO_PERSONA_NO_DETECTADA:
+        {
+            showActualState("ESTADO_ESPERANDO_ENTRADA_PERSONA", "EVENTO_PERSONA_NO_DETECTADA");
+            shutdownScreen();
+            turnOffEntranceLight();
+            clearPassEnteredIntoLock();
+            lockEntranceDoor();
+            state = ESTADO_BLOQUEADO_ESPERANDO_VISITA;
+        }
         break;
+        case EVENTO_TIMEOUT_APERTURA_PUERTA:
+        {
+            showActualState("ESTADO_ESPERANDO_ENTRADA_PERSONA", "EVENTO_TIMEOUT_APERTURA_PUERTA");
+            lockEntranceDoor();
+            initializeScreenToInputPassword();
+            state = ESTADO_ESPERANDO_INGRESO_CONTRASENA;
+        }
+        break;
+        }
+    break;
     }
 
     event = EVENTO_CONTINUE;

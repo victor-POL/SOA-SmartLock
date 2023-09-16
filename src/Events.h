@@ -12,3 +12,4 @@
 #define TIMEOUT_APERTURA_PUERTA                     1010
 #define EVENTO_PUERTA_ABIERTA                       1011
 #define EVENTO_PUERTA_CERRADA                       1012
+#define EVENTO_TIMEOUT_APERTURA_PUERTA              1013
