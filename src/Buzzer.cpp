@@ -7,8 +7,8 @@
 #define STATUS_NO_SOUND 13
 
 #define BUZZER_KEY_DURATION 15
-#define BUZZER_SUCCESS_DURATION 3000
-#define BUZZER_FAIL_DURATION 3000
+#define BUZZER_SUCCESS_DURATION 1000
+#define BUZZER_FAIL_DURATION 2000
 
 #define BUZZER_SUCCESS_FREQ 800
 #define BUZZER_FAIL_FREQ 200
@@ -35,17 +35,17 @@ private:
         int timeElapsed = currentTime - timeSoundActivated;
         int limit = 0;
 
-        switch(status)
+        switch (status)
         {
-            case STATUS_KEY_SOUND:
-                limit = BUZZER_KEY_DURATION;
-                break;
-            case STATUS_SUCESS_SOUND:
-                limit = BUZZER_SUCCESS_DURATION;
-                break;
-            case STATUS_FAIL_SOUND:
-                limit = BUZZER_FAIL_DURATION;
-                break;
+        case STATUS_KEY_SOUND:
+            limit = BUZZER_KEY_DURATION;
+            break;
+        case STATUS_SUCESS_SOUND:
+            limit = BUZZER_SUCCESS_DURATION;
+            break;
+        case STATUS_FAIL_SOUND:
+            limit = BUZZER_FAIL_DURATION;
+            break;
         }
 
         return timeElapsed > limit;

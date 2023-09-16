@@ -303,7 +303,7 @@ void stateMachine()
         }
         break;
         }
-    break;
+        break;
 
     case ESTADO_ESPERANDO_CIERRE_PUERTA:
         switch (event)
@@ -324,14 +324,19 @@ void stateMachine()
             state = ESTADO_ESPERANDO_CIERRE_PUERTA;
         }
         break;
-
+        case EVENTO_TIMEOUT_CIERRE_PUERTA:
+        {
+            showActualState("ESTADO_ESPERANDO_CIERRE_PUERTA", "EVENTO_TIMEOUT_CIERRE_PUERTA");
+            reproduceInvalidPassSoundInBuzzer();
+            state = ESTADO_ESPERANDO_CIERRE_PUERTA;
+        }
+        break;
         case EVENTO_CONTINUE:
         {
             state = ESTADO_ESPERANDO_CIERRE_PUERTA;
         }
         break;
         }
-    break;
     }
 
     event = EVENTO_CONTINUE;
