@@ -258,8 +258,8 @@ void stateMachine()
         case EVENTO_SE_ABRIO_PUERTA:
         {
             showActualState("ESTADO_ESPERANDO_APERTURA_PUERTA", "EVENTO_SE_ABRIO_PUERTA");
-            lcd.showMessageFullScreen("Puerta abierta - Pase");
-            doorLock.setCheckTimeoutPuerta(false);
+            showOpenDoorMessageOnScreen();
+            cancelDoorOpenTimer();
             state = ESTADO_ESPERANDO_ENTRADA_PERSONA;
         }
         break;
@@ -402,4 +402,14 @@ void unlockEntranceDoor()
 void lockEntranceDoor()
 {
     entranceDoor.lock();
+}
+
+void showOpenDoorMessageOnScreen()
+{
+    lcd.showMessageFullScreen("Puerta abierta - Pase");
+}
+
+void cancelDoorOpenTimer()
+{
+    doorLock.changeUnlockInProgress(false);
 }
