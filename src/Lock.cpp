@@ -22,7 +22,6 @@ private:
     void startTimer()
     {
         lastCurrentTime = millis();
-        Serial.println("Timeout puerta " + String(lastCurrentTime/1000));
     }
 
     bool reachedTimeout()
@@ -99,7 +98,6 @@ public:
         }
         else if (isLocked == false && checkTimeoutPuerta == true && reachedTimeout())
         {
-            Serial.println("Timeout puerta " + String(millis()/1000));
             checkTimeoutPuerta = false;
             event = EVENTO_TIMEOUT_APERTURA_PUERTA;
             return true;
