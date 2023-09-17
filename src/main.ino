@@ -195,7 +195,7 @@ void stateMachine()
         {
         case EVENTO_TIMEOUT_VALIDACION_CLAVE:
         {
-            showActualState("ESTADO_VALIDACION_CLAVE", "EVENTO_TIMEOUT");
+            showActualState("ESTADO_VALIDACION_CLAVE", "EVENTO_TIMEOUT_VALIDACION_CLAVE");
             // there may be an issue reading NFC card
             lcd.showMessageFullScreen("Error validando clave");
             state = ESTADO_ESPERANDO_INGRESO_CONTRASENA;
@@ -249,7 +249,7 @@ void stateMachine()
 
         case EVENTO_TIMEOUT_APERTURA_PUERTA:
         {
-            showActualState("ESTADO_ESPERANDO_ENTRADA_PERSONA", "TIMEOUT_APERTURA_PUERTA");
+            showActualState("ESTADO_ESPERANDO_APERTURA_PUERTA", "EVENTO_TIMEOUT_APERTURA_PUERTA");
             lockEntranceDoor();
             initializeScreenToInputPassword();
             reproduceInvalidPassSoundInBuzzer();
@@ -259,7 +259,7 @@ void stateMachine()
 
         case EVENTO_PUERTA_ABIERTA:
         {
-            showActualState("ESTADO_ESPERANDO_ENTRADA_PERSONA", "EVENTO_PUERTA_ABIERTA");
+            showActualState("ESTADO_ESPERANDO_APERTURA_PUERTA", "EVENTO_PUERTA_ABIERTA");
             lcd.showMessageFullScreen("Puerta abierta - Pase");
             state = ESTADO_ESPERANDO_ENTRADA_PERSONA;
         }
