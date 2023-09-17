@@ -296,42 +296,6 @@ void stateMachine()
         }
     }
     break;
-
-    case ESTADO_ESPERANDO_CIERRE_PUERTA:
-    {
-        switch (event)
-        {
-        case EVENTO_PUERTA_CERRADA:
-        {
-            showActualState("ESTADO_ESPERANDO_CIERRE_PUERTA", "EVENTO_PUERTA_CERRADA");
-            shutdownScreen();
-            turnOffEntranceLight();
-            clearPassEnteredIntoLock();
-            lockEntranceDoor();
-            state = ESTADO_BLOQUEADO_ESPERANDO_VISITA;
-        }
-        break;
-        case EVENTO_PERSONA_NO_DETECTADA:
-        {
-            showActualState("ESTADO_ESPERANDO_CIERRE_PUERTA", "EVENTO_PERSONA_NO_DETECTADA");
-            state = ESTADO_ESPERANDO_CIERRE_PUERTA;
-        }
-        break;
-        case EVENTO_TIMEOUT_CIERRE_PUERTA:
-        {
-            showActualState("ESTADO_ESPERANDO_CIERRE_PUERTA", "EVENTO_TIMEOUT_CIERRE_PUERTA");
-            reproduceInvalidPassSoundInBuzzer();
-            state = ESTADO_ESPERANDO_CIERRE_PUERTA;
-        }
-        break;
-        case EVENTO_CONTINUE:
-        {
-            state = ESTADO_ESPERANDO_CIERRE_PUERTA;
-        }
-        break;
-        }
-    }
-    break;
     }
 
     event = EVENTO_CONTINUE;
