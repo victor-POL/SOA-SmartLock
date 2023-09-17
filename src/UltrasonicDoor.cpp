@@ -1,6 +1,6 @@
 #include "Ultrasonic.cpp"
 #define UMBRAL_TIEMPO_PUERTA_ABIERTA 10000
-#define UMBRAL_TIEMPO_PUERTA_CERRADA 15000
+#define UMBRAL_TIEMPO_PUERTA_CERRADA 5000
 #define DOOR_OPEN 1
 #define DOOR_CLOSED 0
 
@@ -9,6 +9,7 @@ class UltrasonicDoor : public Ultrasonic
 private:
     int timeOpened;
     int timeClosed;
+    bool timerClosedActivated;
     bool status;
 
     void startTimerOpened()
@@ -42,36 +43,44 @@ public:
         timeOpened = 0;
         timeClosed = 0;
         status = DOOR_CLOSED;
+        timerClosedActivated = false;
     }
 
     bool checkStatus()
     {
         int currentDistance = getDistance();
         int previousDistance = this->previousDistance;
-        //Serial.println("Se esta validando el sensor de la puerta");
+
+        if (timerClosedActivated == true && reachedTimeoutClosed())
+        {
+            timerClosedActivated = false;
+            status = DOOR_CLOSED;
+            event = EVENTO_SE_CERRO_PUERTA;
+            return true;
+        }
+
         if (currentDistance != previousDistance)
         {
             this->previousDistance = currentDistance;
             bool isDoorDetected = currentDistance < UMBRAL_PUERTA_ABIERTA;
+
             if (isDoorDetected == false && status == DOOR_CLOSED)
             {
-                //Serial.println("Se abrio la puerta");
                 status = DOOR_OPEN;
                 event = EVENTO_SE_ABRIO_PUERTA;
                 return true;
             }
-            else if (isDoorDetected == true && status == DOOR_OPEN)
+            else if (isDoorDetected == false && status == DOOR_OPEN && timerClosedActivated == true)
             {
-                //Serial.println("Se inicio contador puerta cerrada");
+                timerClosedActivated = false;
+            }
+            else if (isDoorDetected == true && status == DOOR_OPEN && timerClosedActivated == false)
+            {
                 startTimerClosed();
+                timerClosedActivated = true;
             }
         }
-        // if (status == DOOR_OPEN && reachedTimeoutOpened())
-        // {
-        //     status = DOOR_CLOSED;
-        //     event = EVENTO_SE_CERRO_PUERTA;
-        //     return true;
-        // }
+
         return false;
     }
 };
