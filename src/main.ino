@@ -275,6 +275,7 @@ void stateMachine()
     break;
 
     case ESTADO_ESPERANDO_ENTRADA_PERSONA:
+    {
         switch (event)
         {
         case EVENTO_PERSONA_NO_DETECTADA:
@@ -286,6 +287,7 @@ void stateMachine()
             state = ESTADO_ESPERANDO_CIERRE_PUERTA;
         }
         break;
+
         case EVENTO_PUERTA_CERRADA:
         {
             showActualState("ESTADO_ESPERANDO_ENTRADA_PERSONA", "EVENTO_PUERTA_CERRADA");
@@ -303,9 +305,11 @@ void stateMachine()
         }
         break;
         }
-        break;
+    }
+    break;
 
     case ESTADO_ESPERANDO_CIERRE_PUERTA:
+    {
         switch (event)
         {
         case EVENTO_PUERTA_CERRADA:
@@ -337,6 +341,8 @@ void stateMachine()
         }
         break;
         }
+    }
+    break;
     }
 
     event = EVENTO_CONTINUE;
