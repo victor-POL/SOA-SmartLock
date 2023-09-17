@@ -51,9 +51,7 @@ void generateEvent()
         timeout = false;
         lastCurrentTime = currentTime;
         buzzer.checkStatus();
-        // FIXME: prioritize doorSensor when door is open
-        // BUG: if the door is open and the entrance sensor stops detecting a person, the state will change to ESTADO_BLOQUEADO_ESPERANDO_VISITA
-        // when it should remain in ESTADO_ESPERANDO_CIERRE_PUERTA
+       
         if (doorLock.checkStatus() || keypad.checkStatus() || doorSensor.checkStatus() || entranceSensor.checkStatus())
         {
             return;
@@ -279,38 +277,22 @@ void stateMachine()
     {
         switch (event)
         {
-            // case EVENTO_PERSONA_NO_DETECTADA:
-            // {
-            //     showActualState("ESTADO_ESPERANDO_ENTRADA_PERSONA", "EVENTO_PERSONA_NO_DETECTADA");
-            //     shutdownScreen();
-            //     turnOffEntranceLight();
-            //     clearPassEnteredIntoLock();
-            //     state = ESTADO_ESPERANDO_CIERRE_PUERTA;
-            // }
-            // break;
-
-            // case EVENTO_PUERTA_CERRADA:
-            // {
-            //     showActualState("ESTADO_ESPERANDO_ENTRADA_PERSONA", "EVENTO_PUERTA_CERRADA");
-            //     shutdownScreen();
-            //     turnOffEntranceLight();
-            //     clearPassEnteredIntoLock();
-            //     lockEntranceDoor();
-            //     state = ESTADO_BLOQUEADO_ESPERANDO_VISITA;
-            // }
-            // break;
+            case EVENTO_SE_CERRO_PUERTA:
+            {
+                showActualState("ESTADO_ESPERANDO_ENTRADA_PERSONA", "EVENTO_SE_CERRO_PUERTA");
+                shutdownScreen();
+                turnOffEntranceLight();
+                clearPassEnteredIntoLock();
+                lockEntranceDoor();
+                state = ESTADO_BLOQUEADO_ESPERANDO_VISITA;
+            }
+            break;
 
         case EVENTO_CONTINUE:
         {
             state = ESTADO_ESPERANDO_ENTRADA_PERSONA;
         }
         break;
-
-        default:
-        {
-            showActualState("ESTADO_ESPERANDO_ENTRADA_PERSONA", "EVENTO DESCONOCIDO" + String(event));
-            state = ESTADO_ESPERANDO_ENTRADA_PERSONA;
-        }
         }
     }
     break;
