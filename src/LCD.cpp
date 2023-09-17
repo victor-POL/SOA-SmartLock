@@ -157,7 +157,7 @@ public:
         return 0;
     }
 
-    void updateInactiveCursor()
+    void updateCursor()
     {
         if (cursorVisible)
         {
