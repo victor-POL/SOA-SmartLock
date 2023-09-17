@@ -24,7 +24,7 @@ public:
                 event = EVENTO_PERSONA_NO_DETECTADA;
                 return true;
             }
-            else if (photoresistor.statusChanged() == true)
+            else
             {
                 event = photoresistor.getStatus() == "DAY" ? EVENTO_PERSONA_DETECTADA_DIA : EVENTO_PERSONA_DETECTADA_NOCHE;
                 return true;
