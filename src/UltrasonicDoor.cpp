@@ -22,13 +22,6 @@ private:
         timeClosed = millis();
     }
 
-    bool reachedTimeoutOpened()
-    {
-        int currentTime = millis();
-        int timeElapsed = currentTime - timeOpened;
-        return timeElapsed > UMBRAL_TIEMPO_PUERTA_ABIERTA;
-    }
-
     bool reachedTimeoutClosed()
     {
         int currentTime = millis();

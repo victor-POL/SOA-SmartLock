@@ -44,16 +44,6 @@ public:
 
         return 0.01723 * pulseIn(echoPinSelected, HIGH);
     }
-
-    float getPreviousDistance()
-    {
-        return previousDistance;
-    }
-
-    void setPreviousDistance(float distance)
-    {
-        previousDistance = distance;
-    }
 };
 
 #endif

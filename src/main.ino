@@ -51,7 +51,7 @@ void generateEvent()
         timeout = false;
         lastCurrentTime = currentTime;
         buzzer.checkStatus();
-       
+
         if (doorLock.checkStatus() || keypad.checkStatus() || doorSensor.checkStatus() || entranceSensor.checkStatus())
         {
             return;
@@ -277,16 +277,16 @@ void stateMachine()
     {
         switch (event)
         {
-            case EVENTO_SE_CERRO_PUERTA:
-            {
-                showActualState("ESTADO_ESPERANDO_ENTRADA_PERSONA", "EVENTO_SE_CERRO_PUERTA");
-                shutdownScreen();
-                turnOffEntranceLight();
-                clearPassEnteredIntoLock();
-                lockEntranceDoor();
-                state = ESTADO_BLOQUEADO_ESPERANDO_VISITA;
-            }
-            break;
+        case EVENTO_SE_CERRO_PUERTA:
+        {
+            showActualState("ESTADO_ESPERANDO_ENTRADA_PERSONA", "EVENTO_SE_CERRO_PUERTA");
+            shutdownScreen();
+            turnOffEntranceLight();
+            clearPassEnteredIntoLock();
+            lockEntranceDoor();
+            state = ESTADO_BLOQUEADO_ESPERANDO_VISITA;
+        }
+        break;
 
         case EVENTO_CONTINUE:
         {

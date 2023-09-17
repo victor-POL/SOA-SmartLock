@@ -15,17 +15,30 @@ private:
     int cursorPos;
     bool cursorVisible;
     unsigned long previousMillis;
-    static LCD* instance;
-    
+    static LCD *instance;
+
     LCD() : screen(LCD_ADDRESS, LCD_COLUMNS, LCD_ROWS)
     {
         this->cursorPos = 0;
         this->cursorVisible = true;
         this->previousMillis = 0;
     }
-    
+
+    int findFirstNotSpace(const String &str)
+    {
+        int length = str.length();
+        for (int i = 0; i < length; i++)
+        {
+            if (!isWhitespace(str.charAt(i)))
+            {
+                return i;
+            }
+        }
+        return -1;
+    }
+
 public:
-    static LCD* getInstance()
+    static LCD *getInstance()
     {
         if (instance == NULL)
         {
@@ -92,7 +105,7 @@ public:
     void showMessaggeInLine(int line, String message)
     {
         int length = message.length();
-        
+
         this->screen.setCursor(0, line);
 
         for (int i = 0; i < MAX_LCD_LENGTH; i++)
@@ -109,7 +122,7 @@ public:
             int lineLength = std::min(MAX_LCD_LENGTH, length - firstNoSpace);
 
             String line = message.substring(firstNoSpace, firstNoSpace + lineLength);
-            
+
             if (line.length() > MAX_LCD_LENGTH)
             {
                 line = line.substring(0, MAX_LCD_LENGTH);
@@ -117,40 +130,6 @@ public:
 
             this->screen.print(line.c_str());
         }
-    }
-
-    void showTimeoutMessage()
-    {
-        this->screen.clear();
-        this->screen.setCursor(0, 0);
-        this->screen.print("Timeout");
-    }
-
-    void showValidPassMessage()
-    {
-        this->screen.clear();
-        this->screen.setCursor(0, 0);
-        this->screen.print("Empuje la puerta");
-    }
-
-    void showInvalidPassMessage()
-    {
-        this->screen.clear();
-        this->screen.setCursor(0, 0);
-        this->screen.print("Clave invalida");
-    }
-
-    int findFirstNotSpace(const String &str)
-    {
-        int length = str.length();
-        for (int i = 0; i < length; i++)
-        {
-            if (!isWhitespace(str.charAt(i)))
-            {
-                return i;
-            }
-        }
-        return -1;
     }
 
     void showKeyPressed(char keyPressed)

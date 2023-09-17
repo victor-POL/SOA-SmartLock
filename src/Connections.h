@@ -13,7 +13,6 @@
 #define KEYPAD_COLUMN_3_PIN 4
 #define KEYPAD_COLUMN_4_PIN 15
 
-
 // Actuators
 #define SERVO_PIN 26
 #define BUZZER_PIN 2
