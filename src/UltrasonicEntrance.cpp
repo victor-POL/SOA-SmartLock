@@ -13,8 +13,8 @@ public:
 
     bool checkStatus()
     {
-        float currentDistance = getDistance();
-        float previousDistance = this->previousDistance;
+        int currentDistance = getDistance();
+        int previousDistance = this->previousDistance;
 
         if (currentDistance != previousDistance)
         {

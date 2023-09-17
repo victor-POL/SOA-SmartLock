@@ -77,7 +77,6 @@ public:
         }
 
         return false;
-        ;
     }
 
     char getLastKeyPressed()

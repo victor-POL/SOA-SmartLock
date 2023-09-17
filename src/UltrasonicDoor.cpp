@@ -1,72 +1,77 @@
 #include "Ultrasonic.cpp"
-#define UMBRAL_TIEMPO_PUERTA_ABIERTA 5000
+#define UMBRAL_TIEMPO_PUERTA_ABIERTA 10000
+#define UMBRAL_TIEMPO_PUERTA_CERRADA 15000
+#define DOOR_OPEN 1
+#define DOOR_CLOSED 0
 
 class UltrasonicDoor : public Ultrasonic
 {
 private:
-    bool doorOpen;
     int timeOpened;
+    int timeClosed;
+    bool status;
 
-    void startTimer()
+    void startTimerOpened()
     {
         timeOpened = millis();
     }
 
-    bool reachedTimeout()
+    void startTimerClosed()
     {
-        if (timeOpened == 0)
-        {
-            return false;
-        }
+        timeClosed = millis();
+    }
+
+    bool reachedTimeoutOpened()
+    {
         int currentTime = millis();
         int timeElapsed = currentTime - timeOpened;
         return timeElapsed > UMBRAL_TIEMPO_PUERTA_ABIERTA;
     }
 
+    bool reachedTimeoutClosed()
+    {
+        int currentTime = millis();
+        int timeElapsed = currentTime - timeClosed;
+        return timeElapsed > UMBRAL_TIEMPO_PUERTA_CERRADA;
+    }
+
 public:
     UltrasonicDoor(int triggerPin, int echoPin) : Ultrasonic(triggerPin, echoPin)
     {
-        doorOpen = false;
+        previousDistance = 0;
         timeOpened = 0;
-    }
-
-    bool isDoorOpen()
-    {
-        float currentDistance = getDistance();
-        this->previousDistance = currentDistance;
-        if (currentDistance > UMBRAL_PUERTA_ABIERTA)
-        {
-            return true;
-        }
-        return false;
+        timeClosed = 0;
+        status = DOOR_CLOSED;
     }
 
     bool checkStatus()
     {
-        float currentDistance = getDistance();
-        float previousDistance = this->previousDistance;
+        int currentDistance = getDistance();
+        int previousDistance = this->previousDistance;
+        //Serial.println("Se esta validando el sensor de la puerta");
         if (currentDistance != previousDistance)
         {
-            if (isDoorOpen() && !doorOpen)
+            this->previousDistance = currentDistance;
+            bool isDoorDetected = currentDistance < UMBRAL_PUERTA_ABIERTA;
+            if (isDoorDetected == false && status == DOOR_CLOSED)
             {
-                doorOpen = true;
-                event = EVENTO_PUERTA_ABIERTA;
-                startTimer();
+                //Serial.println("Se abrio la puerta");
+                status = DOOR_OPEN;
+                event = EVENTO_SE_ABRIO_PUERTA;
                 return true;
             }
-            else if (!isDoorOpen())
+            else if (isDoorDetected == true && status == DOOR_OPEN)
             {
-                doorOpen = false;
-                event = EVENTO_PUERTA_CERRADA;
-                return true;
+                //Serial.println("Se inicio contador puerta cerrada");
+                startTimerClosed();
             }
         }
-        if (reachedTimeout())
-        {
-            event = EVENTO_TIMEOUT_CIERRE_PUERTA;
-            startTimer();
-            return true;
-        }
+        // if (status == DOOR_OPEN && reachedTimeoutOpened())
+        // {
+        //     status = DOOR_CLOSED;
+        //     event = EVENTO_SE_CERRO_PUERTA;
+        //     return true;
+        // }
         return false;
     }
 };

@@ -5,7 +5,7 @@
 #define MAX_PASSWORD_LENGTH 16
 #define VALID_PASS true
 #define INVALID_PASS false
-#define UMBRAL_TIMEOUT_PUERTA 10000
+#define UMBRAL_TIMEOUT_PUERTA 6000
 
 extern int event;
 
@@ -16,17 +16,19 @@ private:
     String validPassword;
     bool isLocked;
     bool unlockInProgress;
-    int timeUnlocked;
+    bool checkTimeoutPuerta;
+    int lastCurrentTime;
 
     void startTimer()
     {
-        timeUnlocked = millis();
+        lastCurrentTime = millis();
+        Serial.println("Timeout puerta " + String(lastCurrentTime/1000));
     }
 
     bool reachedTimeout()
     {
         int currentTime = millis();
-        int timeElapsed = currentTime - timeUnlocked;
+        int timeElapsed = currentTime - lastCurrentTime;
         return timeElapsed > UMBRAL_TIMEOUT_PUERTA;
     }
 
@@ -36,7 +38,8 @@ public:
         this->validPassword = validPassword;
         isLocked = true;
         unlockInProgress = false;
-        timeUnlocked = 0;
+        checkTimeoutPuerta = false;
+        lastCurrentTime = -1;
     }
 
     bool unlock()
@@ -44,6 +47,7 @@ public:
         if (strcmp(passEntered.c_str(), validPassword.c_str()) == 0)
         {
             isLocked = false;
+            checkTimeoutPuerta = true;
             startTimer();
             return VALID_PASS;
         }
@@ -93,8 +97,10 @@ public:
 
             return true;
         }
-        else if (isLocked == false && reachedTimeout())
+        else if (isLocked == false && checkTimeoutPuerta == true && reachedTimeout())
         {
+            Serial.println("Timeout puerta " + String(millis()/1000));
+            checkTimeoutPuerta = false;
             event = EVENTO_TIMEOUT_APERTURA_PUERTA;
             return true;
         }
@@ -105,5 +111,10 @@ public:
     void changeUnlockInProgress(bool unlockInProgress)
     {
         this->unlockInProgress = unlockInProgress;
+    }
+
+    void setCheckTimeoutPuerta(bool checkTimeoutPuerta)
+    {
+        this->checkTimeoutPuerta = checkTimeoutPuerta;
     }
 };

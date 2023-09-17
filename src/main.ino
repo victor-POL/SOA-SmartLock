@@ -54,7 +54,7 @@ void generateEvent()
         // FIXME: prioritize doorSensor when door is open
         // BUG: if the door is open and the entrance sensor stops detecting a person, the state will change to ESTADO_BLOQUEADO_ESPERANDO_VISITA
         // when it should remain in ESTADO_ESPERANDO_CIERRE_PUERTA
-        if (entranceSensor.checkStatus() || keypad.checkStatus() || doorLock.checkStatus() || doorSensor.checkStatus())
+        if (doorLock.checkStatus() || keypad.checkStatus() || doorSensor.checkStatus() || entranceSensor.checkStatus())
         {
             return;
         }
@@ -257,10 +257,11 @@ void stateMachine()
         }
         break;
 
-        case EVENTO_PUERTA_ABIERTA:
+        case EVENTO_SE_ABRIO_PUERTA:
         {
-            showActualState("ESTADO_ESPERANDO_APERTURA_PUERTA", "EVENTO_PUERTA_ABIERTA");
+            showActualState("ESTADO_ESPERANDO_APERTURA_PUERTA", "EVENTO_SE_ABRIO_PUERTA");
             lcd.showMessageFullScreen("Puerta abierta - Pase");
+            doorLock.setCheckTimeoutPuerta(false);
             state = ESTADO_ESPERANDO_ENTRADA_PERSONA;
         }
         break;
@@ -278,32 +279,38 @@ void stateMachine()
     {
         switch (event)
         {
-        case EVENTO_PERSONA_NO_DETECTADA:
-        {
-            showActualState("ESTADO_ESPERANDO_ENTRADA_PERSONA", "EVENTO_PERSONA_NO_DETECTADA");
-            shutdownScreen();
-            turnOffEntranceLight();
-            clearPassEnteredIntoLock();
-            state = ESTADO_ESPERANDO_CIERRE_PUERTA;
-        }
-        break;
+            // case EVENTO_PERSONA_NO_DETECTADA:
+            // {
+            //     showActualState("ESTADO_ESPERANDO_ENTRADA_PERSONA", "EVENTO_PERSONA_NO_DETECTADA");
+            //     shutdownScreen();
+            //     turnOffEntranceLight();
+            //     clearPassEnteredIntoLock();
+            //     state = ESTADO_ESPERANDO_CIERRE_PUERTA;
+            // }
+            // break;
 
-        case EVENTO_PUERTA_CERRADA:
-        {
-            showActualState("ESTADO_ESPERANDO_ENTRADA_PERSONA", "EVENTO_PUERTA_CERRADA");
-            shutdownScreen();
-            turnOffEntranceLight();
-            clearPassEnteredIntoLock();
-            lockEntranceDoor();
-            state = ESTADO_BLOQUEADO_ESPERANDO_VISITA;
-        }
-        break;
+            // case EVENTO_PUERTA_CERRADA:
+            // {
+            //     showActualState("ESTADO_ESPERANDO_ENTRADA_PERSONA", "EVENTO_PUERTA_CERRADA");
+            //     shutdownScreen();
+            //     turnOffEntranceLight();
+            //     clearPassEnteredIntoLock();
+            //     lockEntranceDoor();
+            //     state = ESTADO_BLOQUEADO_ESPERANDO_VISITA;
+            // }
+            // break;
 
         case EVENTO_CONTINUE:
         {
             state = ESTADO_ESPERANDO_ENTRADA_PERSONA;
         }
         break;
+
+        default:
+        {
+            showActualState("ESTADO_ESPERANDO_ENTRADA_PERSONA", "EVENTO DESCONOCIDO" + String(event));
+            state = ESTADO_ESPERANDO_ENTRADA_PERSONA;
+        }
         }
     }
     break;
@@ -386,7 +393,7 @@ void showValidPassMessageOnScreen()
 {
     lcd.clear();
     lcd.showMessaggeInLine(0, "Clave correcta");
-    lcd.showMessaggeInLine(1, "Puerta abierta");
+    lcd.showMessaggeInLine(1, "Empuje la puerta");
 }
 
 void shutdownScreen()
