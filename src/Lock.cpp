@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include <Preferences.h>
 #include <string>
 #include "Events.h"
 
@@ -18,6 +19,7 @@ private:
     bool unlockInProgress;
     bool checkTimeoutPuerta;
     int lastCurrentTime;
+    Preferences preferences;
 
     void startTimer()
     {
@@ -32,9 +34,10 @@ private:
     }
 
 public:
-    Lock(String validPassword = "A")
+    Lock()
     {
-        this->validPassword = validPassword;
+        preferences.begin("smartLock", false);
+        validPassword = preferences.getString("password", "A");
         isLocked = true;
         unlockInProgress = false;
         checkTimeoutPuerta = false;
@@ -81,6 +84,15 @@ public:
 
     bool checkStatus()
     {
+        if (validPassword == "A")
+        {
+            event = EVENTO_CLAVE_NO_CONFIGURADA;
+            return true;
+        }
+        else
+        {
+            preferences.end();
+        }
         if (unlockInProgress == true)
         {
             unlockInProgress = false;
@@ -114,5 +126,16 @@ public:
     void setCheckTimeoutPuerta(bool checkTimeoutPuerta)
     {
         this->checkTimeoutPuerta = checkTimeoutPuerta;
+    }
+
+    void setValidPassword(String validPassword)
+    {
+        this->validPassword = validPassword;
+        preferences.putString("password", validPassword);
+    }
+
+    bool checkPassword(String password)
+    {
+        return strcmp(password.c_str(), validPassword.c_str()) == 0;
     }
 };

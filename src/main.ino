@@ -53,7 +53,7 @@ void generateEvent()
 
         buzzer.checkStatus();
 
-        if(state == ESTADO_ESPERANDO_INGRESO_CONTRASENA && lcd.checkCursorInterval() == UPDATE_CURSOR)
+        if (state == ESTADO_ESPERANDO_INGRESO_CONTRASENA && lcd.checkCursorInterval() == UPDATE_CURSOR)
         {
             lcd.updateCursor();
         }
@@ -77,12 +77,27 @@ void stateMachine()
     {
         switch (event)
         {
+        case EVENTO_CLAVE_NO_CONFIGURADA:
+        {
+            showActualState("ESTADO_CERRADURA_INIT", "EVENTO_CLAVE_NO_CONFIGURADA");
+            lcd.showMessageFullScreen("Clave no configurada");
+            state = ESTADO_ESPERANDO_INGRESO_NUEVA_CLAVE;
+        }
+        break;
         case EVENTO_CONTINUE:
         {
             showActualState("ESTADO_CERRADURA_INIT", "EVENTO_CONTINUE");
             state = ESTADO_BLOQUEADO_ESPERANDO_VISITA;
         }
         break;
+        }
+    }
+    break;
+
+    case ESTADO_ESPERANDO_INGRESO_NUEVA_CLAVE:
+    {
+        switch (event)
+        {
         }
     }
     break;
