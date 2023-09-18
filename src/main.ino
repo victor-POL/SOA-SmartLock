@@ -254,10 +254,12 @@ void stateMachine()
         case EVENTO_TIMEOUT_APERTURA_PUERTA:
         {
             showActualState("ESTADO_ESPERANDO_APERTURA_PUERTA", "EVENTO_TIMEOUT_APERTURA_PUERTA");
+            shutdownScreen();
+            turnOffEntranceLight();
+            clearPassEnteredIntoLock();
             lockEntranceDoor();
-            initializeScreenToInputPassword();
             reproduceInvalidPassSoundInBuzzer();
-            state = ESTADO_ESPERANDO_INGRESO_CONTRASENA;
+            state = ESTADO_BLOQUEADO_ESPERANDO_VISITA;
         }
         break;
 
