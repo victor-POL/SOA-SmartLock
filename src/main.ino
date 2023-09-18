@@ -50,7 +50,7 @@ void generateEvent()
     {
         timeout = false;
         lastCurrentTime = currentTime;
-        
+
         buzzer.checkStatus();
 
         if(state == ESTADO_ESPERANDO_INGRESO_CONTRASENA && lcd.checkCursorInterval() == UPDATE_CURSOR)
@@ -291,6 +291,13 @@ void stateMachine()
             clearPassEnteredIntoLock();
             lockEntranceDoor();
             state = ESTADO_BLOQUEADO_ESPERANDO_VISITA;
+        }
+        break;
+
+        case EVENTO_NOTIFICAR_PUERTA_ABIERTA:
+        {
+            showActualState("ESTADO_ESPERANDO_ENTRADA_PERSONA", "EVENTO_NOTIFICAR_PUERTA_ABIERTA");
+            state = ESTADO_ESPERANDO_ENTRADA_PERSONA;
         }
         break;
 

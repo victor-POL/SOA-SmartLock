@@ -9,6 +9,8 @@ class UltrasonicDoor : public Ultrasonic
 private:
     int timeOpened;
     int timeClosed;
+    bool doorOpenNotificationSent;
+    bool timerOpenedActivated;
     bool timerClosedActivated;
     bool status;
 
@@ -29,6 +31,13 @@ private:
         return timeElapsed > UMBRAL_TIEMPO_PUERTA_CERRADA;
     }
 
+    bool reachedTimeoutOpened()
+    {
+        int currentTime = millis();
+        int timeElapsed = currentTime - timeOpened;
+        return timeElapsed > UMBRAL_TIEMPO_PUERTA_ABIERTA;
+    }
+
 public:
     UltrasonicDoor(int triggerPin, int echoPin) : Ultrasonic(triggerPin, echoPin)
     {
@@ -47,8 +56,16 @@ public:
         if (timerClosedActivated == true && reachedTimeoutClosed())
         {
             timerClosedActivated = false;
+            doorOpenNotificationSent = false;
             status = DOOR_CLOSED;
             event = EVENTO_SE_CERRO_PUERTA;
+            return true;
+        }
+
+        if (timerOpenedActivated == true && doorOpenNotificationSent == true && reachedTimeoutOpened() == true)
+        {
+            doorOpenNotificationSent = false;
+            event = EVENTO_NOTIFICAR_PUERTA_ABIERTA;
             return true;
         }
 
@@ -59,18 +76,24 @@ public:
 
             if (isDoorDetected == false && status == DOOR_CLOSED)
             {
+                doorOpenNotificationSent = true;
+                timerOpenedActivated = true;
+                startTimerOpened();
                 status = DOOR_OPEN;
                 event = EVENTO_SE_ABRIO_PUERTA;
                 return true;
             }
-            else if (isDoorDetected == false && status == DOOR_OPEN && timerClosedActivated == true)
+            else if (status == DOOR_OPEN)
             {
-                timerClosedActivated = false;
-            }
-            else if (isDoorDetected == true && status == DOOR_OPEN && timerClosedActivated == false)
-            {
-                startTimerClosed();
-                timerClosedActivated = true;
+                if (isDoorDetected == true && timerClosedActivated == false)
+                {
+                    startTimerClosed();
+                    timerClosedActivated = true;
+                }
+                else if (isDoorDetected == false && timerClosedActivated == true)
+                {
+                    timerClosedActivated = false;
+                }
             }
         }
 
