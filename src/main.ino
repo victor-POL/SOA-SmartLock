@@ -424,7 +424,6 @@ void stateMachine()
             unlockEntranceDoor();
             showValidPassMessageOnScreen();
             clearPassEnteredIntoLock();
-            ESP.restart();
             state = ESTADO_ESPERANDO_APERTURA_PUERTA;
         }
         break;
