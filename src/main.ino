@@ -275,8 +275,9 @@ void stateMachine()
         {
             showActualState("ESTADO_VALIDACION_NUEVA_CLAVE", "EVENTO_CLAVE_VALIDA");
             reproduceValidPassSoundInBuzzer();
-            initializeScreenToInputPassword();
-            state = ESTADO_ESPERANDO_INGRESO_CONTRASENA;
+            shutdownScreen();
+            turnOffEntranceLight();
+            state = ESTADO_BLOQUEADO_ESPERANDO_VISITA;
         }
         break;
 
