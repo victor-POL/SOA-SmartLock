@@ -3,7 +3,9 @@
 #include "Component.cpp"
 #define MIN_ANGLE 500
 #define MAX_ANGLE 2500
-
+#define LOCK_ANGLE 0
+#define UNLOCK_ANGLE 179
+c
 class MyServo : public Component
 {
 private:
@@ -18,7 +20,7 @@ public:
     void setup()
     {
         this->servo.attach(this->pinSelected, MIN_ANGLE, MAX_ANGLE);
-        this->servo.write(0);
+        this->servo.write(LOCK_ANGLE);
     }
 
     void changeOrientation(int angle)
@@ -28,11 +30,11 @@ public:
 
     void unlock()
     {
-        this->servo.write(179);
+        this->servo.write(UNLOCK_ANGLE);
     }
 
     void lock()
     {
-        this->servo.write(0);
+        this->servo.write(LOCK_ANGLE);
     }
 };
