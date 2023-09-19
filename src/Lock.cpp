@@ -21,6 +21,8 @@ private:
     bool unlockInProgress;
     bool newPassInProgress;
     bool checkTimeoutPuerta;
+    bool passwordSetted;
+    bool initSuccess;
     int lastCurrentTime;
     Storage storage;
 
@@ -40,7 +42,9 @@ public:
     Lock()
     {
         storage = Storage();
-        validPassword = storage.ReadData("password", DEFAULT_PASSWORD);
+        validPassword = DEFAULT_PASSWORD;
+        passwordSetted = false;
+        initSuccess = false;
         isLocked = true;
         unlockInProgress = false;
         newPassInProgress = false;
@@ -101,11 +105,23 @@ public:
 
     bool checkStatus()
     {
-        if (validPassword.compareTo(DEFAULT_PASSWORD) == 0)
+        if (initSuccess == false)
         {
-            event = EVENTO_CLAVE_NO_CONFIGURADA;
-            validPassword = "";
-            return true;
+            validPassword = storage.ReadData("password", DEFAULT_PASSWORD);
+            passwordSetted = strcmp(validPassword.c_str(), DEFAULT_PASSWORD) != 0;
+            initSuccess = true;
+            if (passwordSetted == false)
+            {
+                Serial.println("Clave NO seteada " + validPassword);
+                event = EVENTO_CLAVE_NO_CONFIGURADA;
+                return true;
+            }
+            else
+            {
+                Serial.println("Clave seteada " + validPassword);
+                event = EVENTO_CLAVE_CONFIGURADA;
+                return true;
+            }
         }
         if (newPassInProgress == true)
         {
