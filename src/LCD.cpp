@@ -60,6 +60,22 @@ public:
         this->screen.setCursor(0, 1);
     }
 
+    void loadNewPassScreen()
+    {
+        cursorPos = 0;
+        this->screen.clear();
+        showMessaggeInLine(0, "Nueva clave:");
+        this->screen.setCursor(0, 1);
+    }
+
+    void loadConfirmNewPassScreen()
+    {
+        cursorPos = 0;
+        this->screen.clear();
+        showMessaggeInLine(0, "Confirma clave:");
+        this->screen.setCursor(0, 1);
+    }
+
     void resetInputPassScreen()
     {
         cursorPos = 0;

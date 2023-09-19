@@ -80,14 +80,44 @@ void stateMachine()
         case EVENTO_CLAVE_NO_CONFIGURADA:
         {
             showActualState("ESTADO_CERRADURA_INIT", "EVENTO_CLAVE_NO_CONFIGURADA");
-            lcd.showMessageFullScreen("Clave no configurada");
             state = ESTADO_ESPERANDO_INGRESO_NUEVA_CLAVE;
         }
         break;
         case EVENTO_CONTINUE:
         {
             showActualState("ESTADO_CERRADURA_INIT", "EVENTO_CONTINUE");
-            state = ESTADO_BLOQUEADO_ESPERANDO_VISITA;
+            state = ESTADO_CERRADURA_INIT;
+        }
+        break;
+        }
+    }
+    break;
+
+    case ESTADO_BLOQUEADO_ESPERANDO_CLAVE_INICIAL:
+    {
+        switch (event)
+        {
+        case EVENTO_PERSONA_DETECTADA_DIA:
+        {
+            showActualState("ESTADO_BLOQUEADO_ESPERANDO_CLAVE_INICIAL", "EVENTO_PERSONA_DETECTADA_DIA");
+            initializeScreenToInputNewPassword();
+            turnOffEntranceLight();
+            state = ESTADO_ESPERANDO_INGRESO_NUEVA_CLAVE;
+        }
+        break;
+
+        case EVENTO_PERSONA_DETECTADA_NOCHE:
+        {
+            showActualState("ESTADO_BLOQUEADO_ESPERANDO_CLAVE_INICIAL", "EVENTO_PERSONA_DETECTADA_NOCHE");
+            initializeScreenToInputNewPassword();
+            turnOnEntranceLight();
+            state = ESTADO_ESPERANDO_INGRESO_NUEVA_CLAVE;
+        }
+        break;
+
+        case EVENTO_CONTINUE:
+        {
+            state = ESTADO_BLOQUEADO_ESPERANDO_CLAVE_INICIAL;
         }
         break;
         }
@@ -98,6 +128,169 @@ void stateMachine()
     {
         switch (event)
         {
+        case EVENTO_PERSONA_NO_DETECTADA:
+        {
+            showActualState("ESTADO_ESPERANDO_INGRESO_NUEVA_CLAVE", "EVENTO_PERSONA_NO_DETECTADA");
+            shutdownScreen();
+            turnOffEntranceLight();
+            clearNewPassEnteredIntoLock();
+            state = ESTADO_BLOQUEADO_ESPERANDO_CLAVE_INICIAL;
+        }
+        break;
+
+        case EVENTO_VALIDAR_CLAVE:
+        {
+            showActualState("ESTADO_ESPERANDO_INGRESO_NUEVA_CLAVE", "EVENTO_VALIDAR_CLAVE");
+            reproduceKeyPressedSoundInBuzzer();
+            startNewPasswordConfirmation();
+            initializeScreenToInputPasswordConfirmation();
+            state = ESTADO_CONFIRMACION_NUEVA_CLAVE;
+        }
+        break;
+
+        case EVENTO_CARACTER_INGRESADO:
+        {
+            showActualState("ESTADO_ESPERANDO_INGRESO_NUEVA_CLAVE", "EVENTO_CARACTER_INGRESADO");
+            reproduceKeyPressedSoundInBuzzer();
+            showPasswordCharPressedOnScreen();
+            loadNewPasswordCharPressedIntoLock();
+            state = ESTADO_ESPERANDO_INGRESO_NUEVA_CLAVE;
+        }
+        break;
+
+        case EVENTO_CLEAR_CLAVE_INGRESADA:
+        {
+            showActualState("ESTADO_ESPERANDO_INGRESO_NUEVA_CLAVE", "EVENTO_CLEAR_CLAVE_INGRESADA");
+            reproduceKeyPressedSoundInBuzzer();
+            clearPassEnteredOnScreen();
+            clearNewPassEnteredIntoLock();
+            state = ESTADO_ESPERANDO_INGRESO_NUEVA_CLAVE;
+        }
+        break;
+
+        case EVENTO_PERSONA_DETECTADA_DIA:
+        {
+            showActualState("ESTADO_ESPERANDO_INGRESO_NUEVA_CLAVE", "EVENTO_PERSONA_DETECTADA_DIA");
+            turnOffEntranceLight();
+            state = ESTADO_ESPERANDO_INGRESO_NUEVA_CLAVE;
+        }
+        break;
+
+        case EVENTO_PERSONA_DETECTADA_NOCHE:
+        {
+            showActualState("ESTADO_ESPERANDO_INGRESO_NUEVA_CLAVE", "EVENTO_PERSONA_DETECTADA_NOCHE");
+            turnOnEntranceLight();
+            state = ESTADO_ESPERANDO_INGRESO_NUEVA_CLAVE;
+        }
+        break;
+
+        case EVENTO_CONTINUE:
+        {
+            state = ESTADO_ESPERANDO_INGRESO_NUEVA_CLAVE;
+        }
+        break;
+        }
+    }
+    break;
+
+    case ESTADO_CONFIRMACION_NUEVA_CLAVE:
+    {
+        switch (event)
+        {
+        case EVENTO_PERSONA_NO_DETECTADA:
+        {
+            showActualState("ESTADO_CONFIRMACION_NUEVA_CLAVE", "EVENTO_PERSONA_NO_DETECTADA");
+            shutdownScreen();
+            turnOffEntranceLight();
+            clearNewPassEnteredIntoLock();
+            state = ESTADO_BLOQUEADO_ESPERANDO_CLAVE_INICIAL;
+        }
+        break;
+
+        case EVENTO_VALIDAR_CLAVE:
+        {
+            showActualState("ESTADO_CONFIRMACION_NUEVA_CLAVE", "EVENTO_VALIDAR_CLAVE");
+            reproduceKeyPressedSoundInBuzzer();
+            startNewPasswordValidation();
+            state = ESTADO_VALIDACION_NUEVA_CLAVE;
+        }
+        break;
+
+        case EVENTO_CARACTER_INGRESADO:
+        {
+            showActualState("ESTADO_CONFIRMACION_NUEVA_CLAVE", "EVENTO_CARACTER_INGRESADO");
+            reproduceKeyPressedSoundInBuzzer();
+            showPasswordCharPressedOnScreen();
+            loadNewPasswordCharPressedIntoLock();
+            state = ESTADO_CONFIRMACION_NUEVA_CLAVE;
+        }
+        break;
+
+        case EVENTO_CLEAR_CLAVE_INGRESADA:
+        {
+            showActualState("ESTADO_CONFIRMACION_NUEVA_CLAVE", "EVENTO_CLEAR_CLAVE_INGRESADA");
+            reproduceKeyPressedSoundInBuzzer();
+            clearPassEnteredOnScreen();
+            clearNewPassEnteredIntoLock();
+            state = ESTADO_CONFIRMACION_NUEVA_CLAVE;
+        }
+        break;
+
+        case EVENTO_PERSONA_DETECTADA_DIA:
+        {
+            showActualState("ESTADO_CONFIRMACION_NUEVA_CLAVE", "EVENTO_PERSONA_DETECTADA_DIA");
+            turnOffEntranceLight();
+            state = ESTADO_CONFIRMACION_NUEVA_CLAVE;
+        }
+        break;
+
+        case EVENTO_PERSONA_DETECTADA_NOCHE:
+        {
+            showActualState("ESTADO_CONFIRMACION_NUEVA_CLAVE", "EVENTO_PERSONA_DETECTADA_NOCHE");
+            turnOnEntranceLight();
+            state = ESTADO_CONFIRMACION_NUEVA_CLAVE;
+        }
+        break;
+
+        case EVENTO_CONTINUE:
+        {
+            state = ESTADO_CONFIRMACION_NUEVA_CLAVE;
+        }
+        break;
+        }
+    }
+    break;
+
+    case ESTADO_VALIDACION_NUEVA_CLAVE:
+    {
+        switch (event)
+        {
+        case EVENTO_CLAVE_VALIDA:
+        {
+            showActualState("ESTADO_VALIDACION_NUEVA_CLAVE", "EVENTO_CLAVE_VALIDA");
+            reproduceValidPassSoundInBuzzer();
+            lcd.showMessageFullScreen("Clave configurada correctamente"); // mostrar mientras suene buzzer
+            initializeScreenToInputPassword();
+            state = ESTADO_ESPERANDO_INGRESO_CONTRASENA;
+        }
+        break;
+
+        case EVENTO_CLAVE_INVALIDA:
+        {
+            showActualState("ESTADO_VALIDACION_NUEVA_CLAVE", "EVENTO_CLAVE_INVALIDA");
+            reproduceInvalidPassSoundInBuzzer();
+            lcd.showMessageFullScreen("Clave no coincide"); // mostrar mientras suene buzzer
+            initializeScreenToInputNewPassword();
+            clearNewPassEnteredIntoLock();
+            state = ESTADO_ESPERANDO_INGRESO_NUEVA_CLAVE;
+        }
+        break;
+
+        case EVENTO_CONTINUE:
+        {
+            state = ESTADO_VALIDACION_NUEVA_CLAVE;
+        }
+        break;
         }
     }
     break;
@@ -353,6 +546,18 @@ void initializeScreenToInputPassword()
     lcd.loadInputPassScreen();
 }
 
+void initializeScreenToInputNewPassword()
+{
+    lcd.turnOn();
+    lcd.loadNewPassScreen();
+}
+
+void initializeScreenToInputPasswordConfirmation()
+{
+    lcd.turnOn();
+    lcd.loadConfirmNewPassScreen();
+}
+
 void clearPassEnteredOnScreen()
 {
     lcd.resetInputPassScreen();
@@ -397,6 +602,11 @@ void clearPassEnteredIntoLock()
     doorLock.resetPassEntered();
 }
 
+void clearNewPassEnteredIntoLock()
+{
+    doorLock.resetNewPassEntered();
+}
+
 void reproduceInvalidPassSoundInBuzzer()
 {
     buzzer.activateErrorSound();
@@ -417,9 +627,24 @@ void startPasswordValidation()
     doorLock.changeUnlockInProgress(true);
 }
 
+void startNewPasswordConfirmation()
+{
+    doorLock.toPasswordConfirmation();
+}
+
+void startNewPasswordValidation()
+{
+    doorLock.changeNewPassInProgress(true);
+}
+
 void loadPasswordCharPressedIntoLock()
 {
     doorLock.loadCharacter(keypad.getLastKeyPressed());
+}
+
+void loadNewPasswordCharPressedIntoLock()
+{
+    doorLock.loadNewCharacter(keypad.getLastKeyPressed());
 }
 
 void unlockEntranceDoor()

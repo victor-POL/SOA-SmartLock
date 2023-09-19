@@ -1,12 +1,13 @@
 #include <Arduino.h>
-#include <Preferences.h>
 #include <string>
 #include "Events.h"
+#include "Storage.cpp"
 
 #define MAX_PASSWORD_LENGTH 16
 #define VALID_PASS true
 #define INVALID_PASS false
 #define UMBRAL_TIMEOUT_PUERTA 6000
+#define DEFAULT_PASSWORD "A"
 
 extern int event;
 
@@ -15,11 +16,13 @@ class Lock
 private:
     String passEntered;
     String validPassword;
+    String newPasswordEntered;
     bool isLocked;
     bool unlockInProgress;
+    bool newPassInProgress;
     bool checkTimeoutPuerta;
     int lastCurrentTime;
-    Preferences preferences;
+    Storage storage;
 
     void startTimer()
     {
@@ -36,10 +39,11 @@ private:
 public:
     Lock()
     {
-        preferences.begin("smartLock", false);
-        validPassword = preferences.getString("password", "A");
+        storage = Storage();
+        validPassword = storage.ReadData("password", DEFAULT_PASSWORD);
         isLocked = true;
         unlockInProgress = false;
+        newPassInProgress = false;
         checkTimeoutPuerta = false;
         lastCurrentTime = -1;
     }
@@ -69,11 +73,24 @@ public:
         passEntered = "";
     }
 
+    void resetNewPassEntered()
+    {
+        newPasswordEntered = "";
+    }
+
     void loadCharacter(char keyPressed)
     {
         if (passEntered.length() < MAX_PASSWORD_LENGTH)
         {
             passEntered += keyPressed;
+        }
+    }
+
+    void loadNewCharacter(char keyPressed)
+    {
+        if (newPasswordEntered.length() < MAX_PASSWORD_LENGTH)
+        {
+            newPasswordEntered += keyPressed;
         }
     }
 
@@ -84,14 +101,26 @@ public:
 
     bool checkStatus()
     {
-        if (validPassword == "A")
+        if (validPassword.compareTo(DEFAULT_PASSWORD) == 0)
         {
             event = EVENTO_CLAVE_NO_CONFIGURADA;
+            validPassword = "";
             return true;
         }
-        else
+        if (newPassInProgress == true)
         {
-            preferences.end();
+            newPassInProgress = false;
+            if (newPasswordEntered == validPassword)
+            {
+                event = EVENTO_CLAVE_VALIDA;
+                storage.StoreData("password", validPassword.c_str());
+            }
+            else
+            {
+                event = EVENTO_CLAVE_INVALIDA;
+                validPassword = "";
+            }
+            return true;
         }
         if (unlockInProgress == true)
         {
@@ -128,14 +157,19 @@ public:
         this->checkTimeoutPuerta = checkTimeoutPuerta;
     }
 
-    void setValidPassword(String validPassword)
-    {
-        this->validPassword = validPassword;
-        preferences.putString("password", validPassword);
-    }
-
     bool checkPassword(String password)
     {
         return strcmp(password.c_str(), validPassword.c_str()) == 0;
+    }
+
+    void toPasswordConfirmation()
+    {
+        validPassword = newPasswordEntered;
+        newPasswordEntered = "";
+    }
+
+    void changeNewPassInProgress(bool newPassInProgress)
+    {
+        this->newPassInProgress = newPassInProgress;
     }
 };
