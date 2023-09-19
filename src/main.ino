@@ -275,7 +275,6 @@ void stateMachine()
         {
             showActualState("ESTADO_VALIDACION_NUEVA_CLAVE", "EVENTO_CLAVE_VALIDA");
             reproduceValidPassSoundInBuzzer();
-            lcd.showMessageFullScreen("Clave configurada correctamente"); // mostrar mientras suene buzzer
             initializeScreenToInputPassword();
             state = ESTADO_ESPERANDO_INGRESO_CONTRASENA;
         }
@@ -285,7 +284,6 @@ void stateMachine()
         {
             showActualState("ESTADO_VALIDACION_NUEVA_CLAVE", "EVENTO_CLAVE_INVALIDA");
             reproduceInvalidPassSoundInBuzzer();
-            lcd.showMessageFullScreen("Clave no coincide"); // mostrar mientras suene buzzer
             initializeScreenToInputNewPassword();
             clearNewPassEnteredIntoLock();
             state = ESTADO_ESPERANDO_INGRESO_NUEVA_CLAVE;
