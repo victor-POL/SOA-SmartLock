@@ -1,6 +1,8 @@
 #include <Arduino.h>
 #include <ESP32Servo.h>
 #include "Component.cpp"
+#define MIN_ANGLE 500
+#define MAX_ANGLE 2500
 
 class MyServo : public Component
 {
@@ -15,7 +17,7 @@ public:
 
     void setup()
     {
-        this->servo.attach(this->pinSelected, 500, 2500);
+        this->servo.attach(this->pinSelected, MIN_ANGLE, MAX_ANGLE);
         this->servo.write(0);
     }
 
