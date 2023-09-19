@@ -112,13 +112,11 @@ public:
             initSuccess = true;
             if (passwordSetted == false)
             {
-                Serial.println("Clave NO seteada " + validPassword);
                 event = EVENTO_CLAVE_NO_CONFIGURADA;
                 return true;
             }
             else
             {
-                Serial.println("Clave seteada " + validPassword);
                 event = EVENTO_CLAVE_CONFIGURADA;
                 return true;
             }

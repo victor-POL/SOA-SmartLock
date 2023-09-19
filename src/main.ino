@@ -413,7 +413,6 @@ void stateMachine()
         case EVENTO_TIMEOUT_VALIDACION_CLAVE:
         {
             showActualState("ESTADO_VALIDACION_CLAVE", "EVENTO_TIMEOUT_VALIDACION_CLAVE");
-            // there may be an issue reading NFC card
             state = ESTADO_ESPERANDO_INGRESO_CONTRASENA;
         }
         break;
@@ -425,6 +424,7 @@ void stateMachine()
             unlockEntranceDoor();
             showValidPassMessageOnScreen();
             clearPassEnteredIntoLock();
+            ESP.restart();
             state = ESTADO_ESPERANDO_APERTURA_PUERTA;
         }
         break;
