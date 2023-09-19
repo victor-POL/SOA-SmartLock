@@ -413,7 +413,6 @@ void stateMachine()
         {
             showActualState("ESTADO_VALIDACION_CLAVE", "EVENTO_TIMEOUT_VALIDACION_CLAVE");
             // there may be an issue reading NFC card
-            lcd.showMessageFullScreen("Error validando clave");
             state = ESTADO_ESPERANDO_INGRESO_CONTRASENA;
         }
         break;
@@ -574,9 +573,7 @@ void showPasswordCharPressedOnScreen()
 
 void showValidPassMessageOnScreen()
 {
-    lcd.clear();
-    lcd.showMessaggeInLine(0, "Clave correcta");
-    lcd.showMessaggeInLine(1, "Empuje la puerta");
+    lcd.showMessage("Clave correcta", "Empuje la puerta");
 }
 
 void shutdownScreen()
@@ -663,7 +660,7 @@ void lockEntranceDoor()
 
 void showOpenDoorMessageOnScreen()
 {
-    lcd.showMessageFullScreen("Puerta abierta - Pase");
+    lcd.showMessage("Puerta abierta", "pase");
 }
 
 void cancelDoorOpenTimer()
