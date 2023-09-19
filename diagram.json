@@ -83,7 +83,15 @@
     },
     { "type": "wokwi-vcc", "id": "vcc2", "top": 184.41, "left": 651.69, "attrs": {} },
     { "type": "wokwi-gnd", "id": "gnd1", "top": 258.19, "left": 688.11, "attrs": {} },
-    { "type": "wokwi-vcc", "id": "vcc1", "top": -66.58, "left": 83.74, "attrs": {} }
+    { "type": "wokwi-vcc", "id": "vcc1", "top": -66.58, "left": 83.74, "attrs": {} },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "btn1",
+      "top": 153,
+      "left": 124.78,
+      "rotate": 90,
+      "attrs": { "color": "black" }
+    }
   ],
   "connections": [
     [ "esp:TX0", "$serialMonitor:RX", "", [] ],
@@ -107,8 +115,8 @@
     [ "ultrasonic2:TRIG", "esp:D33", "magenta", [ "v166.06", "h-211.45" ] ],
     [ "ultrasonic1:GND", "bb2:tn.25", "black", [ "v0" ] ],
     [ "ultrasonic1:VCC", "bb2:tp.27", "red", [ "v0" ] ],
-    [ "ultrasonic1:TRIG", "bb1:11b.g", "magenta", [ "v-296.77", "h-211.61" ] ],
-    [ "esp:D34", "ultrasonic1:ECHO", "blue", [ "v-28.48", "h183.35" ] ],
+    [ "ultrasonic1:TRIG", "bb1:11b.g", "purple", [ "v-296.77", "h-211.61" ] ],
+    [ "esp:D34", "ultrasonic1:ECHO", "cyan", [ "v-28.48", "h183.35" ] ],
     [ "vcc2:VCC", "bb1:tp.50", "red", [ "v0" ] ],
     [ "vcc2:VCC", "bb2:tp.50", "red", [ "v0" ] ],
     [ "gnd1:GND", "bb1:tn.50", "black", [ "v0" ] ],
@@ -119,6 +127,14 @@
     [ "ldr1:VCC", "bb1:tp.38", "red", [ "v0" ] ],
     [ "relay1:COM", "vcc1:VCC", "red", [ "v0" ] ],
     [ "led1:C", "bb1:tn.11", "black", [ "v33.23", "h-35.36", "v316.04" ] ],
+    [ "bb1:7b.g", "keypad1:R4", "gold", [ "v-79.9", "h-248.33" ] ],
+    [ "bb2:5t.c", "bz1:2", "red", [ "v0" ] ],
+    [ "bz1:1", "bb2:bn.4", "black", [ "v0" ] ],
+    [ "keypad1:C3", "esp:D4", "orange", [ "v300.78", "h210.83" ] ],
+    [ "keypad1:C2", "esp:RX2", "black", [ "v309.54", "h229.78" ] ],
+    [ "esp:TX2", "keypad1:C1", "white", [ "v102.2", "h-249.08" ] ],
+    [ "btn1:2.r", "bb1:tn.20", "black", [ "v0" ] ],
+    [ "btn1:1.r", "bb1:15b.g", "orange", [ "v0" ] ],
     [ "esp:VIN", "bb1:2b.h", "", [ "$bb" ] ],
     [ "esp:GND.2", "bb1:3b.h", "", [ "$bb" ] ],
     [ "esp:D13", "bb1:4b.h", "", [ "$bb" ] ],
@@ -148,14 +164,7 @@
     [ "esp:RX0", "bb2:13t.b", "", [ "$bb" ] ],
     [ "esp:TX0", "bb2:14t.b", "", [ "$bb" ] ],
     [ "esp:D22", "bb2:15t.b", "", [ "$bb" ] ],
-    [ "esp:D23", "bb2:16t.b", "", [ "$bb" ] ],
-    [ "bb1:7b.g", "keypad1:R4", "gold", [ "v-79.9", "h-248.33" ] ],
-    [ "bb2:5t.c", "bz1:2", "red", [ "v0" ] ],
-    [ "bz1:1", "bb2:bn.4", "black", [ "v0" ] ],
-    [ "keypad1:C4", "esp:D15", "green", [ "v292.02", "h181.58" ] ],
-    [ "keypad1:C3", "esp:D4", "orange", [ "v300.78", "h210.83" ] ],
-    [ "keypad1:C2", "esp:RX2", "black", [ "v309.54", "h229.78" ] ],
-    [ "esp:TX2", "keypad1:C1", "white", [ "v102.2", "h-249.08" ] ]
+    [ "esp:D23", "bb2:16t.b", "", [ "$bb" ] ]
   ],
   "dependencies": {}
 }
