@@ -11,6 +11,7 @@
 #define KEYPAD_COLUMN_1_PIN 17
 #define KEYPAD_COLUMN_2_PIN 16
 #define KEYPAD_COLUMN_3_PIN 4
+#define BUTTON_PIN 36
 
 // Actuators
 #define SERVO_PIN 26

@@ -52,6 +52,13 @@ public:
         lastCurrentTime = -1;
     }
 
+    void unlockWithButton()
+    {
+        startTimer();
+        isLocked = false;
+        checkTimeoutPuerta = true;
+    }
+
     bool unlock()
     {
         if (strcmp(passEntered.c_str(), validPassword.c_str()) == 0)

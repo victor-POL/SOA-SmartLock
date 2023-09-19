@@ -8,6 +8,7 @@
 #include "UltrasonicEntrance.cpp"
 #include "UltrasonicDoor.cpp"
 #include "Relay.cpp"
+#include "Button.cpp"
 
 #include "States.h"
 #include "Events.h"

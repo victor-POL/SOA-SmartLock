@@ -54,8 +54,8 @@
     {
       "type": "wokwi-hc-sr04",
       "id": "ultrasonic2",
-      "top": 48.25,
-      "left": 139.75,
+      "top": -21.45,
+      "left": 143.85,
       "attrs": { "distance": "2" }
     },
     {
@@ -79,7 +79,7 @@
       "top": 611.54,
       "left": 142.11,
       "rotate": 180,
-      "attrs": { "distance": "400" }
+      "attrs": { "distance": "22" }
     },
     { "type": "wokwi-vcc", "id": "vcc2", "top": 184.41, "left": 651.69, "attrs": {} },
     { "type": "wokwi-gnd", "id": "gnd1", "top": 258.19, "left": 688.11, "attrs": {} },
@@ -87,10 +87,17 @@
     {
       "type": "wokwi-pushbutton",
       "id": "btn1",
-      "top": 153,
-      "left": 124.78,
+      "top": 124.3,
+      "left": 134.35,
       "rotate": 90,
       "attrs": { "color": "black" }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "r1",
+      "top": 282.35,
+      "left": 240,
+      "attrs": { "value": "330" }
     }
   ],
   "connections": [
@@ -133,8 +140,7 @@
     [ "keypad1:C3", "esp:D4", "orange", [ "v300.78", "h210.83" ] ],
     [ "keypad1:C2", "esp:RX2", "black", [ "v309.54", "h229.78" ] ],
     [ "esp:TX2", "keypad1:C1", "white", [ "v102.2", "h-249.08" ] ],
-    [ "btn1:2.r", "bb1:tn.20", "black", [ "v0" ] ],
-    [ "btn1:1.r", "bb1:15b.g", "orange", [ "v0" ] ],
+    [ "btn1:1.r", "bb1:tn.21", "black", [ "v0" ] ],
     [ "esp:VIN", "bb1:2b.h", "", [ "$bb" ] ],
     [ "esp:GND.2", "bb1:3b.h", "", [ "$bb" ] ],
     [ "esp:D13", "bb1:4b.h", "", [ "$bb" ] ],
@@ -164,7 +170,13 @@
     [ "esp:RX0", "bb2:13t.b", "", [ "$bb" ] ],
     [ "esp:TX0", "bb2:14t.b", "", [ "$bb" ] ],
     [ "esp:D22", "bb2:15t.b", "", [ "$bb" ] ],
-    [ "esp:D23", "bb2:16t.b", "", [ "$bb" ] ]
+    [ "esp:D23", "bb2:16t.b", "", [ "$bb" ] ],
+    [ "r1:1", "bb1:34t.c", "", [ "$bb" ] ],
+    [ "r1:2", "bb1:40t.c", "", [ "$bb" ] ],
+    [ "r1:2", "bb1:tp.32", "green", [ "v0" ] ],
+    [ "r1:1", "bb1:26t.c", "blue", [ "v0" ] ],
+    [ "bb1:26t.b", "btn1:2.r", "blue", [ "v0" ] ],
+    [ "bb1:26t.d", "bb1:15b.g", "blue", [ "v0" ] ]
   ],
   "dependencies": {}
 }

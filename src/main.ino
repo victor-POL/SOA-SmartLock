@@ -4,6 +4,7 @@
 UltrasonicEntrance entranceSensor = UltrasonicEntrance(ENTRANCE_SENSOR_TRIGGER_PIN, ENTRANCE_SENSOR_ECHO_PIN);
 UltrasonicDoor doorSensor = UltrasonicDoor(DOOR_SENSOR_TRIGGER_PIN, DOOR_SENSOR_ECHO_PIN);
 KeyPad keypad = KeyPad();
+Button button = Button();
 
 // Actuators
 MyServo entranceDoor = MyServo(SERVO_PIN);
@@ -28,6 +29,7 @@ void doInit()
     entranceDoor.setup();
     entranceSensor.setup();
     doorSensor.setup();
+    button.setup();
 
     buzzer.setup();
     light.setup();
@@ -58,7 +60,7 @@ void generateEvent()
             lcd.updateCursor();
         }
 
-        if (doorLock.checkStatus() || keypad.checkStatus() || doorSensor.checkStatus() || entranceSensor.checkStatus())
+        if (button.checkStatus() || doorLock.checkStatus() || keypad.checkStatus() || doorSensor.checkStatus() || entranceSensor.checkStatus())
         {
             return;
         }
@@ -304,6 +306,15 @@ void stateMachine()
     {
         switch (event)
         {
+        case EVENTO_BOTON_PRESIONADO:
+        {
+            showActualState("ESTADO_BLOQUEADO_ESPERANDO_VISITA", "EVENTO_BOTON_PRESIONADO");
+            doorLock.unlockWithButton();
+            unlockEntranceDoor();
+            state = ESTADO_ESPERANDO_APERTURA_PUERTA_BOTON;
+        }
+        break;
+
         case EVENTO_PERSONA_DETECTADA_DIA:
         {
             showActualState("ESTADO_BLOQUEADO_ESPERANDO_VISITA", "EVENTO_PERSONA_DETECTADA_DIA");
@@ -492,6 +503,34 @@ void stateMachine()
     }
     break;
 
+    case ESTADO_ESPERANDO_APERTURA_PUERTA_BOTON:
+    {
+        switch (event)
+        {
+        case EVENTO_SE_ABRIO_PUERTA:
+        {
+            showActualState("ESTADO_ESPERANDO_APERTURA_PUERTA_BOTON", "EVENTO_SE_ABRIO_PUERTA");
+            state = ESTADO_ESPERANDO_ENTRADA_PERSONA;
+        }
+        break;
+
+        case EVENTO_TIMEOUT_APERTURA_PUERTA:
+        {
+            showActualState("EVENTO_TIMEOUT_APERTURA_PUERTA", "ESTADO_BLOQUEADO_ESPERANDO_VISITA");
+            lockEntranceDoor();
+            state = ESTADO_BLOQUEADO_ESPERANDO_VISITA;
+        }
+        break;
+
+        case EVENTO_CONTINUE:
+        {
+            state = ESTADO_ESPERANDO_APERTURA_PUERTA;
+        }
+        break;
+        }
+    }
+    break;
+
     case ESTADO_ESPERANDO_ENTRADA_PERSONA:
     {
         switch (event)
@@ -662,6 +701,7 @@ void lockEntranceDoor()
 
 void showOpenDoorMessageOnScreen()
 {
+    lcd.turnOn();
     lcd.showMessage("Puerta abierta", "pase");
 }
 
