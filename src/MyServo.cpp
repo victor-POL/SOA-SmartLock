@@ -5,7 +5,7 @@
 #define MAX_ANGLE 2500
 #define LOCK_ANGLE 0
 #define UNLOCK_ANGLE 179
-c
+
 class MyServo : public Component
 {
 private:
