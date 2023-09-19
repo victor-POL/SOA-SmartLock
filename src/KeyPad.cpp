@@ -8,11 +8,11 @@
 #define KEY_CLEAR '*'
 #define KEY_ENTER '#'
 #define ROWS_KEYPAD 4
-#define COLS_KEYPAD 4
-#define KEYS_ROW_1 '1', '2', '3', 'A'
-#define KEYS_ROW_2 '4', '5', '6', 'B'
-#define KEYS_ROW_3 '7', '8', '9', 'C'
-#define KEYS_ROW_4 '*', '0', '#', 'D'
+#define COLS_KEYPAD 3
+#define KEYS_ROW_1 '1', '2', '3'
+#define KEYS_ROW_2 '4', '5', '6'
+#define KEYS_ROW_3 '7', '8', '9'
+#define KEYS_ROW_4 '*', '0', '#'
 
 extern int event;
 
@@ -37,7 +37,6 @@ private:
         KEYPAD_COLUMN_1_PIN,
         KEYPAD_COLUMN_2_PIN,
         KEYPAD_COLUMN_3_PIN,
-        KEYPAD_COLUMN_4_PIN,
     };
 
     char lastKeyPressed;
