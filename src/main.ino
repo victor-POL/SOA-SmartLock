@@ -80,7 +80,13 @@ void stateMachine()
         case EVENTO_CLAVE_NO_CONFIGURADA:
         {
             showActualState("ESTADO_CERRADURA_INIT", "EVENTO_CLAVE_NO_CONFIGURADA");
-            state = ESTADO_ESPERANDO_INGRESO_NUEVA_CLAVE;
+            state = ESTADO_BLOQUEADO_ESPERANDO_CLAVE_INICIAL;
+        }
+        break;
+        case EVENTO_CLAVE_CONFIGURADA:
+        {
+            showActualState("ESTADO_CERRADURA_INIT", "EVENTO_CLAVE_CONFIGURADA");
+            state = ESTADO_BLOQUEADO_ESPERANDO_VISITA;
         }
         break;
         case EVENTO_CONTINUE:
