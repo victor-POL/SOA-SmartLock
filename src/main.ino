@@ -55,11 +55,6 @@ void generateEvent()
 
         buzzer.checkStatus();
 
-        if (state == ESTADO_ESPERANDO_INGRESO_CONTRASENA && lcd.checkCursorInterval() == UPDATE_CURSOR)
-        {
-            lcd.updateCursor();
-        }
-
         if (button.checkStatus() || doorLock.checkStatus() || keypad.checkStatus() || doorSensor.checkStatus() || entranceSensor.checkStatus())
         {
             return;

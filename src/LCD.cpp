@@ -13,15 +13,11 @@ private:
     LiquidCrystal_I2C screen;
 
     int cursorPos;
-    bool cursorVisible;
-    unsigned long previousMillis;
     static LCD *instance;
 
     LCD() : screen(LCD_ADDRESS, LCD_COLUMNS, LCD_ROWS)
     {
         this->cursorPos = 0;
-        this->cursorVisible = true;
-        this->previousMillis = 0;
     }
 
     int findFirstNotSpace(const String &str)
@@ -115,32 +111,6 @@ public:
     }
 
     // Cursor
-
-    int checkCursorInterval()
-    {
-        unsigned long currentMillis = millis();
-        if (currentMillis - previousMillis >= CURSOR_INTERVAL)
-        {
-            previousMillis = currentMillis;
-            cursorVisible = !cursorVisible;
-            return UPDATE_CURSOR;
-        }
-        return 0;
-    }
-
-    void updateCursor()
-    {
-        if (cursorVisible)
-        {
-            this->screen.setCursor(cursorPos, 1);
-            this->screen.print('_');
-        }
-        else
-        {
-            this->screen.setCursor(cursorPos, 1);
-            this->screen.print(' ');
-        }
-    }
 
     void turnOff()
     {
