@@ -18,7 +18,7 @@ Lock doorLock = Lock();
 
 // Global
 enum States state;
-int event;
+enum Events event;
 bool timeout;
 long lastCurrentTime;
 

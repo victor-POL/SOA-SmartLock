@@ -3,7 +3,7 @@
 #include "Events.h"
 #include "Connections.h"
 
-extern int event;
+extern enum Events event;
 
 class Button
 {

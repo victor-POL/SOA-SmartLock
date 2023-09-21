@@ -14,7 +14,7 @@
 #define KEYS_ROW_3 '7', '8', '9'
 #define KEYS_ROW_4 '*', '0', '#'
 
-extern int event;
+extern enum Events event;
 
 class KeyPad
 {

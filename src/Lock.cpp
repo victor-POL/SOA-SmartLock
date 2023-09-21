@@ -9,7 +9,7 @@
 #define UMBRAL_TIMEOUT_PUERTA 6000
 #define DEFAULT_PASSWORD "A"
 
-extern int event;
+extern enum Events event;
 
 class Lock
 {

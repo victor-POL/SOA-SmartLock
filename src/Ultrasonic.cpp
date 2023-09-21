@@ -9,7 +9,7 @@
 #define UMBRAL_PERSONA_DETECTADA 50
 #define UMBRAL_PUERTA_ABIERTA 20
 
-extern int event;
+extern enum Events event;
 
 class Ultrasonic
 {
