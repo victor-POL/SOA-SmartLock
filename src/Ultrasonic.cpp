@@ -14,36 +14,36 @@ extern enum Events event;
 class Ultrasonic
 {
 protected:
-    int triggerPinSelected;
-    int echoPinSelected;
-    int previousDistance;
+  int triggerPinSelected;
+  int echoPinSelected;
+  int previousDistance;
 
 public:
-    Ultrasonic(int echoPin, int triggerPrin)
-    {
-        this->triggerPinSelected = echoPin;
-        this->echoPinSelected = triggerPrin;
-        this->previousDistance = 0;
-    }
+  Ultrasonic(int echoPin, int triggerPrin)
+  {
+    this->triggerPinSelected = echoPin;
+    this->echoPinSelected = triggerPrin;
+    this->previousDistance = 0;
+  }
 
-    void setup()
-    {
-        pinMode(triggerPinSelected, OUTPUT);
-        pinMode(echoPinSelected, INPUT);
-    }
+  void setup()
+  {
+    pinMode(triggerPinSelected, OUTPUT);
+    pinMode(echoPinSelected, INPUT);
+  }
 
-    int getDistance()
-    {
-        digitalWrite(triggerPinSelected, LOW);
-        delayMicroseconds(2);
+  int getDistance()
+  {
+    digitalWrite(triggerPinSelected, LOW);
+    delayMicroseconds(2);
 
-        digitalWrite(triggerPinSelected, HIGH);
-        delayMicroseconds(10);
+    digitalWrite(triggerPinSelected, HIGH);
+    delayMicroseconds(10);
 
-        digitalWrite(triggerPinSelected, LOW);
+    digitalWrite(triggerPinSelected, LOW);
 
-        return 0.01723 * pulseIn(echoPinSelected, HIGH);
-    }
+    return 0.01723 * pulseIn(echoPinSelected, HIGH);
+  }
 };
 
 #endif

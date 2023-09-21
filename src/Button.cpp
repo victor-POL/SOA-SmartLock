@@ -7,25 +7,24 @@ extern enum Events event;
 
 class Button
 {
-    private:
+private:
+public:
+  Button()
+  {
+  }
 
-    public:
-        Button()
-        {
-        }
+  void setup()
+  {
+    pinMode(BUTTON_PIN, INPUT);
+  }
 
-        void setup()
-        {
-            pinMode(BUTTON_PIN, INPUT);
-        }
-
-        bool checkStatus()
-        {
-            if (digitalRead(BUTTON_PIN) == LOW)
-            {
-                event = EVENTO_BOTON_PRESIONADO;
-                return true;
-            }
-            return false;
-        }
+  bool checkStatus()
+  {
+    if (digitalRead(BUTTON_PIN) == LOW)
+    {
+      event = EVENTO_BOTON_PRESIONADO;
+      return true;
+    }
+    return false;
+  }
 };

@@ -21,85 +21,85 @@
 class Buzzer : public Component
 {
 private:
-    int status;
-    int timeSoundActivated;
+  int status;
+  int timeSoundActivated;
 
-    void startTimer()
+  void startTimer()
+  {
+    timeSoundActivated = millis();
+  }
+
+  bool reachedTimeout()
+  {
+    int currentTime = millis();
+    int timeElapsed = currentTime - timeSoundActivated;
+    int limit = 0;
+
+    switch (status)
     {
-        timeSoundActivated = millis();
+    case STATUS_KEY_SOUND:
+      limit = BUZZER_KEY_DURATION;
+      break;
+    case STATUS_SUCESS_SOUND:
+      limit = BUZZER_SUCCESS_DURATION;
+      break;
+    case STATUS_FAIL_SOUND:
+      limit = BUZZER_FAIL_DURATION;
+      break;
     }
 
-    bool reachedTimeout()
-    {
-        int currentTime = millis();
-        int timeElapsed = currentTime - timeSoundActivated;
-        int limit = 0;
-
-        switch (status)
-        {
-        case STATUS_KEY_SOUND:
-            limit = BUZZER_KEY_DURATION;
-            break;
-        case STATUS_SUCESS_SOUND:
-            limit = BUZZER_SUCCESS_DURATION;
-            break;
-        case STATUS_FAIL_SOUND:
-            limit = BUZZER_FAIL_DURATION;
-            break;
-        }
-
-        return timeElapsed > limit;
-    }
+    return timeElapsed > limit;
+  }
 
 public:
-    Buzzer(int pinSelected) : Component(pinSelected)
+  Buzzer(int pinSelected) : Component(pinSelected)
+  {
+    this->status = STATUS_NO_SOUND;
+    this->timeSoundActivated = 0;
+  }
+
+  void setup()
+  {
+    ledcSetup(BUZZER_CHANNEL, BUZZER_FREQUENCY, BUZZER_RESOLUTION);
+    ledcAttachPin(this->pinSelected, BUZZER_CHANNEL);
+  }
+
+  void activateSuccessSound()
+  {
+    this->status = STATUS_SUCESS_SOUND;
+    startTimer();
+    ledcWriteTone(BUZZER_CHANNEL, BUZZER_SUCCESS_FREQ);
+  }
+
+  void activateErrorSound()
+  {
+    this->status = STATUS_FAIL_SOUND;
+    startTimer();
+    ledcWriteTone(BUZZER_CHANNEL, BUZZER_FAIL_FREQ);
+  }
+
+  void activateKeyPressedSound()
+  {
+    this->status = STATUS_KEY_SOUND;
+    startTimer();
+    ledcWriteTone(BUZZER_CHANNEL, BUZZER_KEY_FREQ);
+  }
+
+  void deactivateSound()
+  {
+    this->status = STATUS_NO_SOUND;
+    ledcWriteTone(BUZZER_CHANNEL, 0);
+  }
+
+  bool checkStatus()
+  {
+    if (status != STATUS_NO_SOUND && reachedTimeout() == true)
     {
-        this->status = STATUS_NO_SOUND;
-        this->timeSoundActivated = 0;
+      deactivateSound();
+      status = STATUS_NO_SOUND;
+      return true;
     }
 
-    void setup()
-    {
-        ledcSetup(BUZZER_CHANNEL, BUZZER_FREQUENCY, BUZZER_RESOLUTION);
-        ledcAttachPin(this->pinSelected, BUZZER_CHANNEL);
-    }
-
-    void activateSuccessSound()
-    {
-        this->status = STATUS_SUCESS_SOUND;
-        startTimer();
-        ledcWriteTone(BUZZER_CHANNEL, BUZZER_SUCCESS_FREQ);
-    }
-
-    void activateErrorSound()
-    {
-        this->status = STATUS_FAIL_SOUND;
-        startTimer();
-        ledcWriteTone(BUZZER_CHANNEL, BUZZER_FAIL_FREQ);
-    }
-
-    void activateKeyPressedSound()
-    {
-        this->status = STATUS_KEY_SOUND;
-        startTimer();
-        ledcWriteTone(BUZZER_CHANNEL, BUZZER_KEY_FREQ);
-    }
-
-    void deactivateSound()
-    {
-        this->status = STATUS_NO_SOUND;
-        ledcWriteTone(BUZZER_CHANNEL, 0);
-    }
-
-    bool checkStatus()
-    {
-        if (status != STATUS_NO_SOUND && reachedTimeout() == true)
-        {
-            deactivateSound();
-            status = STATUS_NO_SOUND;
-            return true;
-        }
-
-        return false;
-    }
+    return false;
+  }
 };

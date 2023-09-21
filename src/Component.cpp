@@ -6,13 +6,13 @@
 class Component
 {
 protected:
-    int pinSelected;
+  int pinSelected;
 
 public:
-    Component(int pinSelected)
-    {
-        this->pinSelected = pinSelected;
-    }
+  Component(int pinSelected)
+  {
+    this->pinSelected = pinSelected;
+  }
 };
 
 #endif

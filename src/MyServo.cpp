@@ -9,32 +9,32 @@
 class MyServo : public Component
 {
 private:
-    Servo servo;
+  Servo servo;
 
 public:
-    MyServo(int pinSelected) : Component(pinSelected)
-    {
-        this->servo = Servo();
-    }
+  MyServo(int pinSelected) : Component(pinSelected)
+  {
+    this->servo = Servo();
+  }
 
-    void setup()
-    {
-        this->servo.attach(this->pinSelected, MIN_ANGLE, MAX_ANGLE);
-        this->servo.write(LOCK_ANGLE);
-    }
+  void setup()
+  {
+    this->servo.attach(this->pinSelected, MIN_ANGLE, MAX_ANGLE);
+    this->servo.write(LOCK_ANGLE);
+  }
 
-    void changeOrientation(int angle)
-    {
-        this->servo.write(angle);
-    }
+  void changeOrientation(int angle)
+  {
+    this->servo.write(angle);
+  }
 
-    void unlock()
-    {
-        this->servo.write(UNLOCK_ANGLE);
-    }
+  void unlock()
+  {
+    this->servo.write(UNLOCK_ANGLE);
+  }
 
-    void lock()
-    {
-        this->servo.write(LOCK_ANGLE);
-    }
+  void lock()
+  {
+    this->servo.write(LOCK_ANGLE);
+  }
 };
