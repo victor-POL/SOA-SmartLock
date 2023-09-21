@@ -17,7 +17,7 @@ LCD lcd = *LCD::getInstance();
 Lock doorLock = Lock();
 
 // Global
-int state;
+enum States state;
 int event;
 bool timeout;
 long lastCurrentTime;
