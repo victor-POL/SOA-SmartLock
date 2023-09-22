@@ -1,26 +1,32 @@
 #include <Arduino.h>
+#include "Component.cpp"
 #include "States.h"
 #include "Events.h"
 #include "Connections.h"
 
 extern enum Event event;
 
-class Button
+class Button : public Component
 {
 private:
+  int ReadSensor()
+  {
+    return digitalRead(this->pin_selected);
+  }
+
 public:
-  Button()
+  Button(int pin_selected) : Component(pin_selected)
   {
   }
 
   void Setup()
   {
-    pinMode(BUTTON_PIN, INPUT);
+    pinMode(this->pin_selected, INPUT);
   }
 
   bool CheckStatus()
   {
-    if (digitalRead(BUTTON_PIN) == LOW)
+    if (ReadSensor() == LOW)
     {
       event = Event::BotonPresionado;
       return true;

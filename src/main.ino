@@ -4,7 +4,7 @@
 UltrasonicEntrance entrance_sensor = UltrasonicEntrance(ENTRANCE_SENSOR_TRIGGER_PIN, ENTRANCE_SENSOR_ECHO_PIN);
 UltrasonicDoor door_sensor = UltrasonicDoor(DOOR_SENSOR_TRIGGER_PIN, DOOR_SENSOR_ECHO_PIN);
 KeyPad keypad = KeyPad();
-Button button = Button();
+Button button = Button(BUTTON_PIN);
 
 // Actuators
 MyServo entrance_door = MyServo(SERVO_PIN);
