@@ -6,6 +6,11 @@ class Relay : public Component
 private:
   bool is_on;
 
+  void WriteValue(int value)
+  {
+    digitalWrite(this->pin_selected, value);
+  }
+
 public:
   Relay(int pin_selected) : Component(pin_selected)
   {
@@ -20,16 +25,16 @@ public:
   void TurnOn()
   {
     this->is_on = true;
-    digitalWrite(this->pin_selected, HIGH);
+    WriteValue(HIGH);
   }
 
   void TurnOff()
   {
     this->is_on = false;
-    digitalWrite(this->pin_selected, LOW);
+    WriteValue(LOW);
   }
 
-  bool get_is_on()
+  bool GetIsOn()
   {
     return this->is_on;
   }

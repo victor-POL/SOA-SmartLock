@@ -8,16 +8,16 @@ private:
 public:
   void StoreData(const char *key, const char *val)
   {
-    preferences.begin("smartlock", false);
-    preferences.putString(key, val);
-    preferences.end();
+    this->preferences.begin("smartlock", false);
+    this->preferences.putString(key, val);
+    this->preferences.end();
   }
 
   String ReadData(const char *val, const char *default_val)
   {
-    preferences.begin("smartlock", false);
-    String ret = preferences.getString(val, default_val);
-    preferences.end();
+    this->preferences.begin("smartlock", false);
+    String ret = this->preferences.getString(val, default_val);
+    this->preferences.end();
     return ret;
   }
 };

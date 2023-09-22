@@ -620,7 +620,7 @@ void ShutdownScreen()
 
 void TurnOnEntranceLight()
 {
-  if (light.get_is_on() == false)
+  if (light.GetIsOn() == false)
   {
     light.TurnOn();
   }
@@ -628,7 +628,7 @@ void TurnOnEntranceLight()
 
 void TurnOffEntranceLight()
 {
-  if (light.get_is_on() == true)
+  if (light.GetIsOn() == true)
   {
     light.TurnOff();
   }
