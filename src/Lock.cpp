@@ -37,6 +37,21 @@ private:
     return time_elapsed > UMBRAL_TIMEOUT_PUERTA;
   }
 
+  bool Unlock()
+  {
+    if (this->pass_entered == this->valid_password)
+    {
+      StartTimer();
+      this->is_locked = false;
+      this->check_timeout_puerta = true;
+      return VALID_PASS;
+    }
+    else
+    {
+      return INVALID_PASS;
+    }
+  }
+
 public:
   Lock()
   {
@@ -56,21 +71,6 @@ public:
     StartTimer();
     this->is_locked = false;
     this->check_timeout_puerta = true;
-  }
-
-  bool Unlock()
-  {
-    if (this->pass_entered == this->valid_password)
-    {
-      StartTimer();
-      this->is_locked = false;
-      this->check_timeout_puerta = true;
-      return VALID_PASS;
-    }
-    else
-    {
-      return INVALID_PASS;
-    }
   }
 
   // Pass
@@ -101,23 +101,20 @@ public:
   }
 
   // Status
-  bool CheckStatus()
+  bool CheckPasswordExistence()
   {
     if (this->init_success == false)
     {
       this->init_success = true;
       this->valid_password = storage.ReadData("password", DEFAULT_PASSWORD);
-      if (this->valid_password == DEFAULT_PASSWORD)
-      {
-        event = Event::ClaveNoConfigurada;
-        return true;
-      }
-      else
-      {
-        event = Event::ClaveConfigurada;
-        return true;
-      }
+      event = this->valid_password == DEFAULT_PASSWORD ? Event::ClaveNoConfigurada : Event::ClaveConfigurada;
+      return true;
     }
+    return false;
+  }
+
+  bool CheckPasswordSettingInProgress()
+  {
     if (this->new_pass_in_progress == true)
     {
       this->new_pass_in_progress = false;
@@ -133,28 +130,28 @@ public:
       }
       return true;
     }
+    return false;
+  }
+
+  bool CheckUnlockInProgress()
+  {
     if (this->unlock_in_progress == true)
     {
       this->unlock_in_progress = false;
-
-      if (Unlock() == VALID_PASS)
-      {
-        event = Event::ClaveValida;
-      }
-      else
-      {
-        event = Event::ClaveInvalida;
-      }
-
+      event = Unlock() == VALID_PASS ? Event::ClaveValida : Event::ClaveInvalida;
       return true;
     }
-    else if (this->is_locked == false && this->check_timeout_puerta == true && ReachedTimeout())
+    return false;
+  }
+
+  bool CheckOpeningDoorTimeout()
+  {
+    if (this->is_locked == false && this->check_timeout_puerta == true && ReachedTimeout())
     {
       this->check_timeout_puerta = false;
       event = Event::TimeOutAperturaPuerta;
       return true;
     }
-
     return false;
   }
 
