@@ -55,7 +55,7 @@ void GenerateEvent()
 
     buzzer.CheckStatus();
 
-    if (button.CheckStatus() || door_lock.CheckStatus() || keypad.CheckStatus() || door_sensor.CheckStatus() || entrance_sensor.CheckStatus())
+    if (button.CheckStatus() || door_lock.CheckStatus() || keypad.CheckStatus() || door_sensor.CheckOpenedDoorTimer() || door_sensor.CheckClosedDoorTimer() || door_sensor.CheckStatus() || entrance_sensor.CheckStatus())
     {
       return;
     }
