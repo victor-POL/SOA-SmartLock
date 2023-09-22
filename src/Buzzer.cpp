@@ -22,17 +22,17 @@ class Buzzer : public Component
 {
 private:
   int status;
-  int timeSoundActivated;
+  int time_sound_activated;
 
-  void startTimer()
+  void StartTimer()
   {
-    timeSoundActivated = millis();
+    time_sound_activated = millis();
   }
 
-  bool reachedTimeout()
+  bool ReachedTimeout()
   {
-    int currentTime = millis();
-    int timeElapsed = currentTime - timeSoundActivated;
+    int current_time = millis();
+    int time_elapsed = current_time - time_sound_activated;
     int limit = 0;
 
     switch (status)
@@ -48,54 +48,54 @@ private:
       break;
     }
 
-    return timeElapsed > limit;
+    return time_elapsed > limit;
   }
 
 public:
-  Buzzer(int pinSelected) : Component(pinSelected)
+  Buzzer(int pin_selected) : Component(pin_selected)
   {
     this->status = STATUS_NO_SOUND;
-    this->timeSoundActivated = 0;
+    this->time_sound_activated = 0;
   }
 
-  void setup()
+  void Setup()
   {
     ledcSetup(BUZZER_CHANNEL, BUZZER_FREQUENCY, BUZZER_RESOLUTION);
-    ledcAttachPin(this->pinSelected, BUZZER_CHANNEL);
+    ledcAttachPin(this->pin_selected, BUZZER_CHANNEL);
   }
 
-  void activateSuccessSound()
+  void ActivateSuccessSound()
   {
     this->status = STATUS_SUCESS_SOUND;
-    startTimer();
+    StartTimer();
     ledcWriteTone(BUZZER_CHANNEL, BUZZER_SUCCESS_FREQ);
   }
 
-  void activateErrorSound()
+  void ActivateErrorSound()
   {
     this->status = STATUS_FAIL_SOUND;
-    startTimer();
+    StartTimer();
     ledcWriteTone(BUZZER_CHANNEL, BUZZER_FAIL_FREQ);
   }
 
-  void activateKeyPressedSound()
+  void ActivateKeyPressedSound()
   {
     this->status = STATUS_KEY_SOUND;
-    startTimer();
+    StartTimer();
     ledcWriteTone(BUZZER_CHANNEL, BUZZER_KEY_FREQ);
   }
 
-  void deactivateSound()
+  void DeactivateSound()
   {
     this->status = STATUS_NO_SOUND;
     ledcWriteTone(BUZZER_CHANNEL, 0);
   }
 
-  bool checkStatus()
+  bool CheckStatus()
   {
-    if (status != STATUS_NO_SOUND && reachedTimeout() == true)
+    if (status != STATUS_NO_SOUND && ReachedTimeout() == true)
     {
-      deactivateSound();
+      DeactivateSound();
       status = STATUS_NO_SOUND;
       return true;
     }

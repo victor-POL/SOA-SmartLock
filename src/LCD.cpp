@@ -12,15 +12,15 @@ class LCD
 private:
   LiquidCrystal_I2C screen;
 
-  int cursorPos;
+  int cursor_pos;
   static LCD *instance;
 
   LCD() : screen(LCD_ADDRESS, LCD_COLUMNS, LCD_ROWS)
   {
-    this->cursorPos = 0;
+    this->cursor_pos = 0;
   }
 
-  int findFirstNotSpace(const String &str)
+  int FindFirstNotSpace(const String &str)
   {
     int length = str.length();
     for (int i = 0; i < length; i++)
@@ -34,7 +34,7 @@ private:
   }
 
 public:
-  static LCD *getInstance()
+  static LCD *GetInstance()
   {
     if (instance == NULL)
     {
@@ -43,38 +43,38 @@ public:
     return instance;
   }
 
-  void setup()
+  void Setup()
   {
     this->screen.init();
   }
 
-  void loadInputPassScreen()
+  void LoadInputPassScreen()
   {
-    cursorPos = 0;
+    cursor_pos = 0;
     this->screen.clear();
-    showMessage("Ingrese clave:", 0);
+    ShowMessage("Ingrese clave:", 0);
     this->screen.setCursor(0, 1);
   }
 
-  void loadNewPassScreen()
+  void LoadNewPassScreen()
   {
-    cursorPos = 0;
+    cursor_pos = 0;
     this->screen.clear();
-    showMessage("Nueva clave:", 0);
+    ShowMessage("Nueva clave:", 0);
     this->screen.setCursor(0, 1);
   }
 
-  void loadConfirmNewPassScreen()
+  void LoadConfirmNewPassScreen()
   {
-    cursorPos = 0;
+    cursor_pos = 0;
     this->screen.clear();
-    showMessage("Confirma clave:", 0);
+    ShowMessage("Confirma clave:", 0);
     this->screen.setCursor(0, 1);
   }
 
-  void resetInputPassScreen()
+  void ResetInputPassScreen()
   {
-    cursorPos = 0;
+    cursor_pos = 0;
     this->screen.setCursor(0, 1);
     for (int i = 0; i < MAX_LCD_LENGTH; i++)
     {
@@ -84,27 +84,27 @@ public:
   }
 
   // Messages
-  void showKeyPressed(char keyPressed)
+  void ShowKeyPressed(char key_pressed)
   {
-    this->screen.setCursor(cursorPos, 1);
-    this->screen.print(keyPressed);
-    cursorPos++;
-    if (cursorPos >= MAX_LCD_LENGTH)
+    this->screen.setCursor(cursor_pos, 1);
+    this->screen.print(key_pressed);
+    cursor_pos++;
+    if (cursor_pos >= MAX_LCD_LENGTH)
     {
-      cursorPos = 0;
+      cursor_pos = 0;
     }
   }
 
-  void showMessage(String message1, String message2)
+  void ShowMessage(String first_message, String second_message)
   {
     this->screen.clear();
     this->screen.setCursor(0, 0);
-    this->screen.print(message1.c_str());
+    this->screen.print(first_message.c_str());
     this->screen.setCursor(0, 1);
-    this->screen.print(message2.c_str());
+    this->screen.print(second_message.c_str());
   }
 
-  void showMessage(String message, int line)
+  void ShowMessage(String message, int line)
   {
     this->screen.setCursor(0, line);
     this->screen.print(message.c_str());
@@ -112,19 +112,19 @@ public:
 
   // Cursor
 
-  void turnOff()
+  void TurnOff()
   {
     this->screen.clear();
     this->screen.noBacklight();
   }
 
-  void turnOn()
+  void TurnOn()
   {
     this->screen.clear();
     this->screen.backlight();
   }
 
-  void clear()
+  void Clear()
   {
     this->screen.clear();
   }

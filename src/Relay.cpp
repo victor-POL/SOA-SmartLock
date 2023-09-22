@@ -4,33 +4,33 @@
 class Relay : public Component
 {
 private:
-  bool isOn;
+  bool is_on;
 
 public:
-  Relay(int pinSelected) : Component(pinSelected)
+  Relay(int pin_selected) : Component(pin_selected)
   {
-    this->isOn = false;
+    this->is_on = false;
   }
 
-  void setup()
+  void Setup()
   {
-    pinMode(this->pinSelected, OUTPUT);
+    pinMode(this->pin_selected, OUTPUT);
   }
 
-  void turnOn()
+  void TurnOn()
   {
-    this->isOn = true;
-    digitalWrite(this->pinSelected, HIGH);
+    this->is_on = true;
+    digitalWrite(this->pin_selected, HIGH);
   }
 
-  void turnOff()
+  void TurnOff()
   {
-    this->isOn = false;
-    digitalWrite(this->pinSelected, LOW);
+    this->is_on = false;
+    digitalWrite(this->pin_selected, LOW);
   }
 
-  bool getIsOn()
+  bool get_is_on()
   {
-    return this->isOn;
+    return this->is_on;
   }
 };

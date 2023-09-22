@@ -7,26 +7,26 @@ private:
   Photoresistor photoresistor;
 
 public:
-  UltrasonicEntrance(int triggerPin, int echoPin) : Ultrasonic(triggerPin, echoPin), photoresistor(PHOTORESISTOR_PIN)
+  UltrasonicEntrance(int trigger_pin, int echo_pin) : Ultrasonic(trigger_pin, echo_pin), photoresistor(PHOTORESISTOR_PIN)
   {
   }
 
-  bool checkStatus()
+  bool CheckStatus()
   {
-    int currentDistance = getDistance();
-    int previousDistance = this->previousDistance;
+    int current_distance = GetDistance();
+    int previous_distance = this->previous_distance;
 
-    if (currentDistance != previousDistance)
+    if (current_distance != previous_distance)
     {
-      this->previousDistance = currentDistance;
-      if (currentDistance > UMBRAL_PERSONA_DETECTADA)
+      this->previous_distance = current_distance;
+      if (current_distance > UMBRAL_PERSONA_DETECTADA)
       {
-        event = EVENTO_PERSONA_NO_DETECTADA;
+        event = Event::PersonaNoDetectada;
         return true;
       }
       else
       {
-        event = photoresistor.getStatus() == "DAY" ? EVENTO_PERSONA_DETECTADA_DIA : EVENTO_PERSONA_DETECTADA_NOCHE;
+        event = photoresistor.GetStatus() == "DAY" ? Event::PersonaDetectadaDia : Event::PersonaDetectadaNoche;
         return true;
       }
     }

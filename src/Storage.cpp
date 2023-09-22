@@ -13,10 +13,10 @@ public:
     preferences.end();
   }
 
-  String ReadData(const char *val, const char *defaultVal)
+  String ReadData(const char *val, const char *default_val)
   {
     preferences.begin("smartlock", false);
-    String ret = preferences.getString(val, defaultVal);
+    String ret = preferences.getString(val, default_val);
     preferences.end();
     return ret;
   }

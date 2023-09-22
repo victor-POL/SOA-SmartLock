@@ -9,63 +9,63 @@
 #define UMBRAL_TIMEOUT_PUERTA 6000
 #define DEFAULT_PASSWORD "A"
 
-extern enum Events event;
+extern enum Event event;
 
 class Lock
 {
 private:
-  String passEntered;
-  String validPassword;
-  String newPasswordEntered;
-  bool isLocked;
-  bool unlockInProgress;
-  bool newPassInProgress;
-  bool checkTimeoutPuerta;
-  bool passwordSetted;
-  bool initSuccess;
-  int lastCurrentTime;
+  String pass_entered;
+  String valid_password;
+  String new_password_entered;
+  bool is_locked;
+  bool unlock_in_progress;
+  bool new_pass_in_progress;
+  bool check_timeout_puerta;
+  bool password_setted;
+  bool init_success;
+  int last_current_time;
   Storage storage;
 
-  void startTimer()
+  void StartTimer()
   {
-    lastCurrentTime = millis();
+    last_current_time = millis();
   }
 
-  bool reachedTimeout()
+  bool ReachedTimeout()
   {
-    int currentTime = millis();
-    int timeElapsed = currentTime - lastCurrentTime;
-    return timeElapsed > UMBRAL_TIMEOUT_PUERTA;
+    int current_time = millis();
+    int time_elapsed = current_time - last_current_time;
+    return time_elapsed > UMBRAL_TIMEOUT_PUERTA;
   }
 
 public:
   Lock()
   {
     storage = Storage();
-    validPassword = DEFAULT_PASSWORD;
-    passwordSetted = false;
-    initSuccess = false;
-    isLocked = true;
-    unlockInProgress = false;
-    newPassInProgress = false;
-    checkTimeoutPuerta = false;
-    lastCurrentTime = -1;
+    valid_password = DEFAULT_PASSWORD;
+    password_setted = false;
+    init_success = false;
+    is_locked = true;
+    unlock_in_progress = false;
+    new_pass_in_progress = false;
+    check_timeout_puerta = false;
+    last_current_time = -1;
   }
 
-  void unlockWithButton()
+  void UnlockWithButton()
   {
-    startTimer();
-    isLocked = false;
-    checkTimeoutPuerta = true;
+    StartTimer();
+    is_locked = false;
+    check_timeout_puerta = true;
   }
 
-  bool unlock()
+  bool Unlock()
   {
-    if (strcmp(passEntered.c_str(), validPassword.c_str()) == 0)
+    if (strcmp(pass_entered.c_str(), valid_password.c_str()) == 0)
     {
-      isLocked = false;
-      checkTimeoutPuerta = true;
-      startTimer();
+      is_locked = false;
+      check_timeout_puerta = true;
+      StartTimer();
       return VALID_PASS;
     }
     else
@@ -74,123 +74,118 @@ public:
     }
   }
 
-  void lock()
+  void ResetPassEntered()
   {
-    isLocked = true;
+    pass_entered = "";
   }
 
-  void resetPassEntered()
+  void ResetNewPassEntered()
   {
-    passEntered = "";
+    new_password_entered = "";
   }
 
-  void resetNewPassEntered()
+  void LoadCharacter(char key_pressed)
   {
-    newPasswordEntered = "";
-  }
-
-  void loadCharacter(char keyPressed)
-  {
-    if (passEntered.length() < MAX_PASSWORD_LENGTH)
+    if (pass_entered.length() < MAX_PASSWORD_LENGTH)
     {
-      passEntered += keyPressed;
+      pass_entered += key_pressed;
     }
   }
 
-  void loadNewCharacter(char keyPressed)
+  void LoadNewCharacter(char key_pressed)
   {
-    if (newPasswordEntered.length() < MAX_PASSWORD_LENGTH)
+    if (new_password_entered.length() < MAX_PASSWORD_LENGTH)
     {
-      newPasswordEntered += keyPressed;
+      new_password_entered += key_pressed;
     }
   }
 
-  String getPassEntered()
+  String get_pass_entered()
   {
-    return passEntered;
+    return pass_entered;
   }
 
-  bool checkStatus()
+  bool CheckStatus()
   {
-    if (initSuccess == false)
+    if (init_success == false)
     {
-      validPassword = storage.ReadData("password", DEFAULT_PASSWORD);
-      passwordSetted = strcmp(validPassword.c_str(), DEFAULT_PASSWORD) != 0;
-      initSuccess = true;
-      if (passwordSetted == false)
+      valid_password = storage.ReadData("password", DEFAULT_PASSWORD);
+      password_setted = strcmp(valid_password.c_str(), DEFAULT_PASSWORD) != 0;
+      init_success = true;
+      if (password_setted == false)
       {
-        event = EVENTO_CLAVE_NO_CONFIGURADA;
+        event = Event::ClaveNoConfigurada;
         return true;
       }
       else
       {
-        event = EVENTO_CLAVE_CONFIGURADA;
+        event = Event::ClaveConfigurada;
         return true;
       }
     }
-    if (newPassInProgress == true)
+    if (new_pass_in_progress == true)
     {
-      newPassInProgress = false;
-      if (newPasswordEntered == validPassword)
+      new_pass_in_progress = false;
+      if (new_password_entered == valid_password)
       {
-        event = EVENTO_CLAVE_VALIDA;
-        storage.StoreData("password", validPassword.c_str());
+        event = Event::ClaveValida;
+        storage.StoreData("password", valid_password.c_str());
       }
       else
       {
-        event = EVENTO_CLAVE_INVALIDA;
-        validPassword = "";
+        event = Event::ClaveInvalida;
+        valid_password = "";
       }
       return true;
     }
-    if (unlockInProgress == true)
+    if (unlock_in_progress == true)
     {
-      unlockInProgress = false;
+      unlock_in_progress = false;
 
-      if (unlock() == VALID_PASS)
+      if (Unlock() == VALID_PASS)
       {
-        event = EVENTO_CLAVE_VALIDA;
+        event = Event::ClaveValida;
       }
       else
       {
-        event = EVENTO_CLAVE_INVALIDA;
+        event = Event::ClaveInvalida;
       }
 
       return true;
     }
-    else if (isLocked == false && checkTimeoutPuerta == true && reachedTimeout())
+    else if (is_locked == false && check_timeout_puerta == true && ReachedTimeout())
     {
-      checkTimeoutPuerta = false;
-      event = EVENTO_TIMEOUT_APERTURA_PUERTA;
+      check_timeout_puerta = false;
+      event = Event::TimeOutAperturaPuerta;
       return true;
     }
 
     return false;
   }
 
-  void changeUnlockInProgress(bool unlockInProgress)
+  void ChangeUnlockInProgress(bool unlock_in_progress)
   {
-    this->unlockInProgress = unlockInProgress;
+    this->unlock_in_progress = unlock_in_progress;
   }
 
-  void setCheckTimeoutPuerta(bool checkTimeoutPuerta)
+  void SetCheckTimeoutPuerta(bool check_timeout_puerta)
   {
-    this->checkTimeoutPuerta = checkTimeoutPuerta;
+    this->check_timeout_puerta = check_timeout_puerta;
   }
 
-  bool checkPassword(String password)
+  bool CheckPassword(String password)
   {
-    return strcmp(password.c_str(), validPassword.c_str()) == 0;
+    return strcmp(password.c_str(), valid_password.c_str()) == 0;
   }
 
-  void toPasswordConfirmation()
+  void ToPasswordConfirmation()
   {
-    validPassword = newPasswordEntered;
-    newPasswordEntered = "";
+    valid_password = new_password_entered;
+    new_password_entered = "";
   }
 
-  void changeNewPassInProgress(bool newPassInProgress)
+  void ChangeNewPassInProgress(bool new_pass_in_progress)
   {
-    this->newPassInProgress = newPassInProgress;
+    this->new_pass_in_progress = new_pass_in_progress;
   }
 };
