@@ -11,9 +11,9 @@ public:
   {
   }
 
-  bool checkStatus()
+  bool CheckStatus()
   {
-    int currentDistance = getDistance();
+    int currentDistance = GetDistance();
     int previousDistance = this->previousDistance;
 
     if (currentDistance != previousDistance)
@@ -26,7 +26,7 @@ public:
       }
       else
       {
-        event = photoresistor.getStatus() == "DAY" ? EVENTO_PERSONA_DETECTADA_DIA : EVENTO_PERSONA_DETECTADA_NOCHE;
+        event = photoresistor.GetStatus() == "DAY" ? EVENTO_PERSONA_DETECTADA_DIA : EVENTO_PERSONA_DETECTADA_NOCHE;
         return true;
       }
     }

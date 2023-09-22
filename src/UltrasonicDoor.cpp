@@ -14,24 +14,24 @@ private:
   bool timerClosedActivated;
   bool status;
 
-  void startTimerOpened()
+  void StartTimerOpened()
   {
     timeOpened = millis();
   }
 
-  void startTimerClosed()
+  void StartTimerClosed()
   {
     timeClosed = millis();
   }
 
-  bool reachedTimeoutClosed()
+  bool ReachedTimeoutClosed()
   {
     int currentTime = millis();
     int timeElapsed = currentTime - timeClosed;
     return timeElapsed > UMBRAL_TIEMPO_PUERTA_CERRADA;
   }
 
-  bool reachedTimeoutOpened()
+  bool ReachedTimeoutOpened()
   {
     int currentTime = millis();
     int timeElapsed = currentTime - timeOpened;
@@ -48,12 +48,12 @@ public:
     timerClosedActivated = false;
   }
 
-  bool checkStatus()
+  bool CheckStatus()
   {
-    int currentDistance = getDistance();
+    int currentDistance = GetDistance();
     int previousDistance = this->previousDistance;
 
-    if (timerClosedActivated == true && reachedTimeoutClosed())
+    if (timerClosedActivated == true && ReachedTimeoutClosed())
     {
       timerClosedActivated = false;
       doorOpenNotificationSent = false;
@@ -62,7 +62,7 @@ public:
       return true;
     }
 
-    if (timerOpenedActivated == true && doorOpenNotificationSent == true && reachedTimeoutOpened() == true)
+    if (timerOpenedActivated == true && doorOpenNotificationSent == true && ReachedTimeoutOpened() == true)
     {
       doorOpenNotificationSent = false;
       event = EVENTO_NOTIFICAR_PUERTA_ABIERTA;
@@ -78,7 +78,7 @@ public:
       {
         doorOpenNotificationSent = true;
         timerOpenedActivated = true;
-        startTimerOpened();
+        StartTimerOpened();
         status = DOOR_OPEN;
         event = EVENTO_SE_ABRIO_PUERTA;
         return true;
@@ -87,7 +87,7 @@ public:
       {
         if (isDoorDetected == true && timerClosedActivated == false)
         {
-          startTimerClosed();
+          StartTimerClosed();
           timerClosedActivated = true;
         }
         else if (isDoorDetected == false && timerClosedActivated == true)

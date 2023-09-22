@@ -12,24 +12,24 @@ public:
     this->isOn = false;
   }
 
-  void setup()
+  void Setup()
   {
     pinMode(this->pinSelected, OUTPUT);
   }
 
-  void turnOn()
+  void TurnOn()
   {
     this->isOn = true;
     digitalWrite(this->pinSelected, HIGH);
   }
 
-  void turnOff()
+  void TurnOff()
   {
     this->isOn = false;
     digitalWrite(this->pinSelected, LOW);
   }
 
-  bool getIsOn()
+  bool get_is_on()
   {
     return this->isOn;
   }

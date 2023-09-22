@@ -47,14 +47,14 @@ public:
     this->lastKeyPressed = NO_PRESSED_KEY;
   }
 
-  char getPressedKey()
+  char GetPressedKey()
   {
     return this->keypad.getKey();
   }
 
-  bool checkStatus()
+  bool CheckStatus()
   {
-    char actualPressedKey = getPressedKey();
+    char actualPressedKey = GetPressedKey();
 
     if (actualPressedKey != NO_PRESSED_KEY)
     {
@@ -78,7 +78,7 @@ public:
     return false;
   }
 
-  char getLastKeyPressed()
+  char get_last_key_pressed()
   {
     return lastKeyPressed;
   }

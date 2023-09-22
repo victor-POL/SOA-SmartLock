@@ -13,12 +13,12 @@ public:
   {
   }
 
-  void setup()
+  void Setup()
   {
     pinMode(BUTTON_PIN, INPUT);
   }
 
-  bool checkStatus()
+  bool CheckStatus()
   {
     if (digitalRead(BUTTON_PIN) == LOW)
     {

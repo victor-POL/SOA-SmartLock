@@ -11,7 +11,7 @@
 
 extern enum Events event;
 
-class Lock
+class Locker
 {
 private:
   String passEntered;
@@ -26,12 +26,12 @@ private:
   int lastCurrentTime;
   Storage storage;
 
-  void startTimer()
+  void StartTimer()
   {
     lastCurrentTime = millis();
   }
 
-  bool reachedTimeout()
+  bool ReachedTimeout()
   {
     int currentTime = millis();
     int timeElapsed = currentTime - lastCurrentTime;
@@ -39,7 +39,7 @@ private:
   }
 
 public:
-  Lock()
+  Locker()
   {
     storage = Storage();
     validPassword = DEFAULT_PASSWORD;
@@ -52,20 +52,20 @@ public:
     lastCurrentTime = -1;
   }
 
-  void unlockWithButton()
+  void UnlockWithButton()
   {
-    startTimer();
+    StartTimer();
     isLocked = false;
     checkTimeoutPuerta = true;
   }
 
-  bool unlock()
+  bool Unlock()
   {
     if (strcmp(passEntered.c_str(), validPassword.c_str()) == 0)
     {
       isLocked = false;
       checkTimeoutPuerta = true;
-      startTimer();
+      StartTimer();
       return VALID_PASS;
     }
     else
@@ -74,22 +74,22 @@ public:
     }
   }
 
-  void lock()
+  void Lock()
   {
     isLocked = true;
   }
 
-  void resetPassEntered()
+  void ResetPassEntered()
   {
     passEntered = "";
   }
 
-  void resetNewPassEntered()
+  void ResetNewPassEntered()
   {
     newPasswordEntered = "";
   }
 
-  void loadCharacter(char keyPressed)
+  void LoadCharacter(char keyPressed)
   {
     if (passEntered.length() < MAX_PASSWORD_LENGTH)
     {
@@ -97,7 +97,7 @@ public:
     }
   }
 
-  void loadNewCharacter(char keyPressed)
+  void LoadNewCharacter(char keyPressed)
   {
     if (newPasswordEntered.length() < MAX_PASSWORD_LENGTH)
     {
@@ -105,12 +105,12 @@ public:
     }
   }
 
-  String getPassEntered()
+  String get_pass_entered()
   {
     return passEntered;
   }
 
-  bool checkStatus()
+  bool CheckStatus()
   {
     if (initSuccess == false)
     {
@@ -147,7 +147,7 @@ public:
     {
       unlockInProgress = false;
 
-      if (unlock() == VALID_PASS)
+      if (Unlock() == VALID_PASS)
       {
         event = EVENTO_CLAVE_VALIDA;
       }
@@ -158,7 +158,7 @@ public:
 
       return true;
     }
-    else if (isLocked == false && checkTimeoutPuerta == true && reachedTimeout())
+    else if (isLocked == false && checkTimeoutPuerta == true && ReachedTimeout())
     {
       checkTimeoutPuerta = false;
       event = EVENTO_TIMEOUT_APERTURA_PUERTA;
@@ -168,28 +168,28 @@ public:
     return false;
   }
 
-  void changeUnlockInProgress(bool unlockInProgress)
+  void ChangeUnlockInProgress(bool unlockInProgress)
   {
     this->unlockInProgress = unlockInProgress;
   }
 
-  void setCheckTimeoutPuerta(bool checkTimeoutPuerta)
+  void SetCheckTimeoutPuerta(bool checkTimeoutPuerta)
   {
     this->checkTimeoutPuerta = checkTimeoutPuerta;
   }
 
-  bool checkPassword(String password)
+  bool CheckPassword(String password)
   {
     return strcmp(password.c_str(), validPassword.c_str()) == 0;
   }
 
-  void toPasswordConfirmation()
+  void ToPasswordConfirmation()
   {
     validPassword = newPasswordEntered;
     newPasswordEntered = "";
   }
 
-  void changeNewPassInProgress(bool newPassInProgress)
+  void ChangeNewPassInProgress(bool newPassInProgress)
   {
     this->newPassInProgress = newPassInProgress;
   }

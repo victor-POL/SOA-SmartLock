@@ -26,13 +26,13 @@ public:
     this->previousDistance = 0;
   }
 
-  void setup()
+  void Setup()
   {
     pinMode(triggerPinSelected, OUTPUT);
     pinMode(echoPinSelected, INPUT);
   }
 
-  int getDistance()
+  int GetDistance()
   {
     digitalWrite(triggerPinSelected, LOW);
     delayMicroseconds(2);

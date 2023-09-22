@@ -11,10 +11,10 @@ MyServo entranceDoor = MyServo(SERVO_PIN);
 Buzzer buzzer = Buzzer(BUZZER_PIN);
 Relay light = Relay(RELAY_PIN);
 LCD *LCD::instance = NULL;
-LCD lcd = *LCD::getInstance();
+LCD lcd = *LCD::GetInstance();
 
 // Lock
-Lock doorLock = Lock();
+Locker doorLock = Locker();
 
 // Global
 enum States state;
@@ -26,14 +26,14 @@ void doInit()
 {
   Serial.begin(115200);
 
-  entranceDoor.setup();
-  entranceSensor.setup();
-  doorSensor.setup();
-  button.setup();
+  entranceDoor.Setup();
+  entranceSensor.Setup();
+  doorSensor.Setup();
+  button.Setup();
 
-  buzzer.setup();
-  light.setup();
-  lcd.setup();
+  buzzer.Setup();
+  light.Setup();
+  lcd.Setup();
 
   state = ESTADO_CERRADURA_INIT;
   event = EVENTO_CONTINUE;
@@ -53,9 +53,9 @@ void generateEvent()
     timeout = false;
     lastCurrentTime = currentTime;
 
-    buzzer.checkStatus();
+    buzzer.CheckStatus();
 
-    if (button.checkStatus() || doorLock.checkStatus() || keypad.checkStatus() || doorSensor.checkStatus() || entranceSensor.checkStatus())
+    if (button.CheckStatus() || doorLock.CheckStatus() || keypad.CheckStatus() || doorSensor.CheckStatus() || entranceSensor.CheckStatus())
     {
       return;
     }
@@ -304,7 +304,7 @@ void stateMachine()
     case EVENTO_BOTON_PRESIONADO:
     {
       showActualState("ESTADO_BLOQUEADO_ESPERANDO_VISITA", "EVENTO_BOTON_PRESIONADO");
-      doorLock.unlockWithButton();
+      doorLock.UnlockWithButton();
       unlockEntranceDoor();
       state = ESTADO_ESPERANDO_APERTURA_PUERTA_BOTON;
     }
@@ -581,126 +581,126 @@ void showActualState(String strState, String strEvent)
 
 void initializeScreenToInputPassword()
 {
-  lcd.turnOn();
-  lcd.loadInputPassScreen();
+  lcd.TurnOn();
+  lcd.LoadInputPassScreen();
 }
 
 void initializeScreenToInputNewPassword()
 {
-  lcd.turnOn();
-  lcd.loadNewPassScreen();
+  lcd.TurnOn();
+  lcd.LoadNewPassScreen();
 }
 
 void initializeScreenToInputPasswordConfirmation()
 {
-  lcd.turnOn();
-  lcd.loadConfirmNewPassScreen();
+  lcd.TurnOn();
+  lcd.LoadConfirmNewPassScreen();
 }
 
 void clearPassEnteredOnScreen()
 {
-  lcd.resetInputPassScreen();
+  lcd.ResetInputPassScreen();
 }
 
 void showPasswordCharPressedOnScreen()
 {
-  lcd.showKeyPressed(keypad.getLastKeyPressed());
+  lcd.ShowKeyPressed(keypad.get_last_key_pressed());
 }
 
 void showValidPassMessageOnScreen()
 {
-  lcd.showMessage("Clave correcta", "Empuje la puerta");
+  lcd.ShowMessage("Clave correcta", "Empuje la puerta");
 }
 
 void shutdownScreen()
 {
-  lcd.clear();
-  lcd.turnOff();
+  lcd.Clear();
+  lcd.TurnOff();
 }
 
 void turnOnEntranceLight()
 {
-  if (light.getIsOn() == false)
+  if (light.get_is_on() == false)
   {
-    light.turnOn();
+    light.TurnOn();
   }
 }
 
 void turnOffEntranceLight()
 {
-  if (light.getIsOn() == true)
+  if (light.get_is_on() == true)
   {
-    light.turnOff();
+    light.TurnOff();
   }
 }
 
 void clearPassEnteredIntoLock()
 {
-  doorLock.resetPassEntered();
+  doorLock.ResetPassEntered();
 }
 
 void clearNewPassEnteredIntoLock()
 {
-  doorLock.resetNewPassEntered();
+  doorLock.ResetNewPassEntered();
 }
 
 void reproduceInvalidPassSoundInBuzzer()
 {
-  buzzer.activateErrorSound();
+  buzzer.ActivateErrorSound();
 }
 
 void reproduceValidPassSoundInBuzzer()
 {
-  buzzer.activateSuccessSound();
+  buzzer.ActivateSuccessSound();
 }
 
 void reproduceKeyPressedSoundInBuzzer()
 {
-  buzzer.activateKeyPressedSound();
+  buzzer.ActivateKeyPressedSound();
 }
 
 void startPasswordValidation()
 {
-  doorLock.changeUnlockInProgress(true);
+  doorLock.ChangeUnlockInProgress(true);
 }
 
 void startNewPasswordConfirmation()
 {
-  doorLock.toPasswordConfirmation();
+  doorLock.ToPasswordConfirmation();
 }
 
 void startNewPasswordValidation()
 {
-  doorLock.changeNewPassInProgress(true);
+  doorLock.ChangeNewPassInProgress(true);
 }
 
 void loadPasswordCharPressedIntoLock()
 {
-  doorLock.loadCharacter(keypad.getLastKeyPressed());
+  doorLock.LoadCharacter(keypad.get_last_key_pressed());
 }
 
 void loadNewPasswordCharPressedIntoLock()
 {
-  doorLock.loadNewCharacter(keypad.getLastKeyPressed());
+  doorLock.LoadNewCharacter(keypad.get_last_key_pressed());
 }
 
 void unlockEntranceDoor()
 {
-  entranceDoor.unlock();
+  entranceDoor.Unlock();
 }
 
 void lockEntranceDoor()
 {
-  entranceDoor.lock();
+  entranceDoor.Lock();
 }
 
 void showOpenDoorMessageOnScreen()
 {
-  lcd.turnOn();
-  lcd.showMessage("Puerta abierta", "pase");
+  lcd.TurnOn();
+  lcd.ShowMessage("Puerta abierta", "pase");
 }
 
 void cancelDoorOpenTimer()
 {
-  doorLock.changeUnlockInProgress(false);
+  doorLock.ChangeUnlockInProgress(false);
 }

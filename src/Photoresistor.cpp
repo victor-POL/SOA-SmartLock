@@ -15,12 +15,12 @@ public:
   {
   }
 
-  void setup()
+  void Setup()
   {
     pinMode(this->pinSelected, INPUT);
   }
 
-  int getLux()
+  int GetLux()
   {
     int analogValue = analogRead(this->pinSelected);
     float voltage = analogValue / 1024. * 3.3;
@@ -30,8 +30,8 @@ public:
     return lux;
   }
 
-  String getStatus()
+  String GetStatus()
   {
-    return getLux() > UMBRAL_LUX_NOCHE ? "DAY" : "NIGHT";
+    return GetLux() > UMBRAL_LUX_NOCHE ? "DAY" : "NIGHT";
   }
 };
