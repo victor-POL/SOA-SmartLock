@@ -12,7 +12,7 @@ private:
   Servo servo;
 
 public:
-  MyServo(int pinSelected) : Component(pinSelected)
+  MyServo(int pin_selected) : Component(pin_selected)
   {
     this->servo = Servo();
   }

@@ -7,77 +7,77 @@
 class UltrasonicDoor : public Ultrasonic
 {
 private:
-  int timeOpened;
-  int timeClosed;
-  bool doorOpenNotificationSent;
-  bool timerOpenedActivated;
-  bool timerClosedActivated;
+  int time_opened;
+  int time_closed;
+  bool door_open_notification_sent;
+  bool timer_opened_activated;
+  bool timer_closed_activated;
   bool status;
 
   void StartTimerOpened()
   {
-    timeOpened = millis();
+    time_opened = millis();
   }
 
   void StartTimerClosed()
   {
-    timeClosed = millis();
+    time_closed = millis();
   }
 
   bool ReachedTimeoutClosed()
   {
-    int currentTime = millis();
-    int timeElapsed = currentTime - timeClosed;
-    return timeElapsed > UMBRAL_TIEMPO_PUERTA_CERRADA;
+    int current_time = millis();
+    int time_elapsed = current_time - time_closed;
+    return time_elapsed > UMBRAL_TIEMPO_PUERTA_CERRADA;
   }
 
   bool ReachedTimeoutOpened()
   {
-    int currentTime = millis();
-    int timeElapsed = currentTime - timeOpened;
-    return timeElapsed > UMBRAL_TIEMPO_PUERTA_ABIERTA;
+    int current_time = millis();
+    int time_elapsed = current_time - time_opened;
+    return time_elapsed > UMBRAL_TIEMPO_PUERTA_ABIERTA;
   }
 
 public:
-  UltrasonicDoor(int triggerPin, int echoPin) : Ultrasonic(triggerPin, echoPin)
+  UltrasonicDoor(int trigger_pin, int echo_pin) : Ultrasonic(trigger_pin, echo_pin)
   {
-    previousDistance = 0;
-    timeOpened = 0;
-    timeClosed = 0;
+    previous_distance = 0;
+    time_opened = 0;
+    time_closed = 0;
     status = DOOR_CLOSED;
-    timerClosedActivated = false;
+    timer_closed_activated = false;
   }
 
   bool CheckStatus()
   {
-    int currentDistance = GetDistance();
-    int previousDistance = this->previousDistance;
+    int current_distance = GetDistance();
+    int previous_distance = this->previous_distance;
 
-    if (timerClosedActivated == true && ReachedTimeoutClosed())
+    if (timer_closed_activated == true && ReachedTimeoutClosed())
     {
-      timerClosedActivated = false;
-      doorOpenNotificationSent = false;
+      timer_closed_activated = false;
+      door_open_notification_sent = false;
       status = DOOR_CLOSED;
       event = EVENTO_SE_CERRO_PUERTA;
       return true;
     }
 
-    if (timerOpenedActivated == true && doorOpenNotificationSent == true && ReachedTimeoutOpened() == true)
+    if (timer_closed_activated == true && door_open_notification_sent == true && ReachedTimeoutOpened() == true)
     {
-      doorOpenNotificationSent = false;
+      door_open_notification_sent = false;
       event = EVENTO_NOTIFICAR_PUERTA_ABIERTA;
       return true;
     }
 
-    if (currentDistance != previousDistance)
+    if (current_distance != previous_distance)
     {
-      this->previousDistance = currentDistance;
-      bool isDoorDetected = currentDistance < UMBRAL_PUERTA_ABIERTA;
+      this->previous_distance = current_distance;
+      bool is_door_detected = current_distance < UMBRAL_PUERTA_ABIERTA;
 
-      if (isDoorDetected == false && status == DOOR_CLOSED)
+      if (is_door_detected == false && status == DOOR_CLOSED)
       {
-        doorOpenNotificationSent = true;
-        timerOpenedActivated = true;
+        door_open_notification_sent = true;
+        timer_opened_activated = true;
         StartTimerOpened();
         status = DOOR_OPEN;
         event = EVENTO_SE_ABRIO_PUERTA;
@@ -85,14 +85,14 @@ public:
       }
       else if (status == DOOR_OPEN)
       {
-        if (isDoorDetected == true && timerClosedActivated == false)
+        if (is_door_detected == true && timer_closed_activated == false)
         {
           StartTimerClosed();
-          timerClosedActivated = true;
+          timer_closed_activated = true;
         }
-        else if (isDoorDetected == false && timerClosedActivated == true)
+        else if (is_door_detected == false && timer_closed_activated == true)
         {
-          timerClosedActivated = false;
+          timer_closed_activated = false;
         }
       }
     }

@@ -95,13 +95,13 @@ public:
     }
   }
 
-  void ShowMessage(String message1, String message2)
+  void ShowMessage(String first_message, String second_message)
   {
     this->screen.clear();
     this->screen.setCursor(0, 0);
-    this->screen.print(message1.c_str());
+    this->screen.print(first_message.c_str());
     this->screen.setCursor(0, 1);
-    this->screen.print(message2.c_str());
+    this->screen.print(second_message.c_str());
   }
 
   void ShowMessage(String message, int line)
