@@ -9,6 +9,11 @@ private:
   const float GAMMA = 0.7;
   const float RL10 = 85;
   int previous_lux;
+  
+  int ReadSensor()
+  {
+    return analogRead(this->pin_selected);
+  }
 
 public:
   Photoresistor(int pin_selected) : Component(pin_selected)
@@ -22,10 +27,10 @@ public:
 
   int GetLux()
   {
-    int analog_value = analogRead(this->pin_selected);
+    int analog_value = ReadSensor();
     float voltage = analog_value / 1024. * 3.3;
     float resistance = 5000 * voltage / (1 - voltage / 3.3);
-    float lux = pow(RL10 * 1e3 * pow(10, this->GAMMA) / resistance, (1 / this->GAMMA));
+    float lux = pow(this->RL10 * 1e3 * pow(10, this->GAMMA) / resistance, (1 / this->GAMMA));
     this->previous_lux = lux;
     return lux;
   }

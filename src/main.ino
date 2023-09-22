@@ -604,7 +604,7 @@ void ClearPassEnteredOnScreen()
 
 void ShowPasswordCharPressedOnScreen()
 {
-  lcd.ShowKeyPressed(keypad.get_last_key_pressed());
+  lcd.ShowKeyPressed(keypad.GetLastKeyPressed());
 }
 
 void ShowValidPassMessageOnScreen()
@@ -676,12 +676,12 @@ void StartNewPasswordValidation()
 
 void LoadPasswordCharPressedIntoLock()
 {
-  door_lock.LoadCharacter(keypad.get_last_key_pressed());
+  door_lock.LoadCharacter(keypad.GetLastKeyPressed());
 }
 
 void LoadNewPasswordCharPressedIntoLock()
 {
-  door_lock.LoadNewCharacter(keypad.get_last_key_pressed());
+  door_lock.LoadNewCharacter(keypad.GetLastKeyPressed());
 }
 
 void UnlockEntranceDoor()
