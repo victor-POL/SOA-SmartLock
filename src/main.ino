@@ -581,19 +581,19 @@ void ShowActualState(String strState, String strEvent)
 
 void InitializeScreenToInputPassword()
 {
-  lcd.TurnOn();
+  lcd.TurnOnScreen();
   lcd.LoadInputPassScreen();
 }
 
 void InitializeScreenToInputNewPassword()
 {
-  lcd.TurnOn();
+  lcd.TurnOnScreen();
   lcd.LoadNewPassScreen();
 }
 
 void InitializeScreenToInputPasswordConfirmation()
 {
-  lcd.TurnOn();
+  lcd.TurnOnScreen();
   lcd.LoadConfirmNewPassScreen();
 }
 
@@ -614,8 +614,8 @@ void ShowValidPassMessageOnScreen()
 
 void ShutdownScreen()
 {
-  lcd.Clear();
-  lcd.TurnOff();
+  lcd.ClearScreen();
+  lcd.TurnOffScreen();
 }
 
 void TurnOnEntranceLight()
@@ -696,7 +696,7 @@ void LockEntranceDoor()
 
 void ShowOpenDoorMessageOnScreen()
 {
-  lcd.TurnOn();
+  lcd.TurnOnScreen();
   lcd.ShowMessage("Puerta abierta", "pase");
 }
 

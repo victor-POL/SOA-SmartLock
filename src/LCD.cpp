@@ -1,11 +1,8 @@
 #include <Arduino.h>
 #include <LiquidCrystal_I2C.h>
-#include <string>
 #include "Connections.h"
 
 #define MAX_LCD_LENGTH 16
-#define CURSOR_INTERVAL 500
-#define UPDATE_CURSOR 1
 
 class LCD
 {
@@ -20,17 +17,24 @@ private:
     this->cursor_pos = 0;
   }
 
-  int FindFirstNotSpace(const String &str)
+  void SetCursor(int x, int y)
   {
-    int length = str.length();
-    for (int i = 0; i < length; i++)
-    {
-      if (!isWhitespace(str.charAt(i)))
-      {
-        return i;
-      }
-    }
-    return -1;
+    this->screen.setCursor(x, y);
+  }
+
+  void Print(String message)
+  {
+    this->screen.print(message.c_str());
+  }
+
+  void TurnOn()
+  {
+    this->screen.backlight();
+  }
+
+  void TurnOff()
+  {
+    this->screen.noBacklight();
   }
 
 public:
@@ -48,83 +52,78 @@ public:
     this->screen.init();
   }
 
+  // Predefinen screens
   void LoadInputPassScreen()
   {
-    cursor_pos = 0;
-    this->screen.clear();
+    this->cursor_pos = 0;
+    ClearScreen();
     ShowMessage("Ingrese clave:", 0);
-    this->screen.setCursor(0, 1);
+    SetCursor(0, 1);
   }
 
   void LoadNewPassScreen()
   {
-    cursor_pos = 0;
-    this->screen.clear();
+    this->cursor_pos = 0;
+    ClearScreen();
     ShowMessage("Nueva clave:", 0);
-    this->screen.setCursor(0, 1);
+    SetCursor(0, 1);
   }
 
   void LoadConfirmNewPassScreen()
   {
-    cursor_pos = 0;
-    this->screen.clear();
+    this->cursor_pos = 0;
+    ClearScreen();
     ShowMessage("Confirma clave:", 0);
-    this->screen.setCursor(0, 1);
+    SetCursor(0, 1);
   }
 
   void ResetInputPassScreen()
   {
-    cursor_pos = 0;
-    this->screen.setCursor(0, 1);
-    for (int i = 0; i < MAX_LCD_LENGTH; i++)
-    {
-      this->screen.print(' ');
-    }
-    this->screen.setCursor(0, 1);
+    this->cursor_pos = 0;
+    LoadInputPassScreen();
   }
 
   // Messages
   void ShowKeyPressed(char key_pressed)
   {
-    this->screen.setCursor(cursor_pos, 1);
-    this->screen.print(key_pressed);
-    cursor_pos++;
-    if (cursor_pos >= MAX_LCD_LENGTH)
+    SetCursor(this->cursor_pos, 1);
+    Print((String)key_pressed);
+    this->cursor_pos++;
+    if (this->cursor_pos >= MAX_LCD_LENGTH)
     {
-      cursor_pos = 0;
+      this->cursor_pos = 0;
     }
   }
 
   void ShowMessage(String first_message, String second_message)
   {
-    this->screen.clear();
-    this->screen.setCursor(0, 0);
-    this->screen.print(first_message.c_str());
-    this->screen.setCursor(0, 1);
-    this->screen.print(second_message.c_str());
+    ClearScreen();
+    SetCursor(0, 0);
+    Print(first_message);
+    SetCursor(0, 1);
+    Print(second_message);
   }
 
   void ShowMessage(String message, int line)
   {
-    this->screen.setCursor(0, line);
-    this->screen.print(message.c_str());
+    SetCursor(0, line);
+    Print(message);
   }
 
-  // Cursor
-
-  void TurnOff()
+  // Actions
+  void TurnOffScreen()
   {
-    this->screen.clear();
-    this->screen.noBacklight();
+    ClearScreen();
+    TurnOff();
   }
 
-  void TurnOn()
+  void TurnOnScreen()
   {
-    this->screen.clear();
-    this->screen.backlight();
+    ClearScreen();
+    TurnOn();
   }
 
-  void Clear()
+  void ClearScreen()
   {
     this->screen.clear();
   }
