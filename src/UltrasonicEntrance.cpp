@@ -16,7 +16,7 @@ public:
     int current_distance = GetDistance();
     int previous_distance = this->previous_distance;
 
-    if (current_distance != previous_distance)
+    if (abs(current_distance - previous_distance) > UMBRAL_CAMBIO_VALOR)
     {
       this->previous_distance = current_distance;
       if (current_distance > UMBRAL_PERSONA_DETECTADA)
