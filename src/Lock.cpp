@@ -9,7 +9,7 @@
 #define UMBRAL_TIMEOUT_PUERTA 6000
 #define DEFAULT_PASSWORD "A"
 
-extern enum Events event;
+extern enum Event event;
 
 class Locker
 {
@@ -119,12 +119,12 @@ public:
       init_success = true;
       if (password_setted == false)
       {
-        event = EVENTO_CLAVE_NO_CONFIGURADA;
+        event = Event::ClaveNoConfigurada;
         return true;
       }
       else
       {
-        event = EVENTO_CLAVE_CONFIGURADA;
+        event = Event::ClaveConfigurada;
         return true;
       }
     }
@@ -133,12 +133,12 @@ public:
       new_pass_in_progress = false;
       if (new_password_entered == valid_password)
       {
-        event = EVENTO_CLAVE_VALIDA;
+        event = Event::ClaveValida;
         storage.StoreData("password", valid_password.c_str());
       }
       else
       {
-        event = EVENTO_CLAVE_INVALIDA;
+        event = Event::ClaveInvalida;
         valid_password = "";
       }
       return true;
@@ -149,11 +149,11 @@ public:
 
       if (Unlock() == VALID_PASS)
       {
-        event = EVENTO_CLAVE_VALIDA;
+        event = Event::ClaveValida;
       }
       else
       {
-        event = EVENTO_CLAVE_INVALIDA;
+        event = Event::ClaveInvalida;
       }
 
       return true;
@@ -161,7 +161,7 @@ public:
     else if (is_locked == false && check_timeout_puerta == true && ReachedTimeout())
     {
       check_timeout_puerta = false;
-      event = EVENTO_TIMEOUT_APERTURA_PUERTA;
+      event = Event::TimeOutAperturaPuerta;
       return true;
     }
 

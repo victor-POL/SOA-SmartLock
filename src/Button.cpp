@@ -3,7 +3,7 @@
 #include "Events.h"
 #include "Connections.h"
 
-extern enum Events event;
+extern enum Event event;
 
 class Button
 {
@@ -22,7 +22,7 @@ public:
   {
     if (digitalRead(BUTTON_PIN) == LOW)
     {
-      event = EVENTO_BOTON_PRESIONADO;
+      event = Event::BotonPresionado;
       return true;
     }
     return false;

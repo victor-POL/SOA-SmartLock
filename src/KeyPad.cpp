@@ -14,7 +14,7 @@
 #define KEYS_ROW_3 '7', '8', '9'
 #define KEYS_ROW_4 '*', '0', '#'
 
-extern enum Events event;
+extern enum Event event;
 
 class KeyPad
 {
@@ -63,13 +63,13 @@ public:
       switch (actual_pressed_key)
       {
       case KEY_CLEAR:
-        event = EVENTO_CLEAR_CLAVE_INGRESADA;
+        event = Event::ClearClaveIngresada;
         break;
       case KEY_ENTER:
-        event = EVENTO_VALIDAR_CLAVE;
+        event = Event::ValidarClave;
         break;
       default:
-        event = EVENTO_CARACTER_INGRESADO;
+        event = Event::CaracterIngresado;
       }
 
       return true;

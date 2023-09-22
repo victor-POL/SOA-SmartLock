@@ -58,14 +58,14 @@ public:
       timer_closed_activated = false;
       door_open_notification_sent = false;
       status = DOOR_CLOSED;
-      event = EVENTO_SE_CERRO_PUERTA;
+      event = Event::SeCerroPuerta;
       return true;
     }
 
     if (timer_closed_activated == true && door_open_notification_sent == true && ReachedTimeoutOpened() == true)
     {
       door_open_notification_sent = false;
-      event = EVENTO_NOTIFICAR_PUERTA_ABIERTA;
+      event = Event::NotificarPuertaAbierta;
       return true;
     }
 
@@ -80,7 +80,7 @@ public:
         timer_opened_activated = true;
         StartTimerOpened();
         status = DOOR_OPEN;
-        event = EVENTO_SE_ABRIO_PUERTA;
+        event = Event::SeAbrioPuerta;
         return true;
       }
       else if (status == DOOR_OPEN)
