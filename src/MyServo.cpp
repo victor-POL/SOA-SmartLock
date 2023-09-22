@@ -19,7 +19,7 @@ public:
 
   void Setup()
   {
-    this->servo.attach(this->pinSelected, MIN_ANGLE, MAX_ANGLE);
+    this->servo.attach(this->pin_selected, MIN_ANGLE, MAX_ANGLE);
     this->servo.write(LOCK_ANGLE);
   }
 

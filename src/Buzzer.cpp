@@ -22,17 +22,17 @@ class Buzzer : public Component
 {
 private:
   int status;
-  int timeSoundActivated;
+  int time_sound_activated;
 
   void StartTimer()
   {
-    timeSoundActivated = millis();
+    time_sound_activated = millis();
   }
 
   bool ReachedTimeout()
   {
-    int currentTime = millis();
-    int timeElapsed = currentTime - timeSoundActivated;
+    int current_time = millis();
+    int time_elapsed = current_time - time_sound_activated;
     int limit = 0;
 
     switch (status)
@@ -48,20 +48,20 @@ private:
       break;
     }
 
-    return timeElapsed > limit;
+    return time_elapsed > limit;
   }
 
 public:
-  Buzzer(int pinSelected) : Component(pinSelected)
+  Buzzer(int pin_selected) : Component(pin_selected)
   {
     this->status = STATUS_NO_SOUND;
-    this->timeSoundActivated = 0;
+    this->time_sound_activated = 0;
   }
 
   void Setup()
   {
     ledcSetup(BUZZER_CHANNEL, BUZZER_FREQUENCY, BUZZER_RESOLUTION);
-    ledcAttachPin(this->pinSelected, BUZZER_CHANNEL);
+    ledcAttachPin(this->pin_selected, BUZZER_CHANNEL);
   }
 
   void ActivateSuccessSound()

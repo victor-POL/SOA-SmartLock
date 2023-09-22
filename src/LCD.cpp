@@ -12,12 +12,12 @@ class LCD
 private:
   LiquidCrystal_I2C screen;
 
-  int cursorPos;
+  int cursor_pos;
   static LCD *instance;
 
   LCD() : screen(LCD_ADDRESS, LCD_COLUMNS, LCD_ROWS)
   {
-    this->cursorPos = 0;
+    this->cursor_pos = 0;
   }
 
   int FindFirstNotSpace(const String &str)
@@ -50,7 +50,7 @@ public:
 
   void LoadInputPassScreen()
   {
-    cursorPos = 0;
+    cursor_pos = 0;
     this->screen.clear();
     ShowMessage("Ingrese clave:", 0);
     this->screen.setCursor(0, 1);
@@ -58,7 +58,7 @@ public:
 
   void LoadNewPassScreen()
   {
-    cursorPos = 0;
+    cursor_pos = 0;
     this->screen.clear();
     ShowMessage("Nueva clave:", 0);
     this->screen.setCursor(0, 1);
@@ -66,7 +66,7 @@ public:
 
   void LoadConfirmNewPassScreen()
   {
-    cursorPos = 0;
+    cursor_pos = 0;
     this->screen.clear();
     ShowMessage("Confirma clave:", 0);
     this->screen.setCursor(0, 1);
@@ -74,7 +74,7 @@ public:
 
   void ResetInputPassScreen()
   {
-    cursorPos = 0;
+    cursor_pos = 0;
     this->screen.setCursor(0, 1);
     for (int i = 0; i < MAX_LCD_LENGTH; i++)
     {
@@ -84,14 +84,14 @@ public:
   }
 
   // Messages
-  void ShowKeyPressed(char keyPressed)
+  void ShowKeyPressed(char key_pressed)
   {
-    this->screen.setCursor(cursorPos, 1);
-    this->screen.print(keyPressed);
-    cursorPos++;
-    if (cursorPos >= MAX_LCD_LENGTH)
+    this->screen.setCursor(cursor_pos, 1);
+    this->screen.print(key_pressed);
+    cursor_pos++;
+    if (cursor_pos >= MAX_LCD_LENGTH)
     {
-      cursorPos = 0;
+      cursor_pos = 0;
     }
   }
 
