@@ -14,7 +14,6 @@ private:
 
   LCD() : screen(LCD_ADDRESS, LCD_COLUMNS, LCD_ROWS)
   {
-    this->cursor_pos = 0;
   }
 
   void SetCursor(int x, int y)
@@ -55,7 +54,6 @@ public:
   // Predefinen screens
   void LoadInputPassScreen()
   {
-    this->cursor_pos = 0;
     ClearScreen();
     ShowMessage("Ingrese clave:", 0);
     SetCursor(0, 1);
@@ -63,7 +61,6 @@ public:
 
   void LoadNewPassScreen()
   {
-    this->cursor_pos = 0;
     ClearScreen();
     ShowMessage("Nueva clave:", 0);
     SetCursor(0, 1);
@@ -71,7 +68,6 @@ public:
 
   void LoadConfirmNewPassScreen()
   {
-    this->cursor_pos = 0;
     ClearScreen();
     ShowMessage("Confirma clave:", 0);
     SetCursor(0, 1);
@@ -79,32 +75,23 @@ public:
 
   void ResetInputPassScreen()
   {
-    this->cursor_pos = 0;
     LoadInputPassScreen();
   }
 
   void ResetNewPassScreen()
   {
-    this->cursor_pos = 0;
     LoadNewPassScreen();
   }
 
   void ResetConfirmNewPassScreen()
   {
-    this->cursor_pos = 0;
     LoadConfirmNewPassScreen();
   }
 
   // Messages
   void ShowKeyPressed(char key_pressed)
   {
-    SetCursor(this->cursor_pos, 1);
     Print((String)key_pressed);
-    this->cursor_pos++;
-    if (this->cursor_pos >= MAX_LCD_LENGTH)
-    {
-      this->cursor_pos = 0;
-    }
   }
 
   void ShowMessage(String first_message, String second_message)
