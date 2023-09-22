@@ -11,7 +11,7 @@
 
 extern enum Event event;
 
-class Locker
+class Lock
 {
 private:
   String pass_entered;
@@ -33,13 +33,13 @@ private:
 
   bool ReachedTimeout()
   {
-    int currentTime = millis();
-    int timeElapsed = currentTime - last_current_time;
-    return timeElapsed > UMBRAL_TIMEOUT_PUERTA;
+    int current_time = millis();
+    int time_elapsed = current_time - last_current_time;
+    return time_elapsed > UMBRAL_TIMEOUT_PUERTA;
   }
 
 public:
-  Locker()
+  Lock()
   {
     storage = Storage();
     valid_password = DEFAULT_PASSWORD;
@@ -72,11 +72,6 @@ public:
     {
       return INVALID_PASS;
     }
-  }
-
-  void Lock()
-  {
-    is_locked = true;
   }
 
   void ResetPassEntered()
