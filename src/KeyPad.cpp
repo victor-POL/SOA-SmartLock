@@ -41,15 +41,15 @@ private:
 
   char last_key_pressed;
 
-public:
-  KeyPad() : keypad(makeKeymap(keys), row_pins, column_pins, ROWS_KEYPAD, COLS_KEYPAD)
-  {
-    this->last_key_pressed = NO_PRESSED_KEY;
-  }
-
   char GetPressedKey()
   {
     return this->keypad.getKey();
+  }
+
+public:
+  KeyPad() : keypad(makeKeymap(this->keys), this->row_pins, this->column_pins, ROWS_KEYPAD, COLS_KEYPAD)
+  {
+    this->last_key_pressed = NO_PRESSED_KEY;
   }
 
   bool CheckStatus()
@@ -58,7 +58,7 @@ public:
 
     if (actual_pressed_key != NO_PRESSED_KEY)
     {
-      last_key_pressed = actual_pressed_key;
+      this->last_key_pressed = actual_pressed_key;
 
       switch (actual_pressed_key)
       {
@@ -78,8 +78,8 @@ public:
     return false;
   }
 
-  char get_last_key_pressed()
+  char GetLastKeyPressed()
   {
-    return last_key_pressed;
+    return this->last_key_pressed;
   }
 };
