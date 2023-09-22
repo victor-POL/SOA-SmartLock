@@ -62,7 +62,7 @@ public:
       return true;
     }
 
-    if (timer_closed_activated == true && door_open_notification_sent == true && ReachedTimeoutOpened() == true)
+    if (timer_opened_activated == true && door_open_notification_sent == true && ReachedTimeoutOpened() == true)
     {
       door_open_notification_sent = false;
       event = Event::NotificarPuertaAbierta;
