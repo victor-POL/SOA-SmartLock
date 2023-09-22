@@ -165,7 +165,7 @@ void StateMachine()
     {
       ShowActualState("ESTADO_ESPERANDO_INGRESO_NUEVA_CLAVE", "EVENTO_CLEAR_CLAVE_INGRESADA");
       ReproduceKeyPressedSoundInBuzzer();
-      ClearPassEnteredOnScreen();
+      ClearNewPassEnteredOnScreen();
       ClearNewPassEnteredIntoLock();
       state = State::EsperandoIngresoNuevaClave;
     }
@@ -233,7 +233,7 @@ void StateMachine()
     {
       ShowActualState("ESTADO_CONFIRMACION_NUEVA_CLAVE", "EVENTO_CLEAR_CLAVE_INGRESADA");
       ReproduceKeyPressedSoundInBuzzer();
-      ClearPassEnteredOnScreen();
+      ClearNewPassConfirmationEnteredOnScreen();
       ClearNewPassEnteredIntoLock();
       state = State::ConfirmacionNuevaClave;
     }
@@ -600,6 +600,16 @@ void InitializeScreenToInputPasswordConfirmation()
 void ClearPassEnteredOnScreen()
 {
   lcd.ResetInputPassScreen();
+}
+
+void ClearNewPassEnteredOnScreen()
+{
+  lcd.ResetNewPassScreen();
+}
+
+void ClearNewPassConfirmationEnteredOnScreen()
+{
+  lcd.ResetConfirmNewPassScreen();
 }
 
 void ShowPasswordCharPressedOnScreen()

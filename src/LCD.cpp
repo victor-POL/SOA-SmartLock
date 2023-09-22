@@ -83,6 +83,18 @@ public:
     LoadInputPassScreen();
   }
 
+  void ResetNewPassScreen()
+  {
+    this->cursor_pos = 0;
+    LoadNewPassScreen();
+  }
+
+  void ResetConfirmNewPassScreen()
+  {
+    this->cursor_pos = 0;
+    LoadConfirmNewPassScreen();
+  }
+
   // Messages
   void ShowKeyPressed(char key_pressed)
   {
