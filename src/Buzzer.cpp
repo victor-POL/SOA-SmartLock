@@ -26,16 +26,16 @@ private:
 
   void StartTimer()
   {
-    time_sound_activated = millis();
+    this->time_sound_activated = millis();
   }
 
   bool ReachedTimeout()
   {
     int current_time = millis();
-    int time_elapsed = current_time - time_sound_activated;
+    int time_elapsed = current_time - this->time_sound_activated;
     int limit = 0;
 
-    switch (status)
+    switch (this->status)
     {
     case STATUS_KEY_SOUND:
       limit = BUZZER_KEY_DURATION;
@@ -48,7 +48,12 @@ private:
       break;
     }
 
-    return time_elapsed > limit;
+    return time_elapsed > limit ? true : false;
+  }
+
+  void ReproduceSound(int frequency)
+  {
+    ledcWriteTone(BUZZER_CHANNEL, frequency);
   }
 
 public:
@@ -68,35 +73,35 @@ public:
   {
     this->status = STATUS_SUCESS_SOUND;
     StartTimer();
-    ledcWriteTone(BUZZER_CHANNEL, BUZZER_SUCCESS_FREQ);
+    ReproduceSound(BUZZER_SUCCESS_FREQ);
   }
 
   void ActivateErrorSound()
   {
     this->status = STATUS_FAIL_SOUND;
     StartTimer();
-    ledcWriteTone(BUZZER_CHANNEL, BUZZER_FAIL_FREQ);
+    ReproduceSound(BUZZER_FAIL_FREQ);
   }
 
   void ActivateKeyPressedSound()
   {
     this->status = STATUS_KEY_SOUND;
     StartTimer();
-    ledcWriteTone(BUZZER_CHANNEL, BUZZER_KEY_FREQ);
+    ReproduceSound(BUZZER_KEY_FREQ);
   }
 
   void DeactivateSound()
   {
     this->status = STATUS_NO_SOUND;
-    ledcWriteTone(BUZZER_CHANNEL, 0);
+    ReproduceSound(0);
   }
 
   bool CheckStatus()
   {
-    if (status != STATUS_NO_SOUND && ReachedTimeout() == true)
+    if (this->status != STATUS_NO_SOUND && ReachedTimeout() == true)
     {
       DeactivateSound();
-      status = STATUS_NO_SOUND;
+      this->status = STATUS_NO_SOUND;
       return true;
     }
 
