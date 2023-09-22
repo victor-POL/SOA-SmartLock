@@ -11,6 +11,11 @@ class MyServo : public Component
 private:
   Servo servo;
 
+  void ChangeOrientation(int angle)
+  {
+    this->servo.write(angle);
+  }
+
 public:
   MyServo(int pin_selected) : Component(pin_selected)
   {
@@ -23,18 +28,13 @@ public:
     this->servo.write(LOCK_ANGLE);
   }
 
-  void ChangeOrientation(int angle)
-  {
-    this->servo.write(angle);
-  }
-
   void Unlock()
   {
-    this->servo.write(UNLOCK_ANGLE);
+    ChangeOrientation(UNLOCK_ANGLE);
   }
 
   void Lock()
   {
-    this->servo.write(LOCK_ANGLE);
+    ChangeOrientation(LOCK_ANGLE);
   }
 };
