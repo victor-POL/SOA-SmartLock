@@ -510,5 +510,5 @@ void ShowOpenDoorMessageOnScreen()
 
 void CancelDoorOpenTimer()
 {
-  door_lock.ChangeUnlockInProgress(false);
+  door_lock.StopTimerPuerta();
 }
