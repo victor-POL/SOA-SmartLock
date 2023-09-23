@@ -5,16 +5,32 @@
 enum State
 {
   CerraduraInit,
+  BloqueadoEsperandoClaveInicial,
+  EsperandoIngresoNuevaClave,
+  ConfirmacionNuevaClave,
+  ValidacionNuevaClave,
   BloqueadoEsperandoVisita,
   EsperandoIngresoClave,
   ValidacionClave,
   EsperandoAperturaPuerta,
   EsperandoAperturaPuertaBoton,
   EsperandoEntradaPersona,
-  EsperandoIngresoNuevaClave,
-  ConfirmacionNuevaClave,
-  ValidacionNuevaClave,
-  BloqueadoEsperandoClaveInicial
 };
+
+const String states_s[] = {
+  "CerraduraInit",
+  "BloqueadoEsperandoClaveInicial",
+  "EsperandoIngresoNuevaClave",
+  "ConfirmacionNuevaClave",
+  "ValidacionNuevaClave",
+  "BloqueadoEsperandoVisita",
+  "EsperandoIngresoClave",
+  "ValidacionClave",
+  "EsperandoAperturaPuerta",
+  "EsperandoAperturaPuertaBoton",
+  "EsperandoEntradaPersona",
+};
+
+#define MAX_STATES 11
 
 #endif

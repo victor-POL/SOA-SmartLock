@@ -22,6 +22,282 @@ enum Event event;
 bool timeout;
 long last_current_time;
 
+// Funciones para eventos
+void None(){}
+
+void CreatePass()
+{
+  state = State::BloqueadoEsperandoClaveInicial;
+}
+
+void PassSetted()
+{
+  state = State::BloqueadoEsperandoVisita;
+}
+
+void NewPassWithLight()
+{
+  InitializeScreenToInputNewPassword();
+  TurnOffEntranceLight();
+  state = State::EsperandoIngresoNuevaClave;
+}
+
+void NewPassWithoutLight()
+{
+  InitializeScreenToInputNewPassword();
+  TurnOnEntranceLight();
+  state = State::EsperandoIngresoNuevaClave;
+}
+
+void TurnOffLight()
+{
+  TurnOffEntranceLight();
+  state = State::EsperandoIngresoNuevaClave;
+}
+
+void TurnOffLightA()
+{
+  TurnOffEntranceLight();
+  state = State::ConfirmacionNuevaClave;
+}
+
+void TurnOffLightB()
+{
+  TurnOffEntranceLight();
+  state = State::EsperandoIngresoClave;
+}
+
+void TurnOnLight()
+{
+  TurnOnEntranceLight();
+  state = State::EsperandoIngresoNuevaClave;
+}
+
+void TurnOnLightA()
+{
+  TurnOnEntranceLight();
+  state = State::ConfirmacionNuevaClave;
+}
+
+void TurnOnLightB()
+{
+  TurnOnEntranceLight();
+  state = State::EsperandoIngresoClave;
+}
+
+
+void ExitInputNewPass()
+{
+  ShutdownScreen();
+  TurnOffEntranceLight();
+  ClearNewPassEnteredIntoLock();
+  state = State::BloqueadoEsperandoClaveInicial;
+}
+
+void ClearInputNewPass()
+{
+  ReproduceKeyPressedSoundInBuzzer();
+  ClearNewPassEnteredOnScreen();
+  ClearNewPassEnteredIntoLock();
+  state = State::EsperandoIngresoNuevaClave;
+}
+
+void ClearInputNewPassA()
+{
+  ReproduceKeyPressedSoundInBuzzer();
+  ClearNewPassConfirmationEnteredOnScreen();
+  ClearNewPassEnteredIntoLock();
+  state = State::ConfirmacionNuevaClave;
+}
+
+void LoadNewPass()
+{
+  ReproduceKeyPressedSoundInBuzzer();
+  ShowPasswordCharPressedOnScreen();
+  LoadNewPasswordCharPressedIntoLock();
+  state = State::EsperandoIngresoNuevaClave;
+}
+
+void LoadNewPassA()
+{
+  ReproduceKeyPressedSoundInBuzzer();
+  ShowPasswordCharPressedOnScreen();
+  LoadNewPasswordCharPressedIntoLock();
+  state = State::ConfirmacionNuevaClave;
+}
+
+void ValidateNewPass()
+{
+  ReproduceKeyPressedSoundInBuzzer();
+  StartNewPasswordConfirmation();
+  InitializeScreenToInputPasswordConfirmation();
+  state = State::ConfirmacionNuevaClave;
+}
+
+void ValidateNewPassA()
+{
+  ReproduceKeyPressedSoundInBuzzer();
+  StartNewPasswordValidation();
+  state = State::ValidacionNuevaClave;
+}
+
+void InvalidNewPass()
+{
+  ReproduceInvalidPassSoundInBuzzer();
+  InitializeScreenToInputNewPassword();
+  ClearNewPassEnteredIntoLock();
+  state = State::EsperandoIngresoNuevaClave;
+}
+
+void ValidNewPass()
+{
+  ReproduceValidPassSoundInBuzzer();
+  ShutdownScreen();
+  TurnOffEntranceLight();
+  state = State::BloqueadoEsperandoVisita;
+}
+
+void InputPassWithLight()
+{
+  InitializeScreenToInputPassword();
+  TurnOffEntranceLight();
+  state = State::EsperandoIngresoClave;
+}
+
+void InputPassWithoutLight()
+{
+  InitializeScreenToInputPassword();
+  TurnOnEntranceLight();
+  state = State::EsperandoIngresoClave;
+}
+
+void UnlockWithButton()
+{
+  door_lock.UnlockWithButton();
+  UnlockEntranceDoor();
+  state = State::EsperandoAperturaPuertaBoton;
+}
+
+void ExitInputPass()
+{
+  ShutdownScreen();
+  TurnOffEntranceLight();
+  ClearPassEnteredIntoLock();
+  state = State::BloqueadoEsperandoVisita;
+}
+
+void ClearInputPass()
+{
+  ReproduceKeyPressedSoundInBuzzer();
+  ClearPassEnteredOnScreen();
+  ClearPassEnteredIntoLock();
+  state = State::EsperandoIngresoClave;
+}
+
+void LoadPass()
+{
+  ReproduceKeyPressedSoundInBuzzer();
+  ShowPasswordCharPressedOnScreen();
+  LoadPasswordCharPressedIntoLock();
+  state = State::EsperandoIngresoClave;
+}
+
+void ValidatePass()
+{
+  ReproduceKeyPressedSoundInBuzzer();
+  StartPasswordValidation();
+  state = State::ValidacionClave;
+}
+
+void NotifTimeoutPass()
+{
+  state = State::EsperandoIngresoClave;
+}
+
+void InvalidPass()
+{
+  ReproduceInvalidPassSoundInBuzzer();
+  ClearPassEnteredOnScreen();
+  ClearPassEnteredIntoLock();
+  state = State::EsperandoIngresoClave;
+}
+
+void ValidPass()
+{
+  ReproduceValidPassSoundInBuzzer();
+  UnlockEntranceDoor();
+  ShowValidPassMessageOnScreen();
+  ClearPassEnteredIntoLock();
+  state = State::EsperandoAperturaPuerta;
+}
+
+void BackToLocked()
+{
+  ShutdownScreen();
+  TurnOffEntranceLight();
+  ClearPassEnteredIntoLock();
+  LockEntranceDoor();
+  state = State::BloqueadoEsperandoVisita;
+}
+
+void BackToLockedA()
+{
+  ShutdownScreen();
+  TurnOffEntranceLight();
+  ClearPassEnteredIntoLock();
+  LockEntranceDoor();
+  ReproduceInvalidPassSoundInBuzzer();
+  state = State::BloqueadoEsperandoVisita;
+}
+
+void BackToLockedB()
+{
+  LockEntranceDoor();
+  state = State::BloqueadoEsperandoVisita;
+}
+
+void BackToLockedC()
+{
+  ShutdownScreen();
+  TurnOffEntranceLight();
+  ClearPassEnteredIntoLock();
+  LockEntranceDoor();
+  state = State::BloqueadoEsperandoVisita;
+}
+
+void WaitPerson()
+{
+  ShowOpenDoorMessageOnScreen();
+  CancelDoorOpenTimer();
+  state = State::EsperandoEntradaPersona;
+}
+
+void WaitPersonA()
+{
+  state = State::EsperandoEntradaPersona;
+}
+
+void NotifOpenDoor()
+{
+  state = State::EsperandoEntradaPersona;
+}
+
+transition state_table[MAX_STATES][MAX_EVENTS] =
+{
+      {None       , CreatePass           ,  PassSetted        , None                , None                  , None                , None            , None                , None              , None            ,  None                    , None          , None        , None                  , None          , None          , None                    }, // state CerraduraInit
+      {None       , None                 ,  None              , NewPassWithLight    , NewPassWithoutLight   , None                , None            , None                , None              , None            ,  None                    , None          , None        , None                  , None          , None          , None                    }, // state BloqueadoEsperandoClaveInicial
+      {None       , None                 ,  None              , TurnOffLight        , TurnOnLight           , ExitInputNewPass    , None            , ClearInputNewPass   , LoadNewPass       , ValidateNewPass ,  None                    , None          , None        , None                  , None          , None          , None                    }, // state EsperandoIngresoNuevaClave
+      {None       , None                 ,  None              , TurnOffLightA       , TurnOnLightA          , ExitInputNewPass    , None            , ClearInputNewPassA  , LoadNewPassA      , ValidateNewPassA,  None                    , None          , None        , None                  , None          , None          , None                    }, // state ConfirmacionNuevaClave
+      {None       , None                 ,  None              , None                , None                  , None                , None            , None                , None              , None            ,  None                    , InvalidNewPass, ValidNewPass, None                  , None          , None          , None                    }, // state ValidacionNuevaClave
+      {None       , None                 ,  None              , InputPassWithLight  , InputPassWithoutLight , None                , UnlockWithButton, None                , None              , None            ,  None                    , None          , None        , None                  , None          , None          , None                    }, // state BloqueadoEsperandoVisita
+      {None       , None                 ,  None              , TurnOffLightB       , TurnOnLightB          , ExitInputPass       , None            , ClearInputPass      , LoadPass          , ValidatePass    ,  None                    , None          , None        , None                  , None          , None          , None                    }, // state EsperandoIngresoClave
+      {None       , None                 ,  None              , None                , None                  , None                , None            , None                , None              , None            ,  NotifTimeoutPass        , InvalidPass   , ValidPass   , None                  , None          , None          , None                    }, // state ValidacionClave
+      {None       , None                 ,  None              , None                , None                  , BackToLocked        , None            , None                , None              , None            ,  None                    , None          , None        , BackToLockedA         , WaitPerson    , None          , None                    }, // state EsperandoAperturaPuerta
+      {None       , None                 ,  None              , None                , None                  , None                , None            , None                , None              , None            ,  None                    , None          , None        , BackToLockedB         , WaitPersonA   , None          , None                    }, // state EsperandoAperturaPuertaBoton
+      {None       , None                 ,  None              , None                , None                  , None                , None            , None                , None              , None            ,  None                    , None          , None        , None                  , None          , BackToLockedC , NotifOpenDoor           }, // state EsperandoEntradaPersona
+     //Continue   , ClaveNoConfigurada   ,  ClaveConfigurada  , PersonaDetectadaDia , PersonaDetectadaNoche , PersonaNoDetectada  , BotonPresionado , ClearClaveIngresada , CaracterIngresado , ValidarClave    ,  TimeOutValidacionClave  , ClaveInvalida , ClaveValida , TimeOutAperturaPuerta , SeAbrioPuerta , SeCerroPuerta , NotificarPuertaAbierta
+};
+
 void DoInit()
 {
   Serial.begin(115200);
@@ -77,494 +353,14 @@ void StateMachine()
 {
   GenerateEvent();
 
-  switch (state)
+  if( (event >= 0) && (event < MAX_EVENTS) && (state >= 0) && (state < MAX_STATES) )
   {
-  case State::CerraduraInit:
-  {
-    switch (event)
+    if( event != Event::Continue )
     {
-    case Event::ClaveNoConfigurada:
-    {
-      ShowActualState("ESTADO_CERRADURA_INIT", "EVENTO_CLAVE_NO_CONFIGURADA");
-      state = State::BloqueadoEsperandoClaveInicial;
+      DebugPrintEstado(states_s[state], events_s[event]);
     }
-    break;
-    case Event::ClaveConfigurada:
-    {
-      ShowActualState("ESTADO_CERRADURA_INIT", "EVENTO_CLAVE_CONFIGURADA");
-      state = State::BloqueadoEsperandoVisita;
-    }
-    break;
-    case Event::Continue:
-    {
-      ShowActualState("ESTADO_CERRADURA_INIT", "EVENTO_CONTINUE");
-      state = State::CerraduraInit;
-    }
-    break;
-    }
-  }
-  break;
-
-  case State::BloqueadoEsperandoClaveInicial:
-  {
-    switch (event)
-    {
-    case Event::PersonaDetectadaDia:
-    {
-      ShowActualState("ESTADO_BLOQUEADO_ESPERANDO_CLAVE_INICIAL", "EVENTO_PERSONA_DETECTADA_DIA");
-      InitializeScreenToInputNewPassword();
-      TurnOffEntranceLight();
-      state = State::EsperandoIngresoNuevaClave;
-    }
-    break;
-
-    case Event::PersonaDetectadaNoche:
-    {
-      ShowActualState("ESTADO_BLOQUEADO_ESPERANDO_CLAVE_INICIAL", "EVENTO_PERSONA_DETECTADA_NOCHE");
-      InitializeScreenToInputNewPassword();
-      TurnOnEntranceLight();
-      state = State::EsperandoIngresoNuevaClave;
-    }
-    break;
-
-    case Event::Continue:
-    {
-      state = State::BloqueadoEsperandoClaveInicial;
-    }
-    break;
-    }
-  }
-  break;
-
-  case State::EsperandoIngresoNuevaClave:
-  {
-    switch (event)
-    {
-    case Event::PersonaNoDetectada:
-    {
-      ShowActualState("ESTADO_ESPERANDO_INGRESO_NUEVA_CLAVE", "EVENTO_PERSONA_NO_DETECTADA");
-      ShutdownScreen();
-      TurnOffEntranceLight();
-      ClearNewPassEnteredIntoLock();
-      state = State::BloqueadoEsperandoClaveInicial;
-    }
-    break;
-
-    case Event::ValidarClave:
-    {
-      ShowActualState("ESTADO_ESPERANDO_INGRESO_NUEVA_CLAVE", "EVENTO_VALIDAR_CLAVE");
-      ReproduceKeyPressedSoundInBuzzer();
-      StartNewPasswordConfirmation();
-      InitializeScreenToInputPasswordConfirmation();
-      state = State::ConfirmacionNuevaClave;
-    }
-    break;
-
-    case Event::CaracterIngresado:
-    {
-      ShowActualState("ESTADO_ESPERANDO_INGRESO_NUEVA_CLAVE", "EVENTO_CARACTER_INGRESADO");
-      ReproduceKeyPressedSoundInBuzzer();
-      ShowPasswordCharPressedOnScreen();
-      LoadNewPasswordCharPressedIntoLock();
-      state = State::EsperandoIngresoNuevaClave;
-    }
-    break;
-
-    case Event::ClearClaveIngresada:
-    {
-      ShowActualState("ESTADO_ESPERANDO_INGRESO_NUEVA_CLAVE", "EVENTO_CLEAR_CLAVE_INGRESADA");
-      ReproduceKeyPressedSoundInBuzzer();
-      ClearNewPassEnteredOnScreen();
-      ClearNewPassEnteredIntoLock();
-      state = State::EsperandoIngresoNuevaClave;
-    }
-    break;
-
-    case Event::PersonaDetectadaDia:
-    {
-      ShowActualState("ESTADO_ESPERANDO_INGRESO_NUEVA_CLAVE", "EVENTO_PERSONA_DETECTADA_DIA");
-      TurnOffEntranceLight();
-      state = State::EsperandoIngresoNuevaClave;
-    }
-    break;
-
-    case Event::PersonaDetectadaNoche:
-    {
-      ShowActualState("ESTADO_ESPERANDO_INGRESO_NUEVA_CLAVE", "EVENTO_PERSONA_DETECTADA_NOCHE");
-      TurnOnEntranceLight();
-      state = State::EsperandoIngresoNuevaClave;
-    }
-    break;
-
-    case Event::Continue:
-    {
-      state = State::EsperandoIngresoNuevaClave;
-    }
-    break;
-    }
-  }
-  break;
-
-  case State::ConfirmacionNuevaClave:
-  {
-    switch (event)
-    {
-    case Event::PersonaNoDetectada:
-    {
-      ShowActualState("ESTADO_CONFIRMACION_NUEVA_CLAVE", "EVENTO_PERSONA_NO_DETECTADA");
-      ShutdownScreen();
-      TurnOffEntranceLight();
-      ClearNewPassEnteredIntoLock();
-      state = State::BloqueadoEsperandoClaveInicial;
-    }
-    break;
-
-    case Event::ValidarClave:
-    {
-      ShowActualState("ESTADO_CONFIRMACION_NUEVA_CLAVE", "EVENTO_VALIDAR_CLAVE");
-      ReproduceKeyPressedSoundInBuzzer();
-      StartNewPasswordValidation();
-      state = State::ValidacionNuevaClave;
-    }
-    break;
-
-    case Event::CaracterIngresado:
-    {
-      ShowActualState("ESTADO_CONFIRMACION_NUEVA_CLAVE", "EVENTO_CARACTER_INGRESADO");
-      ReproduceKeyPressedSoundInBuzzer();
-      ShowPasswordCharPressedOnScreen();
-      LoadNewPasswordCharPressedIntoLock();
-      state = State::ConfirmacionNuevaClave;
-    }
-    break;
-
-    case Event::ClearClaveIngresada:
-    {
-      ShowActualState("ESTADO_CONFIRMACION_NUEVA_CLAVE", "EVENTO_CLEAR_CLAVE_INGRESADA");
-      ReproduceKeyPressedSoundInBuzzer();
-      ClearNewPassConfirmationEnteredOnScreen();
-      ClearNewPassEnteredIntoLock();
-      state = State::ConfirmacionNuevaClave;
-    }
-    break;
-
-    case Event::PersonaDetectadaDia:
-    {
-      ShowActualState("ESTADO_CONFIRMACION_NUEVA_CLAVE", "EVENTO_PERSONA_DETECTADA_DIA");
-      TurnOffEntranceLight();
-      state = State::ConfirmacionNuevaClave;
-    }
-    break;
-
-    case Event::PersonaDetectadaNoche:
-    {
-      ShowActualState("ESTADO_CONFIRMACION_NUEVA_CLAVE", "EVENTO_PERSONA_DETECTADA_NOCHE");
-      TurnOnEntranceLight();
-      state = State::ConfirmacionNuevaClave;
-    }
-    break;
-
-    case Event::Continue:
-    {
-      state = State::ConfirmacionNuevaClave;
-    }
-    break;
-    }
-  }
-  break;
-
-  case State::ValidacionNuevaClave:
-  {
-    switch (event)
-    {
-    case Event::ClaveValida:
-    {
-      ShowActualState("ESTADO_VALIDACION_NUEVA_CLAVE", "EVENTO_CLAVE_VALIDA");
-      ReproduceValidPassSoundInBuzzer();
-      ShutdownScreen();
-      TurnOffEntranceLight();
-      state = State::BloqueadoEsperandoVisita;
-    }
-    break;
-
-    case Event::ClaveInvalida:
-    {
-      ShowActualState("ESTADO_VALIDACION_NUEVA_CLAVE", "EVENTO_CLAVE_INVALIDA");
-      ReproduceInvalidPassSoundInBuzzer();
-      InitializeScreenToInputNewPassword();
-      ClearNewPassEnteredIntoLock();
-      state = State::EsperandoIngresoNuevaClave;
-    }
-    break;
-
-    case Event::Continue:
-    {
-      state = State::ValidacionNuevaClave;
-    }
-    break;
-    }
-  }
-  break;
-
-  case State::BloqueadoEsperandoVisita:
-  {
-    switch (event)
-    {
-    case Event::BotonPresionado:
-    {
-      ShowActualState("ESTADO_BLOQUEADO_ESPERANDO_VISITA", "EVENTO_BOTON_PRESIONADO");
-      door_lock.UnlockWithButton();
-      UnlockEntranceDoor();
-      state = State::EsperandoAperturaPuertaBoton;
-    }
-    break;
-
-    case Event::PersonaDetectadaDia:
-    {
-      ShowActualState("ESTADO_BLOQUEADO_ESPERANDO_VISITA", "EVENTO_PERSONA_DETECTADA_DIA");
-      InitializeScreenToInputPassword();
-      TurnOffEntranceLight();
-      state = State::EsperandoIngresoClave;
-    }
-    break;
-
-    case Event::PersonaDetectadaNoche:
-    {
-      ShowActualState("ESTADO_BLOQUEADO_ESPERANDO_VISITA", "EVENTO_PERSONA_DETECTADA_NOCHE");
-      InitializeScreenToInputPassword();
-      TurnOnEntranceLight();
-      state = State::EsperandoIngresoClave;
-    }
-    break;
-
-    case Event::PersonaNoDetectada:
-    {
-      ShowActualState("ESTADO_BLOQUEADO_ESPERANDO_VISITA", "EVENTO_PERSONA_NO_DETECTADA");
-      state = State::BloqueadoEsperandoVisita;
-    }
-    break;
-
-    case Event::Continue:
-    {
-      state = State::BloqueadoEsperandoVisita;
-    }
-    break;
-    }
-  }
-  break;
-
-  case State::EsperandoIngresoClave:
-  {
-    switch (event)
-    {
-    case Event::PersonaNoDetectada:
-    {
-      ShowActualState("ESTADO_ESPERANDO_INGRESO_CONTRASENA", "EVENTO_PERSONA_NO_DETECTADA");
-      ShutdownScreen();
-      TurnOffEntranceLight();
-      ClearPassEnteredIntoLock();
-      state = State::BloqueadoEsperandoVisita;
-    }
-    break;
-
-    case Event::ValidarClave:
-    {
-      ShowActualState("ESTADO_ESPERANDO_INGRESO_CONTRASENA", "EVENTO_VALIDAR_CLAVE");
-      ReproduceKeyPressedSoundInBuzzer();
-      StartPasswordValidation();
-      state = State::ValidacionClave;
-    }
-    break;
-
-    case Event::CaracterIngresado:
-    {
-      ShowActualState("ESTADO_ESPERANDO_INGRESO_CONTRASENA", "EVENTO_CARACTER_INGRESADO");
-      ReproduceKeyPressedSoundInBuzzer();
-      ShowPasswordCharPressedOnScreen();
-      LoadPasswordCharPressedIntoLock();
-      state = State::EsperandoIngresoClave;
-    }
-    break;
-
-    case Event::ClearClaveIngresada:
-    {
-      ShowActualState("ESTADO_ESPERANDO_INGRESO_CONTRASENA", "EVENTO_CLEAR_CLAVE_INGRESADA");
-      ReproduceKeyPressedSoundInBuzzer();
-      ClearPassEnteredOnScreen();
-      ClearPassEnteredIntoLock();
-      state = State::EsperandoIngresoClave;
-    }
-    break;
-
-    case Event::PersonaDetectadaDia:
-    {
-      ShowActualState("ESTADO_ESPERANDO_INGRESO_CONTRASENA", "EVENTO_PERSONA_DETECTADA_DIA");
-      TurnOffEntranceLight();
-      state = State::EsperandoIngresoClave;
-    }
-    break;
-
-    case Event::PersonaDetectadaNoche:
-    {
-      ShowActualState("ESTADO_ESPERANDO_INGRESO_CONTRASENA", "EVENTO_PERSONA_DETECTADA_NOCHE");
-      TurnOnEntranceLight();
-      state = State::EsperandoIngresoClave;
-    }
-    break;
-
-    case Event::Continue:
-    {
-      state = State::EsperandoIngresoClave;
-    }
-    break;
-    }
-  }
-  break;
-
-  case State::ValidacionClave:
-  {
-    switch (event)
-    {
-    case Event::TimeOutValidacionClave:
-    {
-      ShowActualState("ESTADO_VALIDACION_CLAVE", "EVENTO_TIMEOUT_VALIDACION_CLAVE");
-      state = State::EsperandoIngresoClave;
-    }
-    break;
-
-    case Event::ClaveValida:
-    {
-      ShowActualState("ESTADO_VALIDACION_CLAVE", "EVENTO_CLAVE_VALIDA");
-      ReproduceValidPassSoundInBuzzer();
-      UnlockEntranceDoor();
-      ShowValidPassMessageOnScreen();
-      ClearPassEnteredIntoLock();
-      state = State::EsperandoAperturaPuerta;
-    }
-    break;
-
-    case Event::ClaveInvalida:
-    {
-      ShowActualState("ESTADO_VALIDACION_CLAVE", "EVENTO_CLAVE_INVALIDA");
-      ReproduceInvalidPassSoundInBuzzer();
-      ClearPassEnteredOnScreen();
-      ClearPassEnteredIntoLock();
-      state = State::EsperandoIngresoClave;
-    }
-    break;
-
-    case Event::Continue:
-    {
-      state = State::ValidacionClave;
-    }
-    break;
-    }
-  }
-  break;
-
-  case State::EsperandoAperturaPuerta:
-  {
-    switch (event)
-    {
-    case Event::PersonaNoDetectada:
-    {
-      ShowActualState("ESTADO_ESPERANDO_APERTURA_PUERTA", "EVENTO_PERSONA_NO_DETECTADA");
-      ShutdownScreen();
-      TurnOffEntranceLight();
-      ClearPassEnteredIntoLock();
-      LockEntranceDoor();
-      state = State::BloqueadoEsperandoVisita;
-    }
-    break;
-
-    case Event::TimeOutAperturaPuerta:
-    {
-      ShowActualState("ESTADO_ESPERANDO_APERTURA_PUERTA", "EVENTO_TIMEOUT_APERTURA_PUERTA");
-      ShutdownScreen();
-      TurnOffEntranceLight();
-      ClearPassEnteredIntoLock();
-      LockEntranceDoor();
-      ReproduceInvalidPassSoundInBuzzer();
-      state = State::BloqueadoEsperandoVisita;
-    }
-    break;
-
-    case Event::SeAbrioPuerta:
-    {
-      ShowActualState("ESTADO_ESPERANDO_APERTURA_PUERTA", "EVENTO_SE_ABRIO_PUERTA");
-      ShowOpenDoorMessageOnScreen();
-      CancelDoorOpenTimer();
-      state = State::EsperandoEntradaPersona;
-    }
-    break;
-
-    case Event::Continue:
-    {
-      state = State::EsperandoAperturaPuerta;
-    }
-    break;
-    }
-  }
-  break;
-
-  case State::EsperandoAperturaPuertaBoton:
-  {
-    switch (event)
-    {
-    case Event::SeAbrioPuerta:
-    {
-      ShowActualState("ESTADO_ESPERANDO_APERTURA_PUERTA_BOTON", "EVENTO_SE_ABRIO_PUERTA");
-      state = State::EsperandoEntradaPersona;
-    }
-    break;
-
-    case Event::TimeOutAperturaPuerta:
-    {
-      ShowActualState("EVENTO_TIMEOUT_APERTURA_PUERTA", "ESTADO_BLOQUEADO_ESPERANDO_VISITA");
-      LockEntranceDoor();
-      state = State::BloqueadoEsperandoVisita;
-    }
-    break;
-
-    case Event::Continue:
-    {
-      state = State::EsperandoAperturaPuerta;
-    }
-    break;
-    }
-  }
-  break;
-
-  case State::EsperandoEntradaPersona:
-  {
-    switch (event)
-    {
-    case Event::SeCerroPuerta:
-    {
-      ShowActualState("ESTADO_ESPERANDO_ENTRADA_PERSONA", "EVENTO_SE_CERRO_PUERTA");
-      ShutdownScreen();
-      TurnOffEntranceLight();
-      ClearPassEnteredIntoLock();
-      LockEntranceDoor();
-      state = State::BloqueadoEsperandoVisita;
-    }
-    break;
-
-    case Event::NotificarPuertaAbierta:
-    {
-      ShowActualState("ESTADO_ESPERANDO_ENTRADA_PERSONA", "EVENTO_NOTIFICAR_PUERTA_ABIERTA");
-      state = State::EsperandoEntradaPersona;
-    }
-    break;
-
-    case Event::Continue:
-    {
-      state = State::EsperandoEntradaPersona;
-    }
-    break;
-    }
-  }
-  break;
+    
+    state_table[state][event]();
   }
 
   event = Event::Continue;
@@ -580,14 +376,7 @@ void loop()
   StateMachine();
 }
 
-void ShowActualState(String strState, String strEvent)
-{
-  Serial.println("-----------------------------------------------------");
-  Serial.println("Estado: " + String(strState));
-  Serial.println("Evento: " + String(strEvent));
-  Serial.println("-----------------------------------------------------");
-}
-
+// Utils
 void InitializeScreenToInputPassword()
 {
   lcd.TurnOnScreen();
