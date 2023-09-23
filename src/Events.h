@@ -5,22 +5,44 @@
 enum Event
 {
   Continue,
+  ClaveNoConfigurada,
+  ClaveConfigurada,
   PersonaDetectadaDia,
   PersonaDetectadaNoche,
   PersonaNoDetectada,
-  ValidarClave,
+  BotonPresionado,
   ClearClaveIngresada,
   CaracterIngresado,
+  ValidarClave,
   TimeOutValidacionClave,
-  ClaveValida,
   ClaveInvalida,
+  ClaveValida,
   TimeOutAperturaPuerta,
   SeAbrioPuerta,
   SeCerroPuerta,
-  NotificarPuertaAbierta,
-  ClaveNoConfigurada,
-  ClaveConfigurada,
-  BotonPresionado
+  NotificarPuertaAbierta
 };
+
+const String events_s[] = {
+  "Continue",
+  "ClaveNoConfigurada",
+  "ClaveConfigurada",
+  "PersonaDetectadaDia",
+  "PersonaDetectadaNoche",
+  "PersonaNoDetectada",
+  "BotonPresionado",
+  "ClearClaveIngresada",
+  "CaracterIngresado",
+  "ValidarClave",
+  "TimeOutValidacionClave",
+  "ClaveInvalida",
+  "ClaveValida",
+  "TimeOutAperturaPuerta",
+  "SeAbrioPuerta",
+  "SeCerroPuerta",
+  "NotificarPuertaAbierta",
+};
+
+#define MAX_EVENTS 17
 
 #endif

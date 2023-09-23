@@ -171,4 +171,9 @@ public:
   {
     this->new_pass_in_progress = new_pass_in_progress;
   }
+
+  void StopTimerPuerta()
+  {
+    this->check_timeout_puerta = false;
+  }
 };
