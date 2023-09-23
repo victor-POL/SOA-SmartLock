@@ -274,6 +274,7 @@ void WaitPerson()
 
 void WaitPersonA()
 {
+  CancelDoorOpenTimer();
   state = State::EsperandoEntradaPersona;
 }
 
