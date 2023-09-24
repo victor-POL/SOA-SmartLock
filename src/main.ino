@@ -154,7 +154,7 @@ void ValidNewPass()
   ReproduceValidPassSoundInBuzzer();
   ShutdownScreen();
   TurnOffEntranceLight();
-  state = State::BloqueadoEsperandoVisita;
+  state = State::BloqueadoEsperandoClaveInicial;
 }
 
 void InputPassWithLight()
@@ -285,7 +285,7 @@ void NotifOpenDoor()
 
 transition state_table[MAX_STATES][MAX_EVENTS] =
 {
-      {None       , CreatePass           ,  PassSetted        , None                , None                  , None                , None            , None                , None              , None            ,  None                    , None          , None        , None                  , None          , None          , None                    }, // state CerraduraInit
+      {None       , CreatePass           ,  None              , None                , None                  , None                , None            , None                , None              , None            ,  None                    , None          , None        , None                  , None          , None          , None                    }, // state CerraduraInit
       {None       , None                 ,  None              , NewPassWithLight    , NewPassWithoutLight   , None                , None            , None                , None              , None            ,  None                    , None          , None        , None                  , None          , None          , None                    }, // state BloqueadoEsperandoClaveInicial
       {None       , None                 ,  None              , TurnOffLight        , TurnOnLight           , ExitInputNewPass    , None            , ClearInputNewPass   , LoadNewPass       , ValidateNewPass ,  None                    , None          , None        , None                  , None          , None          , None                    }, // state EsperandoIngresoNuevaClave
       {None       , None                 ,  None              , TurnOffLightA       , TurnOnLightA          , ExitInputNewPass    , None            , ClearInputNewPassA  , LoadNewPassA      , ValidateNewPassA,  None                    , None          , None        , None                  , None          , None          , None                    }, // state ConfirmacionNuevaClave
@@ -334,13 +334,13 @@ void GenerateEvent()
 
     if (door_lock.CheckPasswordExistence() ||
         door_lock.CheckPasswordSettingInProgress() ||
-        button.CheckStatus() ||
-        door_lock.CheckUnlockInProgress() ||
-        door_lock.CheckOpeningDoorTimeout() ||
+        //button.CheckStatus() ||
+        //door_lock.CheckUnlockInProgress() ||
+        //door_lock.CheckOpeningDoorTimeout() ||
         keypad.CheckStatus() ||
-        door_sensor.CheckOpenedDoorTimer() ||
-        door_sensor.CheckClosedDoorTimer() ||
-        door_sensor.CheckStatus() ||
+        //door_sensor.CheckOpenedDoorTimer() ||
+        //door_sensor.CheckClosedDoorTimer() ||
+        //door_sensor.CheckStatus() ||
         entrance_sensor.CheckStatus())
     {
       return;
