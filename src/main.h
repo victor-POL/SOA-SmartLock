@@ -1,7 +1,6 @@
 #include <ESP32Servo.h>
 
 #include "KeyPad.cpp"
-#include "LCD.cpp"
 #include "Buzzer.cpp"
 #include "MyServo.cpp"
 #include "Lock.cpp"
@@ -13,6 +12,13 @@
 #include "States.h"
 #include "Events.h"
 #include "Connections.h"
+
+#define COMPILAR_PARA_SIMULADOR true
+#if COMPILAR_PARA_SIMULADOR
+#include "LCD.cpp"
+#else
+#include "LCDRgb.cpp"
+#endif
 
 #define UMBRAL_DIFERENCIA_TIMEOUT 50
 
