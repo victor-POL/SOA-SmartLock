@@ -3,8 +3,13 @@
 #include "States.h"
 #include "Events.h"
 #include "Connections.h"
+#include "Config.h"
 
+#if COMPILAR_PARA_SIMULADOR
 #define BUTTON_PRESSED LOW
+#else
+#define BUTTON_PRESSED HIGH
+#endif
 
 extern enum Event event;
 
