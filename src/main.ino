@@ -309,10 +309,10 @@ void DoInit()
 {
   Serial.begin(115200);
 
-  entrance_door.Setup();
+  //entrance_door.Setup();
   entrance_sensor.Setup();
-  door_sensor.Setup();
-  button.Setup();
+  //door_sensor.Setup();
+  //button.Setup();
 
   buzzer.Setup();
   light.Setup();
