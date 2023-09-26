@@ -17,6 +17,7 @@
 #define SERVO_PIN 26
 #define BUZZER_PIN 2
 #define RELAY_PIN 25
-#define LCD_ADDRESS 0x27
+#define LCD_ADDR 0x27
 #define LCD_ROWS 2
 #define LCD_COLUMNS 16
+#define MAX_LCD_LENGTH 16

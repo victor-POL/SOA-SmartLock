@@ -1,16 +1,16 @@
 #include <Arduino.h>
-#include <LiquidCrystal_I2C.h>
+#include "rgb_lcd.h"
 #include "Connections.h"
 
-class LCD
+class LCDRgb
 {
 private:
-  LiquidCrystal_I2C screen;
+  rgb_lcd screen;
 
   int cursor_pos;
-  static LCD *instance;
+  static LCDRgb *instance;
 
-  LCD() : screen(LCD_ADDR, LCD_COLUMNS, LCD_ROWS)
+  LCDRgb() : screen()
   {
   }
 
@@ -26,27 +26,27 @@ private:
 
   void TurnOn()
   {
-    this->screen.backlight();
+    this->screen.display();
   }
 
   void TurnOff()
   {
-    this->screen.noBacklight();
+    this->screen.noDisplay();
   }
 
 public:
-  static LCD *GetInstance()
+  static LCDRgb *GetInstance()
   {
     if (instance == NULL)
     {
-      instance = new LCD();
+      instance = new LCDRgb();
     }
     return instance;
   }
 
   void Setup()
   {
-    this->screen.init();
+    this->screen.begin(LCD_COLUMNS, LCD_ROWS);
   }
 
   // Predefinen screens

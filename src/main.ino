@@ -10,8 +10,14 @@ Button button = Button(BUTTON_PIN);
 MyServo entrance_door = MyServo(SERVO_PIN);
 Buzzer buzzer = Buzzer(BUZZER_PIN);
 Relay light = Relay(RELAY_PIN);
+#if COMPILAR_PARA_SIMULADOR
 LCD *LCD::instance = NULL;
 LCD lcd = *LCD::GetInstance();
+#else
+LCDRgb *LCDRgb::instance = NULL;
+LCDRgb lcd = *LCDRgb::GetInstance();
+#endif
+
 
 // Lock
 Lock door_lock = Lock();
