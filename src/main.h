@@ -1,7 +1,6 @@
 #include <ESP32Servo.h>
 
 #include "KeyPad.cpp"
-#include "LCD.cpp"
 #include "Buzzer.cpp"
 #include "MyServo.cpp"
 #include "Lock.cpp"
@@ -13,31 +12,14 @@
 #include "States.h"
 #include "Events.h"
 #include "Connections.h"
+#include "Config.h"
 
-#define UMBRAL_DIFERENCIA_TIMEOUT 50
-
-#define SERIAL_DEBUG_ENABLED 1
-
-#if SERIAL_DEBUG_ENABLED
-  #define DebugPrint(str)\
-      {\
-        Serial.println(str);\
-      }
+#if COMPILAR_PARA_SIMULADOR
+#include "LCD.cpp"
 #else
-  #define DebugPrint(str)
+#include "LCDRgb.cpp"
 #endif
 
-#define DebugPrintEstado(estado,evento)\
-      {\
-        String est = estado;\
-        String evt = evento;\
-        String str;\
-        str = "-----------------------------------------------------";\
-        DebugPrint(str);\
-        str = "EST-> [" + est + "]: " + "EVT-> [" + evt + "].";\
-        DebugPrint(str);\
-        str = "-----------------------------------------------------";\
-        DebugPrint(str);\
-      }
+#define UMBRAL_DIFERENCIA_TIMEOUT 50
 
 typedef void (*transition)();
