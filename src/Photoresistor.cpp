@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include "Component.cpp"
 
-#define UMBRAL_LUX_NOCHE 200
+#define UMBRAL_LUX_NOCHE 2000
 
 class Photoresistor : public Component
 {
@@ -28,11 +28,7 @@ public:
   int GetLux()
   {
     int analog_value = ReadSensor();
-    float voltage = analog_value / 1024. * 3.3;
-    float resistance = 5000 * voltage / (1 - voltage / 3.3);
-    float lux = pow(this->RL10 * 1e3 * pow(10, this->GAMMA) / resistance, (1 / this->GAMMA));
-    this->previous_lux = lux;
-    return lux;
+    return analog_value;
   }
 
   String GetStatus()
