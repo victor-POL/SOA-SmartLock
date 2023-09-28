@@ -8,7 +8,7 @@
 
 #define UMBRAL_PERSONA_DETECTADA 50
 #define UMBRAL_PUERTA_ABIERTA 20
-#define UMBRAL_CAMBIO_VALOR 1
+#define UMBRAL_CAMBIO_VALOR 5
 
 extern enum Event event;
 
