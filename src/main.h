@@ -8,6 +8,7 @@
 #include "UltrasonicDoor.cpp"
 #include "Relay.cpp"
 #include "Button.cpp"
+#include "NFC.cpp"
 
 #include "States.h"
 #include "Events.h"

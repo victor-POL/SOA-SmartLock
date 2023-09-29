@@ -5,6 +5,7 @@ UltrasonicEntrance entrance_sensor = UltrasonicEntrance(ENTRANCE_SENSOR_TRIGGER_
 UltrasonicDoor door_sensor = UltrasonicDoor(DOOR_SENSOR_TRIGGER_PIN, DOOR_SENSOR_ECHO_PIN);
 KeyPad keypad = KeyPad();
 Button button = Button(BUTTON_PIN);
+NFC nfc = NFC();
 
 // Actuators
 MyServo entrance_door = MyServo(SERVO_PIN);
@@ -291,18 +292,18 @@ void NotifOpenDoor()
 
 transition state_table[MAX_STATES][MAX_EVENTS] =
 {
-      {None       , CreatePass           ,  PassSetted        , None                , None                  , None                , None            , None                , None              , None            ,  None                    , None          , None        , None                  , None          , None          , None                    }, // state CerraduraInit
-      {None       , None                 ,  None              , NewPassWithLight    , NewPassWithoutLight   , None                , None            , None                , None              , None            ,  None                    , None          , None        , None                  , None          , None          , None                    }, // state BloqueadoEsperandoClaveInicial
-      {None       , None                 ,  None              , TurnOffLight        , TurnOnLight           , ExitInputNewPass    , None            , ClearInputNewPass   , LoadNewPass       , ValidateNewPass ,  None                    , None          , None        , None                  , None          , None          , None                    }, // state EsperandoIngresoNuevaClave
-      {None       , None                 ,  None              , TurnOffLightA       , TurnOnLightA          , ExitInputNewPass    , None            , ClearInputNewPassA  , LoadNewPassA      , ValidateNewPassA,  None                    , None          , None        , None                  , None          , None          , None                    }, // state ConfirmacionNuevaClave
-      {None       , None                 ,  None              , None                , None                  , None                , None            , None                , None              , None            ,  None                    , InvalidNewPass, ValidNewPass, None                  , None          , None          , None                    }, // state ValidacionNuevaClave
-      {None       , None                 ,  None              , InputPassWithLight  , InputPassWithoutLight , None                , UnlockWithButton, None                , None              , None            ,  None                    , None          , None        , None                  , None          , None          , None                    }, // state BloqueadoEsperandoVisita
-      {None       , None                 ,  None              , TurnOffLightB       , TurnOnLightB          , ExitInputPass       , None            , ClearInputPass      , LoadPass          , ValidatePass    ,  None                    , None          , None        , None                  , None          , None          , None                    }, // state EsperandoIngresoClave
-      {None       , None                 ,  None              , None                , None                  , None                , None            , None                , None              , None            ,  NotifTimeoutPass        , InvalidPass   , ValidPass   , None                  , None          , None          , None                    }, // state ValidacionClave
-      {None       , None                 ,  None              , None                , None                  , BackToLocked        , None            , None                , None              , None            ,  None                    , None          , None        , BackToLockedA         , WaitPerson    , None          , None                    }, // state EsperandoAperturaPuerta
-      {None       , None                 ,  None              , None                , None                  , None                , None            , None                , None              , None            ,  None                    , None          , None        , BackToLockedB         , WaitPersonA   , None          , None                    }, // state EsperandoAperturaPuertaBoton
-      {None       , None                 ,  None              , None                , None                  , None                , None            , None                , None              , None            ,  None                    , None          , None        , None                  , None          , BackToLockedC , NotifOpenDoor           }, // state EsperandoEntradaPersona
-     //Continue   , ClaveNoConfigurada   ,  ClaveConfigurada  , PersonaDetectadaDia , PersonaDetectadaNoche , PersonaNoDetectada  , BotonPresionado , ClearClaveIngresada , CaracterIngresado , ValidarClave    ,  TimeOutValidacionClave  , ClaveInvalida , ClaveValida , TimeOutAperturaPuerta , SeAbrioPuerta , SeCerroPuerta , NotificarPuertaAbierta
+      {None       , CreatePass           ,  PassSetted        , None                , None                  , None                , None            , None                , None              , None            ,  None                    , None          , None        , None                  , None          , None          , None                    , None           , None}, // state CerraduraInit
+      {None       , None                 ,  None              , NewPassWithLight    , NewPassWithoutLight   , None                , None            , None                , None              , None            ,  None                    , None          , None        , None                  , None          , None          , None                    , None           , None}, // state BloqueadoEsperandoClaveInicial
+      {None       , None                 ,  None              , TurnOffLight        , TurnOnLight           , ExitInputNewPass    , None            , ClearInputNewPass   , LoadNewPass       , ValidateNewPass ,  None                    , None          , None        , None                  , None          , None          , None                    , None           , None}, // state EsperandoIngresoNuevaClave
+      {None       , None                 ,  None              , TurnOffLightA       , TurnOnLightA          , ExitInputNewPass    , None            , ClearInputNewPassA  , LoadNewPassA      , ValidateNewPassA,  None                    , None          , None        , None                  , None          , None          , None                    , None           , None}, // state ConfirmacionNuevaClave
+      {None       , None                 ,  None              , None                , None                  , None                , None            , None                , None              , None            ,  None                    , InvalidNewPass, ValidNewPass, None                  , None          , None          , None                    , None           , None}, // state ValidacionNuevaClave
+      {None       , None                 ,  None              , InputPassWithLight  , InputPassWithoutLight , None                , UnlockWithButton, None                , None              , None            ,  None                    , None          , None        , None                  , None          , None          , None                    , None           , None}, // state BloqueadoEsperandoVisita
+      {None       , None                 ,  None              , TurnOffLightB       , TurnOnLightB          , ExitInputPass       , None            , ClearInputPass      , LoadPass          , ValidatePass    ,  None                    , None          , None        , None                  , None          , None          , None                    , None           , None}, // state EsperandoIngresoClave
+      {None       , None                 ,  None              , None                , None                  , None                , None            , None                , None              , None            ,  NotifTimeoutPass        , InvalidPass   , ValidPass   , None                  , None          , None          , None                    , None           , None}, // state ValidacionClave
+      {None       , None                 ,  None              , None                , None                  , BackToLocked        , None            , None                , None              , None            ,  None                    , None          , None        , BackToLockedA         , WaitPerson    , None          , None                    , None           , None}, // state EsperandoAperturaPuerta
+      {None       , None                 ,  None              , None                , None                  , None                , None            , None                , None              , None            ,  None                    , None          , None        , BackToLockedB         , WaitPersonA   , None          , None                    , None           , None}, // state EsperandoAperturaPuertaBoton
+      {None       , None                 ,  None              , None                , None                  , None                , None            , None                , None              , None            ,  None                    , None          , None        , None                  , None          , BackToLockedC , NotifOpenDoor           , None           , None}, // state EsperandoEntradaPersona
+     //Continue   , ClaveNoConfigurada   ,  ClaveConfigurada  , PersonaDetectadaDia , PersonaDetectadaNoche , PersonaNoDetectada  , BotonPresionado , ClearClaveIngresada , CaracterIngresado , ValidarClave    ,  TimeOutValidacionClave  , ClaveInvalida , ClaveValida , TimeOutAperturaPuerta , SeAbrioPuerta , SeCerroPuerta , NotificarPuertaAbierta  , AperturaNFC    , NFCIncorrecto
 };
 
 void DoInit()
@@ -313,6 +314,7 @@ void DoInit()
   entrance_sensor.Setup();
   door_sensor.Setup();
   button.Setup();
+  nfc.Setup();
 
   buzzer.Setup();
   light.Setup();
@@ -341,6 +343,7 @@ void GenerateEvent()
     if (door_lock.CheckPasswordExistence() ||
         door_lock.CheckPasswordSettingInProgress() ||
         button.CheckStatus() ||
+        nfc.CheckStatus() ||
         door_lock.CheckUnlockInProgress() ||
         door_lock.CheckOpeningDoorTimeout() ||
         keypad.CheckStatus() ||

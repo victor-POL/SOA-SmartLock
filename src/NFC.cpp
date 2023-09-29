@@ -1,6 +1,9 @@
 #include <MFRC522.h>
 #include "Events.h"
 
+#define SS_PIN 5   // ESP32 pin GPIO5
+#define RST_PIN 15 // ESP32 pin GPIO27
+
 extern enum Event event;
 
 class NFC
@@ -14,16 +17,16 @@ private:
 public:
     NFC()
     {
-        this->rfid = MFRC522(10, 9);
+        this->rfid = MFRC522(SS_PIN, RST_PIN);
     }
 
-    void setup()
+    void Setup()
     {
         SPI.begin();
-        rfid.PCD_Init();
+        this->rfid.PCD_Init();
     }
 
-    bool checkStatus()
+    bool CheckStatus()
     {
         if (!rfid.PICC_IsNewCardPresent() || !rfid.PICC_ReadCardSerial())
         {

@@ -47,6 +47,6 @@ const String events_s[] = {
   "NFCIncorrecto"
 };
 
-#define MAX_EVENTS 18
+#define MAX_EVENTS 19
 
 #endif
