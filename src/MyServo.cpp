@@ -3,8 +3,8 @@
 #include "Component.cpp"
 #define MIN_ANGLE 500
 #define MAX_ANGLE 2500
-#define LOCK_ANGLE 0
-#define UNLOCK_ANGLE 179
+#define LOCK_ANGLE 20
+#define UNLOCK_ANGLE 160
 
 class MyServo : public Component
 {

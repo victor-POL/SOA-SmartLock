@@ -3,6 +3,8 @@
 #define UMBRAL_TIEMPO_PUERTA_CERRADA 5000
 #define DOOR_OPEN 1
 #define DOOR_CLOSED 0
+#define UMBRAL_CAMBIO_VALOR_PUERTA 10
+#define UMBRAL_PUERTA_ABIERTA 15
 
 class UltrasonicDoor : public Ultrasonic
 {
@@ -87,8 +89,8 @@ public:
   {
     int current_distance = GetDistance();
     int previous_distance = this->previous_distance;
-
-    if (abs(current_distance - previous_distance) > UMBRAL_CAMBIO_VALOR)
+    
+    if (abs(current_distance - previous_distance) > UMBRAL_CAMBIO_VALOR_PUERTA)
     {
       this->previous_distance = current_distance;
       bool is_door_detected = current_distance < UMBRAL_PUERTA_ABIERTA;

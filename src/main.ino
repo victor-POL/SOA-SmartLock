@@ -309,7 +309,7 @@ transition state_table[MAX_STATES][MAX_EVENTS] =
 void DoInit()
 {
   Serial.begin(115200);
-
+  delay(5000);
   entrance_door.Setup();
   entrance_sensor.Setup();
   door_sensor.Setup();

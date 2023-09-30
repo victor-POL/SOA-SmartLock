@@ -1,6 +1,9 @@
 #include "Ultrasonic.cpp"
 #include "Photoresistor.cpp"
 
+#define UMBRAL_CAMBIO_VALOR_PERSONA 10
+#define UMBRAL_PERSONA_DETECTADA 30
+
 class UltrasonicEntrance : public Ultrasonic
 {
 private:
@@ -15,8 +18,8 @@ public:
   {
     int current_distance = GetDistance();
     int previous_distance = this->previous_distance;
-
-    if (abs(current_distance - previous_distance) > UMBRAL_CAMBIO_VALOR)
+    
+    if (abs(current_distance - previous_distance) > UMBRAL_CAMBIO_VALOR_PERSONA)
     {
       this->previous_distance = current_distance;
       if (current_distance > UMBRAL_PERSONA_DETECTADA)
