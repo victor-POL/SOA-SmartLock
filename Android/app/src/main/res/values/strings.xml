@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">SmartLock</string>
+    <string name="change_password">Cambiar clave</string>
+</resources>
