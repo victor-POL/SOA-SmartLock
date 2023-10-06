@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
@@ -13,8 +14,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button btnChangePassword = findViewById(R.id.btnChangePassword);
-        btnChangePassword.setOnClickListener(v -> onClickChangePassword());
+        View cardChangePassword = findViewById(R.id.partialChangePasswordCard);
+        cardChangePassword.setOnClickListener(v -> onClickChangePassword());
+
     }
 
     void onClickChangePassword(){

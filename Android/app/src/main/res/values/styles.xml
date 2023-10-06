@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="AppTextViewTitleStyle">
+        <item name="android:textSize">@dimen/large_text_size</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="AppTextViewDescriptionStyle">
+        <item name="android:textSize">@dimen/default_text_size</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+</resources>

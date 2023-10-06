@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">SmartLock</string>
+
+    <string name="entrance_sensor">Sensor de la entrada</string>
+    <string name="entrance_sensor_warning_description">Mantenga activado el Bluetooth para conocer el valor del sensor frente a la puerta.</string>
     <string name="change_password">Cambiar clave</string>
+    <string name="change_password_description">Asigna una nueva clave a la cerradura inteligente</string>
 </resources>
