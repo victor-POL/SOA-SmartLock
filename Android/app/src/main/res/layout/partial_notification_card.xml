@@ -16,21 +16,10 @@
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:contentDescription="@null"
-            android:src="@drawable/ic_sensor_on"
+            android:src="@drawable/ic_notification"
             app:layout_constraintEnd_toStartOf="@id/guideline"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/tvSensorValue"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:text="0cm"
-            android:textColor="?colorPrimary"
-            app:layout_constraintEnd_toStartOf="@id/guideline"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/ivSensorState" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline"
@@ -45,7 +34,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_app"
-            android:text="@string/entrance_sensor"
+            android:text="@string/notifications"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@id/guideline"
             app:layout_constraintTop_toTopOf="parent" />
@@ -56,13 +45,13 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_app"
-            android:text="@string/entrance_sensor_warning_description"
+            android:text="@string/notifications_description"
             app:layout_constraintEnd_toEndOf="@id/tvTitle"
             app:layout_constraintStart_toStartOf="@id/guideline"
             app:layout_constraintTop_toBottomOf="@id/tvTitle" />
 
         <Button
-            android:id="@+id/btnTurnOnBluetooth"
+            android:id="@+id/btnTurnOnNotifications"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -1,8 +1,20 @@
 <resources>
     <string name="app_name">SmartLock</string>
 
+    <string name="app_notification_channel_id">smartlock_channel_01</string>
+    <string name="app_notification_channel_title">General</string>
+
+    <string name="notifications">Notificaciones</string>
+    <string name="notifications_description_warning">Habilite las notificaciones de la app para ser advertido cuando la puerta quedó mucho tiempo abierta.</string>
+    <string name="notifications_description_warning_channel">Habilite el canal general de la app para ser advertido cuando la puerta quedó mucho tiempo abierta.</string>
+    <string name="notifications_description">Se le notificará cuando la puerta haya estado demasiado tiempo abierta.</string>
+    <string name="notify_opened_door_title">Puerta abierta</string>
+    <string name="notify_opened_door_description">La puerta ha estado abierta por mucho tiempo.</string>
+
     <string name="entrance_sensor">Sensor de la entrada</string>
-    <string name="entrance_sensor_warning_description">Mantenga activado el Bluetooth para conocer el valor del sensor frente a la puerta.</string>
+    <string name="entrance_sensor_description">Pruebe el sensor de distancia que Smartlock usa para detectar si hay alguna persona queriendo entrar.</string>
     <string name="change_password">Cambiar clave</string>
-    <string name="change_password_description">Asigna una nueva clave a la cerradura inteligente</string>
+    <string name="change_password_description">Asigna una nueva clave de acceso a Smartlock.</string>
+    <string name="shake">Shake</string>
+    <string name="shake_description">Desbloquee la puerta agitando el celular.</string>
 </resources>

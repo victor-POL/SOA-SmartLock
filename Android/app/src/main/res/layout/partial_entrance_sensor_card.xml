@@ -17,7 +17,7 @@
             style="@style/AppTextViewTitleStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Otra funcionalidad"
+            android:text="@string/entrance_sensor"
             android:textSize="@dimen/large_text_size"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -26,7 +26,7 @@
             style="@style/AppTextViewDescriptionStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="[sensor mobile -> mobile/se]"
+            android:text="@string/entrance_sensor_description"
             app:layout_constraintTop_toBottomOf="@id/tvTitle" />
 
         <ImageView

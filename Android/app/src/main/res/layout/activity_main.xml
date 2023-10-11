@@ -29,21 +29,29 @@
             android:orientation="vertical">
 
             <include
-                android:id="@+id/partialEntranceValueCard"
-                layout="@layout/partial_entrance_value_card"
+                android:id="@+id/partialNotificationCard"
+                layout="@layout/partial_notification_card"
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <include
+                android:id="@+id/partialEntranceSensorCard"
+                layout="@layout/partial_entrance_sensor_card"
+                android:layout_width="match_parent"
+                android:layout_marginTop="@dimen/margin_app"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <include
-                android:id="@+id/partialChangePasswordCard"
-                layout="@layout/partial_change_password_card"
+                android:id="@+id/partialShakeCard"
+                layout="@layout/partial_shake_card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_app" />
 
             <include
-                layout="@layout/partial_unlock_card"
+                android:id="@+id/partialChangePasswordCard"
+                layout="@layout/partial_change_password_card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_app" />
