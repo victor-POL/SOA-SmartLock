@@ -1,4 +1,4 @@
-package com.m2.smartlock;
+package com.m2.smartlock.ui;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.m2.smartlock.R;
 import com.m2.smartlock.utils.AppNotificationUtils;
 
 public class MainActivity extends AppCompatActivity {

@@ -19,7 +19,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 
-import com.m2.smartlock.MainActivity;
+import com.m2.smartlock.ui.MainActivity;
 import com.m2.smartlock.R;
 
 public class AppNotificationUtils {

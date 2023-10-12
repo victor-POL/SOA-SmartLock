@@ -1,10 +1,11 @@
-package com.m2.smartlock;
+package com.m2.smartlock.ui;
 
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.appbar.MaterialToolbar;
+import com.m2.smartlock.R;
 
 public class ShakeActivity extends AppCompatActivity {
 
