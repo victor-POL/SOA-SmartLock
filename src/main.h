@@ -9,6 +9,7 @@
 #include "Relay.cpp"
 #include "Button.cpp"
 #include "NFC.cpp"
+#include "MyWifi.cpp"
 
 #include "States.h"
 #include "Events.h"
