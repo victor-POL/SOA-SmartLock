@@ -23,6 +23,9 @@ LCDRgb lcd = *LCDRgb::GetInstance();
 // Lock
 Lock door_lock = Lock();
 
+// Connection
+MyWifi wifi = MyWifi();
+
 // Global
 enum State state;
 enum Event event;
@@ -309,7 +312,8 @@ transition state_table[MAX_STATES][MAX_EVENTS] =
 void DoInit()
 {
   Serial.begin(115200);
-  delay(5000);
+  delay(COMPILAR_PARA_SIMULADOR ? 0 : 5000);
+  wifi.Setup();
   entrance_door.Setup();
   entrance_sensor.Setup();
   door_sensor.Setup();
