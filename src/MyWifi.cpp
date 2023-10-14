@@ -8,8 +8,10 @@
 #define WIFI_PASSWORD "4460.1222"
 #endif
 
-#define UNLOCK_TOPIC "esp-unlock"
-#define COMMAND_TOPIC "esp-command"
+#define SET_PASS_TOPIC "app-set-pass"
+#define COMMAND_TOPIC "app-command"
+
+#define UNLOCK_COMMAND "unlock"
 
 #define BROKER_URL "broker.emqx.io"
 #define BROKER_PORT 1883
@@ -30,8 +32,6 @@ void MyWifi::SetupWifi()
         delay(300);
     }
     Serial.println();
-    Serial.print("Connected with IP: ");
-    Serial.println(WiFi.localIP());
 }
 
 void MyWifi::Callback(char *topic, byte *message, unsigned int length)
@@ -41,8 +41,6 @@ void MyWifi::Callback(char *topic, byte *message, unsigned int length)
     stMessage[length] = '\0';
     lastMessage = stMessage;
     lastTopic = topic;
-    Serial.println(lastTopic);
-    Serial.println(lastMessage);
 }
 
 void MyWifi::MQTTReconnect()
@@ -53,7 +51,7 @@ void MyWifi::MQTTReconnect()
         if (client.connect(clientId))
         {
             Serial.println("Connected");
-            client.subscribe(UNLOCK_TOPIC);
+            client.subscribe(SET_PASS_TOPIC);
             client.subscribe(COMMAND_TOPIC);
         }
         else
@@ -87,15 +85,28 @@ void MyWifi::CheckMQTT()
 
 bool MyWifi::CheckLastMessage()
 {
-    if (lastMessage != "")
+    if (lastTopic != "")
     {
-        Serial.println("Tópico recibido: " + lastTopic);
-        Serial.println("Mensaje recibido: " + lastMessage);
-        lastMessage = "";
-        lastTopic = "";
-
-        event = Event::MensajeRecibido;
-        return true;
+        newPassword = lastMessage;
+        if (lastTopic == COMMAND_TOPIC && lastMessage == UNLOCK_COMMAND)
+        {
+            lastMessage = "";
+            lastTopic = "";
+            event = Event::BotonPresionado;
+            return true;
+        }
+        else if (lastTopic == SET_PASS_TOPIC)
+        {
+            lastMessage = "";
+            lastTopic = "";
+            event = Event::PasswordSetted;
+            return true;
+        }
     }
     return false;
+}
+
+String MyWifi::GetNewPassword()
+{
+    return newPassword;
 }
