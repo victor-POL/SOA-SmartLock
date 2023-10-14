@@ -19,7 +19,6 @@ LCDRgb *LCDRgb::instance = NULL;
 LCDRgb lcd = *LCDRgb::GetInstance();
 #endif
 
-
 // Lock
 Lock door_lock = Lock();
 
@@ -33,7 +32,7 @@ bool timeout;
 long last_current_time;
 
 // Funciones para eventos
-void None(){}
+void None() {}
 
 void CreatePass()
 {
@@ -94,7 +93,6 @@ void TurnOnLightB()
   TurnOnEntranceLight();
   state = State::EsperandoIngresoClave;
 }
-
 
 void ExitInputNewPass()
 {
@@ -181,9 +179,9 @@ void InputPassWithoutLight()
   state = State::EsperandoIngresoClave;
 }
 
-void UnlockWithButton()
+void ManualUnlock()
 {
-  door_lock.UnlockWithButton();
+  door_lock.UnlockWitoutPass();
   UnlockEntranceDoor();
   state = State::EsperandoAperturaPuertaBoton;
 }
@@ -252,6 +250,7 @@ void BackToLocked()
 
 void BackToLockedA()
 {
+  wifi.SendDoorStatus(false);
   ShutdownScreen();
   TurnOffEntranceLight();
   ClearPassEnteredIntoLock();
@@ -260,23 +259,9 @@ void BackToLockedA()
   state = State::BloqueadoEsperandoVisita;
 }
 
-void BackToLockedB()
-{
-  LockEntranceDoor();
-  state = State::BloqueadoEsperandoVisita;
-}
-
-void BackToLockedC()
-{
-  ShutdownScreen();
-  TurnOffEntranceLight();
-  ClearPassEnteredIntoLock();
-  LockEntranceDoor();
-  state = State::BloqueadoEsperandoVisita;
-}
-
 void WaitPerson()
 {
+  wifi.SendDoorStatus(true);
   ShowOpenDoorMessageOnScreen();
   CancelDoorOpenTimer();
   state = State::EsperandoEntradaPersona;
@@ -284,36 +269,59 @@ void WaitPerson()
 
 void WaitPersonA()
 {
+  wifi.SendDoorStatus(true);
   CancelDoorOpenTimer();
   state = State::EsperandoEntradaPersona;
 }
 
 void NotifOpenDoor()
 {
+  wifi.NotifyDoorOpen();
   state = State::EsperandoEntradaPersona;
+}
+
+void SetNewPassword()
+{
+  SetPasswordLock();
+  state = State::BloqueadoEsperandoVisita;
+}
+
+void SetNewPasswordA()
+{
+  ClearNewPassEnteredIntoLock();
+  ShutdownScreen();
+  SetPasswordLock();
+  state = State::BloqueadoEsperandoVisita;
+}
+
+void SetNewPasswordB()
+{
+  SetPasswordLock();
+  state = State::EsperandoIngresoClave;
 }
 
 transition state_table[MAX_STATES][MAX_EVENTS] =
 {
-      {None       , CreatePass           ,  PassSetted        , None                , None                  , None                , None            , None                , None              , None            ,  None                    , None          , None        , None                  , None          , None          , None                    , None           , None}, // state CerraduraInit
-      {None       , None                 ,  None              , NewPassWithLight    , NewPassWithoutLight   , None                , None            , None                , None              , None            ,  None                    , None          , None        , None                  , None          , None          , None                    , None           , None}, // state BloqueadoEsperandoClaveInicial
-      {None       , None                 ,  None              , TurnOffLight        , TurnOnLight           , ExitInputNewPass    , None            , ClearInputNewPass   , LoadNewPass       , ValidateNewPass ,  None                    , None          , None        , None                  , None          , None          , None                    , None           , None}, // state EsperandoIngresoNuevaClave
-      {None       , None                 ,  None              , TurnOffLightA       , TurnOnLightA          , ExitInputNewPass    , None            , ClearInputNewPassA  , LoadNewPassA      , ValidateNewPassA,  None                    , None          , None        , None                  , None          , None          , None                    , None           , None}, // state ConfirmacionNuevaClave
-      {None       , None                 ,  None              , None                , None                  , None                , None            , None                , None              , None            ,  None                    , InvalidNewPass, ValidNewPass, None                  , None          , None          , None                    , None           , None}, // state ValidacionNuevaClave
-      {None       , None                 ,  None              , InputPassWithLight  , InputPassWithoutLight , None                , UnlockWithButton, None                , None              , None            ,  None                    , None          , None        , None                  , None          , None          , None                    , None           , None}, // state BloqueadoEsperandoVisita
-      {None       , None                 ,  None              , TurnOffLightB       , TurnOnLightB          , ExitInputPass       , None            , ClearInputPass      , LoadPass          , ValidatePass    ,  None                    , None          , None        , None                  , None          , None          , None                    , None           , None}, // state EsperandoIngresoClave
-      {None       , None                 ,  None              , None                , None                  , None                , None            , None                , None              , None            ,  NotifTimeoutPass        , InvalidPass   , ValidPass   , None                  , None          , None          , None                    , None           , None}, // state ValidacionClave
-      {None       , None                 ,  None              , None                , None                  , BackToLocked        , None            , None                , None              , None            ,  None                    , None          , None        , BackToLockedA         , WaitPerson    , None          , None                    , None           , None}, // state EsperandoAperturaPuerta
-      {None       , None                 ,  None              , None                , None                  , None                , None            , None                , None              , None            ,  None                    , None          , None        , BackToLockedB         , WaitPersonA   , None          , None                    , None           , None}, // state EsperandoAperturaPuertaBoton
-      {None       , None                 ,  None              , None                , None                  , None                , None            , None                , None              , None            ,  None                    , None          , None        , None                  , None          , BackToLockedC , NotifOpenDoor           , None           , None}, // state EsperandoEntradaPersona
-     //Continue   , ClaveNoConfigurada   ,  ClaveConfigurada  , PersonaDetectadaDia , PersonaDetectadaNoche , PersonaNoDetectada  , BotonPresionado , ClearClaveIngresada , CaracterIngresado , ValidarClave    ,  TimeOutValidacionClave  , ClaveInvalida , ClaveValida , TimeOutAperturaPuerta , SeAbrioPuerta , SeCerroPuerta , NotificarPuertaAbierta  , AperturaNFC    , NFCIncorrecto
+      {None       , CreatePass           ,  PassSetted        , None                , None                  , None                , None            , None                , None              , None            ,  None                    , None          , None        , None                  , None          , None          , None                    , None          , None            }, // state CerraduraInit
+      {None       , None                 ,  None              , NewPassWithLight    , NewPassWithoutLight   , None                , None            , None                , None              , None            ,  None                    , None          , None        , None                  , None          , None          , None                    , None          , SetNewPassword  }, // state BloqueadoEsperandoClaveInicial
+      {None       , None                 ,  None              , TurnOffLight        , TurnOnLight           , ExitInputNewPass    , None            , ClearInputNewPass   , LoadNewPass       , ValidateNewPass ,  None                    , None          , None        , None                  , None          , None          , None                    , None          , SetNewPasswordA }, // state EsperandoIngresoNuevaClave
+      {None       , None                 ,  None              , TurnOffLightA       , TurnOnLightA          , ExitInputNewPass    , None            , ClearInputNewPassA  , LoadNewPassA      , ValidateNewPassA,  None                    , None          , None        , None                  , None          , None          , None                    , None          , SetNewPasswordA }, // state ConfirmacionNuevaClave
+      {None       , None                 ,  None              , None                , None                  , None                , None            , None                , None              , None            ,  None                    , InvalidNewPass, ValidNewPass, None                  , None          , None          , None                    , None          , None            }, // state ValidacionNuevaClave
+      {None       , None                 ,  None              , InputPassWithLight  , InputPassWithoutLight , None                , ManualUnlock    , None                , None              , None            ,  None                    , None          , None        , None                  , None          , None          , None                    , None          , SetNewPassword  }, // state BloqueadoEsperandoVisita
+      {None       , None                 ,  None              , TurnOffLightB       , TurnOnLightB          , ExitInputPass       , ManualUnlock    , ClearInputPass      , LoadPass          , ValidatePass    ,  None                    , None          , None        , None                  , None          , None          , None                    , None          , SetNewPasswordB }, // state EsperandoIngresoClave
+      {None       , None                 ,  None              , None                , None                  , None                , None            , None                , None              , None            ,  NotifTimeoutPass        , InvalidPass   , ValidPass   , None                  , None          , None          , None                    , None          , None            }, // state ValidacionClave
+      {None       , None                 ,  None              , None                , None                  , BackToLocked        , None            , None                , None              , None            ,  None                    , None          , None        , BackToLockedA         , WaitPerson    , None          , None                    , None          , None            }, // state EsperandoAperturaPuerta
+      {None       , None                 ,  None              , None                , None                  , None                , None            , None                , None              , None            ,  None                    , None          , None        , BackToLockedA         , WaitPersonA   , None          , None                    , None          , None            }, // state EsperandoAperturaPuertaBoton
+      {None       , None                 ,  None              , None                , None                  , None                , None            , None                , None              , None            ,  None                    , None          , None        , None                  , None          , BackToLockedA , NotifOpenDoor           , None          , None            }, // state EsperandoEntradaPersona
+     //Continue   , ClaveNoConfigurada   ,  ClaveConfigurada  , PersonaDetectadaDia , PersonaDetectadaNoche , PersonaNoDetectada  , DesbloqueoManual, ClearClaveIngresada , CaracterIngresado , ValidarClave    ,  TimeOutValidacionClave  , ClaveInvalida , ClaveValida , TimeOutAperturaPuerta , SeAbrioPuerta , SeCerroPuerta , NotificarPuertaAbierta  , NFCIncorrecto , PasswordSetted
 };
 
 void DoInit()
 {
   Serial.begin(115200);
   delay(COMPILAR_PARA_SIMULADOR ? 0 : 5000);
-  wifi.Setup();
+  wifi.SetupWifi();
+  wifi.SetupMQTT();
   entrance_door.Setup();
   entrance_sensor.Setup();
   door_sensor.Setup();
@@ -343,9 +351,11 @@ void GenerateEvent()
     last_current_time = current_time;
 
     buzzer.CheckStatus();
+    wifi.CheckMQTT();
 
     if (door_lock.CheckPasswordExistence() ||
         door_lock.CheckPasswordSettingInProgress() ||
+        wifi.CheckLastMessage() ||
         button.CheckStatus() ||
         nfc.CheckStatus() ||
         door_lock.CheckUnlockInProgress() ||
@@ -367,13 +377,13 @@ void StateMachine()
 {
   GenerateEvent();
 
-  if( (event >= 0) && (event < MAX_EVENTS) && (state >= 0) && (state < MAX_STATES) )
+  if ((event >= 0) && (event < MAX_EVENTS) && (state >= 0) && (state < MAX_STATES))
   {
-    if( event != Event::Continue )
+    if (event != Event::Continue)
     {
       DebugPrintEstado(states_s[state], events_s[event]);
     }
-    
+
     state_table[state][event]();
   }
 
@@ -525,4 +535,10 @@ void ShowOpenDoorMessageOnScreen()
 void CancelDoorOpenTimer()
 {
   door_lock.StopTimerPuerta();
+}
+
+void SetPasswordLock()
+{
+  door_lock.SetNewPassword(wifi.GetNewPassword());
+  ReproduceValidPassSoundInBuzzer();
 }

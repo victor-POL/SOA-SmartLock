@@ -1,7 +1,7 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#define COMPILAR_PARA_SIMULADOR false
+#define COMPILAR_PARA_SIMULADOR true
 
 #define SERIAL_DEBUG_ENABLED 1
 

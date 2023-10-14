@@ -66,7 +66,7 @@ public:
   }
 
   // Actions
-  void UnlockWithButton()
+  void UnlockWitoutPass()
   {
     StartTimer();
     this->is_locked = false;
@@ -175,5 +175,11 @@ public:
   void StopTimerPuerta()
   {
     this->check_timeout_puerta = false;
+  }
+
+  void SetNewPassword(String new_password)
+  {
+    this->valid_password = new_password;
+    this->storage.StoreData("password", valid_password.c_str());
   }
 };

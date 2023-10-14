@@ -10,7 +10,7 @@ enum Event
   PersonaDetectadaDia,
   PersonaDetectadaNoche,
   PersonaNoDetectada,
-  BotonPresionado,
+  DesbloqueoManual,
   ClearClaveIngresada,
   CaracterIngresado,
   ValidarClave,
@@ -21,8 +21,8 @@ enum Event
   SeAbrioPuerta,
   SeCerroPuerta,
   NotificarPuertaAbierta,
-  AperturaNFC,
-  NFCIncorrecto
+  NFCIncorrecto,
+  PasswordSetted
 };
 
 const String events_s[] = {
@@ -32,7 +32,7 @@ const String events_s[] = {
   "PersonaDetectadaDia",
   "PersonaDetectadaNoche",
   "PersonaNoDetectada",
-  "BotonPresionado",
+  "DesbloqueoManual",
   "ClearClaveIngresada",
   "CaracterIngresado",
   "ValidarClave",
@@ -43,9 +43,9 @@ const String events_s[] = {
   "SeAbrioPuerta",
   "SeCerroPuerta",
   "NotificarPuertaAbierta",
-  "AperturaNFC",
-  "NFCIncorrecto"
-};
+  "NFCIncorrecto",
+  "PasswordSetted"
+  };
 
 #define MAX_EVENTS 19
 
