@@ -18,9 +18,12 @@
 
     <string name="change_password">Cambiar clave</string>
     <string name="change_password_description">Asigna una nueva clave de acceso a Smartlock.</string>
-    <string name="change_password_full_description">Ingrese una nueva clave de acceso. Debe ser numérica de hasta 4 dígitos.</string>
+    <string name="change_password_full_description">Ingrese una nueva clave de acceso. Debe ser numérica de hasta 16 dígitos.</string>
     <string name="password_hint">1234</string>
     <string name="save">Guardar</string>
+    <string name="save_password_success">La clave fue cambiada.</string>
+    <string name="save_password_error">Hubo un error y no se pudo actualizar la clave.</string>
+    <string name="accept">Aceptar</string>
 
     <string name="shake">Shake</string>
     <string name="shake_description">Desbloquee la puerta agitando el celular.</string>
