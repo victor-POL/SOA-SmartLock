@@ -19,6 +19,7 @@ public:
 
     void SendData(String topic, String message);
     void CheckMQTT();
+    bool CheckLastMessage();
 };
 
 #endif

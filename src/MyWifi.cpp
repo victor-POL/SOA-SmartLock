@@ -10,7 +10,8 @@
 
 char MyWifi::clientId[50];
 WiFiClient MyWifi::espClient;
-PubSubClient MyWifi::client(MyWifi::espClient); // Inicializa la variable aquí
+PubSubClient MyWifi::client(MyWifi::espClient);
+String lastMessage = "";
 
 void MyWifi::SetupWifi()
 {
@@ -29,12 +30,11 @@ void MyWifi::SetupWifi()
 
 void MyWifi::Callback(char *topic, byte *message, unsigned int length)
 {
-    String stMessage;
-    for (int i = 0; i < length; i++)
-    {
-        stMessage += (char)message[i];
-    }
+    char stMessage[length + 1];
+    memcpy(stMessage, message, length);
+    stMessage[length] = '\0';
     Serial.println(stMessage);
+    lastMessage = stMessage;
 }
 
 void MyWifi::MQTTReconnect()
@@ -74,4 +74,15 @@ void MyWifi::CheckMQTT()
         MQTTReconnect();
     }
     client.loop();
+}
+
+bool MyWifi::CheckLastMessage()
+{
+    if (lastMessage != "")
+    {
+        Serial.println("Mensaje recibido: " + lastMessage);
+        lastMessage = "";
+        return true;
+    }
+    return false;
 }

@@ -348,6 +348,7 @@ void GenerateEvent()
 
     if (door_lock.CheckPasswordExistence() ||
         door_lock.CheckPasswordSettingInProgress() ||
+        wifi.CheckLastMessage() ||
         button.CheckStatus() ||
         nfc.CheckStatus() ||
         door_lock.CheckUnlockInProgress() ||
