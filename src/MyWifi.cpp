@@ -86,6 +86,8 @@ bool MyWifi::CheckLastMessage()
         Serial.println("Mensaje recibido: " + lastMessage);
         lastMessage = "";
         lastTopic = "";
+
+        event = Event::MensajeRecibido;
         return true;
     }
     return false;

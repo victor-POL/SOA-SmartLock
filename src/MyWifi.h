@@ -4,6 +4,9 @@
 #include <WiFi.h>
 #include <PubSubClient.h>
 #include "Config.h"
+#include "Events.h"
+
+extern enum Event event;
 
 class MyWifi
 {

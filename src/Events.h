@@ -22,7 +22,8 @@ enum Event
   SeCerroPuerta,
   NotificarPuertaAbierta,
   AperturaNFC,
-  NFCIncorrecto
+  NFCIncorrecto,
+  MensajeRecibido
 };
 
 const String events_s[] = {
@@ -44,9 +45,10 @@ const String events_s[] = {
   "SeCerroPuerta",
   "NotificarPuertaAbierta",
   "AperturaNFC",
-  "NFCIncorrecto"
-};
+  "NFCIncorrecto",
+  "MensajeRecibido"
+  };
 
-#define MAX_EVENTS 19
+#define MAX_EVENTS 20
 
 #endif
