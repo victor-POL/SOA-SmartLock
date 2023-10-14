@@ -8,6 +8,8 @@
 #define WIFI_PASSWORD "4460.1222"
 #endif
 
+#define RECEIVE_MESSAGES_TOPIC "aplicacion"
+
 char MyWifi::clientId[50];
 WiFiClient MyWifi::espClient;
 PubSubClient MyWifi::client(MyWifi::espClient);
@@ -25,7 +27,6 @@ void MyWifi::SetupWifi()
     Serial.println();
     Serial.print("Connected with IP: ");
     Serial.println(WiFi.localIP());
-    Serial.println();
 }
 
 void MyWifi::Callback(char *topic, byte *message, unsigned int length)
@@ -33,7 +34,6 @@ void MyWifi::Callback(char *topic, byte *message, unsigned int length)
     char stMessage[length + 1];
     memcpy(stMessage, message, length);
     stMessage[length] = '\0';
-    Serial.println(stMessage);
     lastMessage = stMessage;
 }
 
@@ -45,7 +45,7 @@ void MyWifi::MQTTReconnect()
         if (client.connect(clientId))
         {
             Serial.println("Connected");
-            client.subscribe("aplicacion");
+            client.subscribe(RECEIVE_MESSAGES_TOPIC);
         }
         else
         {
