@@ -14,6 +14,7 @@ char MyWifi::clientId[50];
 WiFiClient MyWifi::espClient;
 PubSubClient MyWifi::client(MyWifi::espClient);
 String lastMessage = "";
+String lastTopic = "";
 
 void MyWifi::SetupWifi()
 {
@@ -35,6 +36,7 @@ void MyWifi::Callback(char *topic, byte *message, unsigned int length)
     memcpy(stMessage, message, length);
     stMessage[length] = '\0';
     lastMessage = stMessage;
+    lastTopic = topic;
 }
 
 void MyWifi::MQTTReconnect()
@@ -80,8 +82,10 @@ bool MyWifi::CheckLastMessage()
 {
     if (lastMessage != "")
     {
+        Serial.println("Tópico recibido: " + lastTopic);
         Serial.println("Mensaje recibido: " + lastMessage);
         lastMessage = "";
+        lastTopic = "";
         return true;
     }
     return false;
