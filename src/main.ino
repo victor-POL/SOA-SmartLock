@@ -260,21 +260,6 @@ void BackToLockedA()
   state = State::BloqueadoEsperandoVisita;
 }
 
-void BackToLockedB()
-{
-  LockEntranceDoor();
-  state = State::BloqueadoEsperandoVisita;
-}
-
-void BackToLockedC()
-{
-  ShutdownScreen();
-  TurnOffEntranceLight();
-  ClearPassEnteredIntoLock();
-  LockEntranceDoor();
-  state = State::BloqueadoEsperandoVisita;
-}
-
 void WaitPerson()
 {
   ShowOpenDoorMessageOnScreen();
@@ -304,8 +289,8 @@ transition state_table[MAX_STATES][MAX_EVENTS] =
       {None       , None                 ,  None              , TurnOffLightB       , TurnOnLightB          , ExitInputPass       , ManualUnlock    , ClearInputPass      , LoadPass          , ValidatePass    ,  None                    , None          , None        , None                  , None          , None          , None                    , None          , None}, // state EsperandoIngresoClave
       {None       , None                 ,  None              , None                , None                  , None                , None            , None                , None              , None            ,  NotifTimeoutPass        , InvalidPass   , ValidPass   , None                  , None          , None          , None                    , None          , None}, // state ValidacionClave
       {None       , None                 ,  None              , None                , None                  , BackToLocked        , None            , None                , None              , None            ,  None                    , None          , None        , BackToLockedA         , WaitPerson    , None          , None                    , None          , None}, // state EsperandoAperturaPuerta
-      {None       , None                 ,  None              , None                , None                  , None                , None            , None                , None              , None            ,  None                    , None          , None        , BackToLockedB         , WaitPersonA   , None          , None                    , None          , None}, // state EsperandoAperturaPuertaBoton
-      {None       , None                 ,  None              , None                , None                  , None                , None            , None                , None              , None            ,  None                    , None          , None        , None                  , None          , BackToLockedC , NotifOpenDoor           , None          , None}, // state EsperandoEntradaPersona
+      {None       , None                 ,  None              , None                , None                  , None                , None            , None                , None              , None            ,  None                    , None          , None        , BackToLockedA         , WaitPersonA   , None          , None                    , None          , None}, // state EsperandoAperturaPuertaBoton
+      {None       , None                 ,  None              , None                , None                  , None                , None            , None                , None              , None            ,  None                    , None          , None        , None                  , None          , BackToLockedA , NotifOpenDoor           , None          , None}, // state EsperandoEntradaPersona
      //Continue   , ClaveNoConfigurada   ,  ClaveConfigurada  , PersonaDetectadaDia , PersonaDetectadaNoche , PersonaNoDetectada  , DesbloqueoManual, ClearClaveIngresada , CaracterIngresado , ValidarClave    ,  TimeOutValidacionClave  , ClaveInvalida , ClaveValida , TimeOutAperturaPuerta , SeAbrioPuerta , SeCerroPuerta , NotificarPuertaAbierta  , NFCIncorrecto , PasswordSetted
 };
 
