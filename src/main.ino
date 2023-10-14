@@ -313,7 +313,8 @@ void DoInit()
 {
   Serial.begin(115200);
   delay(COMPILAR_PARA_SIMULADOR ? 0 : 5000);
-  wifi.Setup();
+  wifi.SetupWifi();
+  wifi.SetupMQTT();
   entrance_door.Setup();
   entrance_sensor.Setup();
   door_sensor.Setup();
@@ -343,6 +344,7 @@ void GenerateEvent()
     last_current_time = current_time;
 
     buzzer.CheckStatus();
+    wifi.CheckMQTT();
 
     if (door_lock.CheckPasswordExistence() ||
         door_lock.CheckPasswordSettingInProgress() ||
