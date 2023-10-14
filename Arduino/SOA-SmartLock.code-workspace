@@ -1,0 +1,31 @@
+{
+	"folders": [
+		{
+			"path": ".."
+		},
+		{
+			"name": "Arduino",
+			"path": "."
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"*.embeddedhtml": "html",
+			"cmath": "cpp",
+			"*.tcc": "cpp",
+			"fstream": "cpp",
+			"deque": "cpp",
+			"string": "cpp",
+			"unordered_map": "cpp",
+			"unordered_set": "cpp",
+			"vector": "cpp",
+			"system_error": "cpp",
+			"random": "cpp",
+			"new": "cpp",
+			"array": "cpp",
+			"list": "cpp",
+			"string_view": "cpp",
+			"initializer_list": "cpp"
+		}
+	}
+}
