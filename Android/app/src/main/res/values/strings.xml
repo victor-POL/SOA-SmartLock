@@ -4,6 +4,10 @@
     <string name="app_notification_channel_id">smartlock_channel_01</string>
     <string name="app_notification_channel_title">General</string>
 
+    <!--commons-->
+    <string name="accept">Aceptar</string>
+    <string name="publisher_error">Error al iniciar el publisher.</string>
+
     <string name="notifications">Notificaciones</string>
     <string name="notifications_description_warning">Habilite las notificaciones de la app para ser advertido cuando la puerta quedó mucho tiempo abierta.</string>
     <string name="notifications_description_warning_channel">Habilite el canal general de la app para ser advertido cuando la puerta quedó mucho tiempo abierta.</string>
@@ -23,8 +27,9 @@
     <string name="save">Guardar</string>
     <string name="save_password_success">La clave fue cambiada.</string>
     <string name="save_password_error">Hubo un error y no se pudo actualizar la clave.</string>
-    <string name="accept">Aceptar</string>
 
     <string name="shake">Shake</string>
     <string name="shake_description">Desbloquee la puerta agitando el celular.</string>
+    <string name="unlock_success">Puerta desbloqueada.</string>
+    <string name="unlock_error">Hubo un error. No fue posible desbloquear la puerta.</string>
 </resources>

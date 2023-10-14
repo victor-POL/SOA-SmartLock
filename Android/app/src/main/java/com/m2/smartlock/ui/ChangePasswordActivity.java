@@ -49,7 +49,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
             publisher = new MqttPublisher();
         } catch (MqttException e) {
             e.printStackTrace();
-            Toast.makeText(this, "Error al iniciar el publisher", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.publisher_error, Toast.LENGTH_SHORT).show();
             finish();
         }
     }
