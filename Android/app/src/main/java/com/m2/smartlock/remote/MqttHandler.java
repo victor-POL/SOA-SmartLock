@@ -16,7 +16,7 @@ public class MqttHandler implements MqttCallback {
 
     static final String TAG = MqttHandler.class.getSimpleName();
     public static final String EXTRA_RAW_VALUE = "extra_raw_value";
-    private final String action;  // solo es un nombre para encontrar las actions que nos interesan dentro de la app, nada de conexiones externas
+    private final String action; // solo es un nombre para encontrar las actions que nos interesan dentro de la app, nada de conexiones externas
     private MqttClient client;
     private final Context mContext;
 
@@ -29,23 +29,23 @@ public class MqttHandler implements MqttCallback {
         return action;
     }
 
-    public void connect(String brokerUrl, String clientId, String username, String password) {
+    public void connect() {
         try {
             MqttConnectOptions options = new MqttConnectOptions();
             options.setCleanSession(true);
-            options.setUserName(username);
-            options.setPassword(password.toCharArray());
+            options.setUserName(AppMqttConstants.USER);
+            options.setPassword(AppMqttConstants.PASS.toCharArray());
 
             // Set up the persistence layer
             MemoryPersistence persistence = new MemoryPersistence();
 
-            client = new MqttClient(brokerUrl, clientId, persistence);
+            client = new MqttClient(AppMqttConstants.BROKER_URL, AppMqttConstants.CLIENT_ID, persistence);
             client.connect(options);
 
             client.setCallback(this);
         } catch (MqttException e) {
+            Log.e(TAG, "connect() failed");
             e.printStackTrace();
-            Log.d(TAG, e.getMessage() + "  " + e.getCause());
         }
     }
 
@@ -77,18 +77,14 @@ public class MqttHandler implements MqttCallback {
 
     @Override
     public void connectionLost(Throwable cause) {
+        Log.d(TAG, "connectionLost: " + cause.getMessage());
         cause.printStackTrace();
-        Log.d(TAG, "connectionLost " + cause.getMessage());
     }
 
     @Override
-    public void messageArrived(String topic, MqttMessage message) throws Exception {
+    public void messageArrived(String topic, MqttMessage message) {
         String rawMessage = message.toString();
-        Log.d(TAG, "messageArrived " + rawMessage);
-
-        //String msgJson = message.toString();
-        //JSONObject json = new JSONObject(message.toString());
-        //Float valorPote = Float.parseFloat(json.getString("value"));
+        Log.d(TAG, "messageArrived: " + rawMessage);
 
         Intent i = new Intent(action);
         i.putExtra(EXTRA_RAW_VALUE, rawMessage);
@@ -97,6 +93,6 @@ public class MqttHandler implements MqttCallback {
 
     @Override
     public void deliveryComplete(IMqttDeliveryToken token) {
-
+        Log.d(TAG, "deliveryComplete(" + token.toString() + ")");
     }
 }

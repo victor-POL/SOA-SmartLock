@@ -3,10 +3,10 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <color name="sensor_far_light">#006686</color>
-    <color name="sensor_close_light">#70D2FF</color>
-    <color name="sensor_far_dark">#004D66</color>
-    <color name="sensor_close_dark">#4B9BBF</color>
+    <color name="status_off_light">#006686</color>
+    <color name="status_on_light">#70D2FF</color>
+    <color name="status_off_dark">#004D66</color>
+    <color name="status_on_dark">#4B9BBF</color>
 
     <color name="md_theme_light_primary">#006686</color>
     <color name="md_theme_light_onPrimary">#FFFFFF</color>

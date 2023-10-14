@@ -19,9 +19,7 @@ import com.m2.smartlock.remote.MqttPublisher;
 
 import org.eclipse.paho.client.mqttv3.MqttException;
 
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.disposables.Disposable;
-import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class ChangePasswordActivity extends AppCompatActivity {
 
@@ -84,8 +82,6 @@ public class ChangePasswordActivity extends AppCompatActivity {
         if (disposablePublish != null)
             disposablePublish.dispose();
         disposablePublish = publisher.publish(AppMqttConstants.TOPIC_APP_SET_PASS, newPassword)
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         this::onSavePasswordSuccess,
                         throwable -> onSavePasswordError()

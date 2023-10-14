@@ -15,9 +15,7 @@ import com.m2.smartlock.remote.MqttPublisher;
 
 import org.eclipse.paho.client.mqttv3.MqttException;
 
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.disposables.Disposable;
-import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class ShakeActivity extends AppCompatActivity {
 
@@ -56,8 +54,6 @@ public class ShakeActivity extends AppCompatActivity {
             disposablePublish.dispose();
         disposablePublish = publisher
                 .publish(AppMqttConstants.TOPIC_APP_COMMAND, AppMqttConstants.TOPIC_VALUE_APP_COMMAND_UNLOCK)
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         this::unlockSuccess,
                         throwable -> unlockError()

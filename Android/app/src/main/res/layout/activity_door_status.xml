@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ui.EntranceSensorActivity">
+    tools:context=".ui.DoorStatusActivity">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
@@ -13,30 +13,29 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         app:navigationIcon="@drawable/ic_back"
-        app:title="@string/entrance_sensor" />
+        app:title="@string/door_status" />
 
     <ImageView
-        android:id="@+id/ivSensor"
+        android:id="@+id/ivDoorStatus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:contentDescription="@null"
-        android:src="@drawable/ic_sensor_on"
+        android:src="@drawable/ic_lock"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar"
-        app:layout_constraintVertical_bias="0.24"
-        tools:tint="?colorSensorClose" />
+        app:layout_constraintVertical_bias="0.24" />
 
     <TextView
-        android:id="@+id/tvSensorValue"
+        android:id="@+id/tvDoorStatus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="27cm"
-        android:textSize="@dimen/extra_large_text_size"
+        android:layout_marginTop="@dimen/margin_app"
+        android:textSize="@dimen/large_text_size"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ivSensor"
-        tools:text="10cm" />
+        app:layout_constraintTop_toBottomOf="@id/ivDoorStatus"
+        tools:text="@string/door_status_init_description" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

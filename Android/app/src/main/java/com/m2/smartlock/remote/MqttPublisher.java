@@ -46,8 +46,6 @@ public class MqttPublisher {
                 emitter.onNext(content);
                 emitter.onComplete();
             } catch (Exception e) {
-                Log.e("catch", "sdddssddssd");
-                e.printStackTrace();
                 emitter.onError(e);
             }
         });

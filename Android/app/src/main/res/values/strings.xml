@@ -15,10 +15,11 @@
     <string name="notify_opened_door_title">Puerta abierta</string>
     <string name="notify_opened_door_description">La puerta ha estado abierta por mucho tiempo.</string>
 
-    <string name="entrance_sensor">Sensor de la entrada</string>
-    <string name="entrance_sensor_description">Pruebe el sensor de distancia que Smartlock usa para detectar si hay alguna persona queriendo entrar.</string>
-    <string name="format_d_cm">%d cm</string>
-    <string name="format_d_cm_default">- cm</string>
+    <string name="door_status">Estado de la puerta</string>
+    <string name="door_status_description">Vea en tiempo real cuando la puerta se cierra y abre.</string>
+    <string name="door_status_open_description">Se abrió la puerta</string>
+    <string name="door_status_closed_description">Se cerró la puerta</string>
+    <string name="door_status_init_description"><i>Escuchando...</i></string>
 
     <string name="change_password">Cambiar clave</string>
     <string name="change_password_description">Asigna una nueva clave de acceso a Smartlock.</string>

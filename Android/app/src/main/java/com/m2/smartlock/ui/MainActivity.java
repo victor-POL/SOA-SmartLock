@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupClickableCards(){
-        View partialEntranceValueCard = findViewById(R.id.partialEntranceSensorCard);
+        View partialEntranceValueCard = findViewById(R.id.partialDoorStatusCard);
         View partialShakeCard = findViewById(R.id.partialShakeCard);
         View partialChangePasswordCard = findViewById(R.id.partialChangePasswordCard);
 
@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void onClickEntranceSensor() {
-        startActivity(new Intent(this, EntranceSensorActivity.class));
+        startActivity(new Intent(this, DoorStatusActivity.class));
     }
 
     private void onClickShake() {

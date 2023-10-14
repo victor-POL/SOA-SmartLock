@@ -12,7 +12,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
-        app:title="@string/app_name" />
+        app:title="@string/app_name"
+        app:titleCentered="true" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -35,8 +36,8 @@
                 android:layout_height="wrap_content" />
 
             <include
-                android:id="@+id/partialEntranceSensorCard"
-                layout="@layout/partial_entrance_sensor_card"
+                android:id="@+id/partialDoorStatusCard"
+                layout="@layout/partial_door_status_card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_app"
