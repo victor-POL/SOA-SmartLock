@@ -42,7 +42,7 @@ public:
       previous_value = actual_value;
       if (ReadSensor() == BUTTON_PRESSED)
       {
-        event = Event::BotonPresionado;
+        event = Event::DesbloqueoManual;
         return true;
       }
     }

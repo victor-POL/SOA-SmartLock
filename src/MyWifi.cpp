@@ -92,7 +92,7 @@ bool MyWifi::CheckLastMessage()
         {
             lastMessage = "";
             lastTopic = "";
-            event = Event::BotonPresionado;
+            event = Event::DesbloqueoManual;
             return true;
         }
         else if (lastTopic == SET_PASS_TOPIC)

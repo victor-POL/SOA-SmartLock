@@ -40,7 +40,7 @@ public:
         }
         else if (memcmp(rfid.uid.uidByte, cardID, 4) == 0)
         {
-            event = Event::BotonPresionado;
+            event = Event::DesbloqueoManual;
         }
         else
         {
