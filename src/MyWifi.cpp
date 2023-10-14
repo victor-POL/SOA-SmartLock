@@ -8,7 +8,11 @@
 #define WIFI_PASSWORD "4460.1222"
 #endif
 
-#define RECEIVE_MESSAGES_TOPIC "aplicacion"
+#define UNLOCK_TOPIC "esp-unlock"
+#define COMMAND_TOPIC "esp-command"
+
+#define BROKER_URL "broker.emqx.io"
+#define BROKER_PORT 1883
 
 char MyWifi::clientId[50];
 WiFiClient MyWifi::espClient;
@@ -37,6 +41,8 @@ void MyWifi::Callback(char *topic, byte *message, unsigned int length)
     stMessage[length] = '\0';
     lastMessage = stMessage;
     lastTopic = topic;
+    Serial.println(lastTopic);
+    Serial.println(lastMessage);
 }
 
 void MyWifi::MQTTReconnect()
@@ -47,7 +53,8 @@ void MyWifi::MQTTReconnect()
         if (client.connect(clientId))
         {
             Serial.println("Connected");
-            client.subscribe(RECEIVE_MESSAGES_TOPIC);
+            client.subscribe(UNLOCK_TOPIC);
+            client.subscribe(COMMAND_TOPIC);
         }
         else
         {
@@ -59,7 +66,7 @@ void MyWifi::MQTTReconnect()
 
 void MyWifi::SetupMQTT()
 {
-    client.setServer("broker.emqx.io", 1883);
+    client.setServer(BROKER_URL, BROKER_PORT);
     client.setCallback(MyWifi::Callback);
     MQTTReconnect();
 }
