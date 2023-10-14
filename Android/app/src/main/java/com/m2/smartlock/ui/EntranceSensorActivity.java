@@ -15,16 +15,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.color.MaterialColors;
 import com.m2.smartlock.R;
+import com.m2.smartlock.remote.AppMqttConstants;
 import com.m2.smartlock.remote.MqttHandler;
 
 public class EntranceSensorActivity extends AppCompatActivity {
 
     private static final int MIN_VALUE_FOR_DETECT_PERSON = 30;
-    private static final String MY_TOPIC = "entrance_sensor";
-    private static final String BROKER_URL = "tcp://broker.emqx.io:1883";
-    private static final String CLIENT_ID = "";
-    private static final String USER = "";
-    private static final String PASS = "";
     private MqttHandler mqttHandler;
     private final EntranceSensorValueReceiver receiver = new EntranceSensorValueReceiver();
 
@@ -51,10 +47,10 @@ public class EntranceSensorActivity extends AppCompatActivity {
         updateValue(null);
 
         mqttHandler = new MqttHandler(getApplicationContext(), EntranceSensorActivity.class.getSimpleName());
-        mqttHandler.connect(BROKER_URL, CLIENT_ID, USER, PASS);
-        publishMessage(MY_TOPIC, "desde mobile");
+        mqttHandler.connect(AppMqttConstants.BROKER_URL, AppMqttConstants.CLIENT_ID, AppMqttConstants.USER, AppMqttConstants.PASS);
+        publishMessage(AppMqttConstants.TOPIC_APP_COMMAND, "desde mobile");
         setupBroadcastReceiver();
-        subscribeToTopic(MY_TOPIC);
+        subscribeToTopic(AppMqttConstants.TOPIC_APP_COMMAND);
     }
 
     private void setupBroadcastReceiver() {
