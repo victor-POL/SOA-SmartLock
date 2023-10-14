@@ -27,6 +27,8 @@ public:
     void CheckMQTT();
     bool CheckLastMessage();
     String GetNewPassword();
+    void NotifyDoorOpen();
+    void SendDoorStatus(bool isOpen);
 };
 
 #endif

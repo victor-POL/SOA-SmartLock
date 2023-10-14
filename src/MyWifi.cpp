@@ -8,10 +8,19 @@
 #define WIFI_PASSWORD "4460.1222"
 #endif
 
-#define SET_PASS_TOPIC "app-set-pass"
+// Suscribe
+#define SET_PASS_TOPIC "app-setpass"
 #define COMMAND_TOPIC "app-command"
 
 #define UNLOCK_COMMAND "unlock"
+
+// Send
+#define NOTIFICATION_TOPIC "esp-notify"
+#define DOOR_STATUS_TOPIC "esp-doorstatus"
+
+#define DOOR_OPEN_NOTIFICATION "door-open-timeout"
+#define DOOR_OPEN_MESSAGE "open"
+#define DOOR_CLOSE_MESSAGE "closed"
 
 #define BROKER_URL "broker.emqx.io"
 #define BROKER_PORT 1883
@@ -109,4 +118,21 @@ bool MyWifi::CheckLastMessage()
 String MyWifi::GetNewPassword()
 {
     return newPassword;
+}
+
+void MyWifi::NotifyDoorOpen()
+{
+    SendData(NOTIFICATION_TOPIC, DOOR_OPEN_NOTIFICATION);
+}
+
+void MyWifi::SendDoorStatus(bool isOpen)
+{
+    if (isOpen)
+    {
+        SendData(DOOR_STATUS_TOPIC, DOOR_OPEN_MESSAGE);
+    }
+    else
+    {
+        SendData(DOOR_STATUS_TOPIC, DOOR_CLOSE_MESSAGE);
+    }
 }

@@ -252,6 +252,7 @@ void BackToLocked()
 
 void BackToLockedA()
 {
+  wifi.SendDoorStatus(false);
   ShutdownScreen();
   TurnOffEntranceLight();
   ClearPassEnteredIntoLock();
@@ -262,6 +263,7 @@ void BackToLockedA()
 
 void WaitPerson()
 {
+  wifi.SendDoorStatus(true);
   ShowOpenDoorMessageOnScreen();
   CancelDoorOpenTimer();
   state = State::EsperandoEntradaPersona;
@@ -269,12 +271,14 @@ void WaitPerson()
 
 void WaitPersonA()
 {
+  wifi.SendDoorStatus(true);
   CancelDoorOpenTimer();
   state = State::EsperandoEntradaPersona;
 }
 
 void NotifOpenDoor()
 {
+  wifi.NotifyDoorOpen();
   state = State::EsperandoEntradaPersona;
 }
 
