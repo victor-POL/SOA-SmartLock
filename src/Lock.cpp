@@ -66,7 +66,7 @@ public:
   }
 
   // Actions
-  void UnlockWithButton()
+  void UnlockWitoutPass()
   {
     StartTimer();
     this->is_locked = false;
