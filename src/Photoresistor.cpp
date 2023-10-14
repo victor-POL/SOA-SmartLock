@@ -9,7 +9,7 @@ private:
   const float GAMMA = 0.7;
   const float RL10 = 85;
   int previous_lux;
-  
+
   int ReadSensor()
   {
     return analogRead(this->pin_selected);

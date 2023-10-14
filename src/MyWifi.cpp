@@ -33,106 +33,106 @@ String lastTopic = "";
 
 void MyWifi::SetupWifi()
 {
-    WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
-    Serial.print("Connecting to Wi-Fi");
-    while (WiFi.status() != WL_CONNECTED)
-    {
-        Serial.print(".");
-        delay(300);
-    }
-    Serial.println();
+  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+  Serial.print("Connecting to Wi-Fi");
+  while (WiFi.status() != WL_CONNECTED)
+  {
+    Serial.print(".");
+    delay(300);
+  }
+  Serial.println();
 }
 
 void MyWifi::Callback(char *topic, byte *message, unsigned int length)
 {
-    char stMessage[length + 1];
-    memcpy(stMessage, message, length);
-    stMessage[length] = '\0';
-    lastMessage = stMessage;
-    lastTopic = topic;
+  char stMessage[length + 1];
+  memcpy(stMessage, message, length);
+  stMessage[length] = '\0';
+  lastMessage = stMessage;
+  lastTopic = topic;
 }
 
 void MyWifi::MQTTReconnect()
 {
-    while (!client.connected())
+  while (!client.connected())
+  {
+    Serial.print("Attempting MQTT connection...");
+    if (client.connect(clientId))
     {
-        Serial.print("Attempting MQTT connection...");
-        if (client.connect(clientId))
-        {
-            Serial.println("Connected");
-            client.subscribe(SET_PASS_TOPIC);
-            client.subscribe(COMMAND_TOPIC);
-        }
-        else
-        {
-            Serial.println("Connection failed, try again in 5 seconds");
-            delay(5000);
-        }
+      Serial.println("Connected");
+      client.subscribe(SET_PASS_TOPIC);
+      client.subscribe(COMMAND_TOPIC);
     }
+    else
+    {
+      Serial.println("Connection failed, try again in 5 seconds");
+      delay(5000);
+    }
+  }
 }
 
 void MyWifi::SetupMQTT()
 {
-    client.setServer(BROKER_URL, BROKER_PORT);
-    client.setCallback(MyWifi::Callback);
-    MQTTReconnect();
+  client.setServer(BROKER_URL, BROKER_PORT);
+  client.setCallback(MyWifi::Callback);
+  MQTTReconnect();
 }
 
 void MyWifi::SendData(String topic, String message)
 {
-    client.publish(topic.c_str(), message.c_str());
+  client.publish(topic.c_str(), message.c_str());
 }
 
 void MyWifi::CheckMQTT()
 {
-    if (!client.connected())
-    {
-        MQTTReconnect();
-    }
-    client.loop();
+  if (!client.connected())
+  {
+    MQTTReconnect();
+  }
+  client.loop();
 }
 
 bool MyWifi::CheckLastMessage()
 {
-    if (lastTopic != "")
+  if (lastTopic != "")
+  {
+    newPassword = lastMessage;
+    if (lastTopic == COMMAND_TOPIC && lastMessage == UNLOCK_COMMAND)
     {
-        newPassword = lastMessage;
-        if (lastTopic == COMMAND_TOPIC && lastMessage == UNLOCK_COMMAND)
-        {
-            lastMessage = "";
-            lastTopic = "";
-            event = Event::DesbloqueoManual;
-            return true;
-        }
-        else if (lastTopic == SET_PASS_TOPIC)
-        {
-            lastMessage = "";
-            lastTopic = "";
-            event = Event::PasswordSetted;
-            return true;
-        }
+      lastMessage = "";
+      lastTopic = "";
+      event = Event::DesbloqueoManual;
+      return true;
     }
-    return false;
+    else if (lastTopic == SET_PASS_TOPIC)
+    {
+      lastMessage = "";
+      lastTopic = "";
+      event = Event::PasswordSetted;
+      return true;
+    }
+  }
+  return false;
 }
 
 String MyWifi::GetNewPassword()
 {
-    return newPassword;
+  return newPassword;
 }
 
 void MyWifi::NotifyDoorOpen()
 {
-    SendData(NOTIFICATION_TOPIC, DOOR_OPEN_NOTIFICATION);
+  SendData(NOTIFICATION_TOPIC, DOOR_OPEN_NOTIFICATION);
 }
 
 void MyWifi::SendDoorStatus(bool isOpen)
 {
-    if (isOpen)
-    {
-        SendData(DOOR_STATUS_TOPIC, DOOR_OPEN_MESSAGE);
-    }
-    else
-    {
-        SendData(DOOR_STATUS_TOPIC, DOOR_CLOSE_MESSAGE);
-    }
+  if (isOpen)
+  {
+    SendData(DOOR_STATUS_TOPIC, DOOR_OPEN_MESSAGE);
+  }
+  else
+  {
+    SendData(DOOR_STATUS_TOPIC, DOOR_CLOSE_MESSAGE);
+  }
 }
