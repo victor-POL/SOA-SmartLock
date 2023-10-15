@@ -33,4 +33,6 @@
     <string name="shake_description">Desbloquee la puerta agitando el celular.</string>
     <string name="unlock_success">Puerta desbloqueada.</string>
     <string name="unlock_error">Hubo un error. No fue posible desbloquear la puerta.</string>
+    <string name="agite_para_desbloquear">Agite para desbloquear!</string>
+    <string name="agite_para_desbloquear_">Agite para desbloquear la puerta!</string>
 </resources>

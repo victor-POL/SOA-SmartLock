@@ -1,5 +1,9 @@
 package com.m2.smartlock.ui;
 
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -17,11 +21,12 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 
 import io.reactivex.rxjava3.disposables.Disposable;
 
-public class ShakeActivity extends AppCompatActivity {
+public class ShakeActivity extends AppCompatActivity implements SensorEventListener {
 
     private static final String TAG = ShakeActivity.class.getSimpleName();
     private MqttPublisher publisher;
     private Disposable disposablePublish;
+    private SensorManager sensorManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,10 +42,17 @@ public class ShakeActivity extends AppCompatActivity {
             Toast.makeText(this, R.string.publisher_error, Toast.LENGTH_SHORT).show();
             finish();
         }
+        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        if (sensorManager != null) {
+            Sensor accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+            if (accelerometer != null) {
+                sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+            }
+        }
 
         // todo - solo para probar
-        Button btnShake = findViewById(R.id.btnShake);
-        btnShake.setOnClickListener(v -> onShakeDetected());
+//        Button btnShake = findViewById(R.id.btnShake);
+//        btnShake.setOnClickListener(v -> onShakeDetected());
     }
 
     private void onShakeDetected() {
@@ -87,5 +99,38 @@ public class ShakeActivity extends AppCompatActivity {
         if (disposablePublish != null)
             disposablePublish.dispose();
         super.onDestroy();
+    }
+
+    public void onSensorChanged(SensorEvent event) {
+        float x = event.values[0];
+        float y = event.values[1];
+        float z = event.values[2];
+
+        double acceleration = Math.sqrt(x * x + y * y + z * z);
+        if (acceleration > 15) {
+            onShakeDetected();
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+        // Do something if sensor accuracy changes
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        sensorManager.unregisterListener(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (sensorManager != null) {
+            Sensor accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+            if (accelerometer != null) {
+                sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+            }
+        }
     }
 }
