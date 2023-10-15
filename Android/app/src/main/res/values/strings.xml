@@ -14,6 +14,9 @@
     <string name="notifications_description">Se le notificará cuando la puerta haya estado demasiado tiempo abierta.</string>
     <string name="notify_opened_door_title">Puerta abierta</string>
     <string name="notify_opened_door_description">La puerta ha estado abierta por mucho tiempo.</string>
+    <string name="service_notification_title">Conectado a Smartlock</string>
+    <string name="service_notification_body">Será notificado ante imprevistos</string>
+    <string name="service_notification_cancel">Desconectar</string>
 
     <string name="door_status">Estado de la puerta</string>
     <string name="door_status_description">Vea en tiempo real cuando la puerta se cierra y abre.</string>

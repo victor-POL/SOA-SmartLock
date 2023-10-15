@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.m2.smartlock.R;
+import com.m2.smartlock.service.AppService;
 import com.m2.smartlock.utils.AppNotificationUtils;
 
 public class MainActivity extends AppCompatActivity {
@@ -84,12 +85,7 @@ public class MainActivity extends AppCompatActivity {
         btnTurnOnNotifications.setOnClickListener(null);
         btnTurnOnNotifications.setVisibility(View.GONE); // hide button
 
-        // test send notification / todo remove
-        AppNotificationUtils.showNotification(
-                this,
-                getString(R.string.notify_opened_door_title),
-                getString(R.string.notify_opened_door_description)
-        );
+        AppService.start(this);
     }
 
     @Override
