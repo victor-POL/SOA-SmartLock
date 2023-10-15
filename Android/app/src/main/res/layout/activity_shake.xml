@@ -21,7 +21,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/margin_app"
+        android:gravity="center_horizontal"
+        android:textSize="20dp"
         android:text="@string/agite_para_desbloquear_" />
+
+    <ImageView
+        android:layout_width="78dp"
+        android:layout_height="93dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/margin_app"
+        android:contentDescription="@null"
+        android:src="@drawable/ic_phone_shake" />
 
     <Space
         android:layout_width="0dp"
