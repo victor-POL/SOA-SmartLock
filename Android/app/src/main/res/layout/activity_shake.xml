@@ -22,8 +22,8 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/margin_app"
         android:gravity="center_horizontal"
-        android:textSize="20dp"
-        android:text="@string/agite_para_desbloquear_" />
+        android:text="@string/shake_to_unlock"
+        android:textSize="@dimen/large_text_size" />
 
     <ImageView
         android:layout_width="78dp"
