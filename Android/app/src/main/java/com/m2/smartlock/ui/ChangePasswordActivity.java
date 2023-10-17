@@ -79,7 +79,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
             return;
         }
 
-        if (disposablePublish != null)
+        if (disposablePublish != null && !disposablePublish.isDisposed())
             disposablePublish.dispose();
         disposablePublish = publisher.publish(AppMqttConstants.TOPIC_APP_SET_PASS, newPassword)
                 .subscribe(
@@ -112,7 +112,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
     protected void onDestroy() {
         if (publisher != null)
             publisher.disconnect();
-        if (disposablePublish != null)
+        if (disposablePublish != null&& !disposablePublish.isDisposed())
             disposablePublish.dispose();
         super.onDestroy();
     }

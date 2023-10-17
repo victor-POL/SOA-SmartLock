@@ -6,7 +6,6 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
@@ -49,20 +48,17 @@ public class ShakeActivity extends AppCompatActivity implements SensorEventListe
                 sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
             }
         }
-
-        // todo - solo para probar
-//        Button btnShake = findViewById(R.id.btnShake);
-//        btnShake.setOnClickListener(v -> onShakeDetected());
     }
 
     private void onShakeDetected() {
+        Log.i(TAG, "onShakeDetected");
         Toast.makeText(this, "Shake detectado", Toast.LENGTH_SHORT).show();
         if (publisher == null) {
             Log.e(TAG, "publisher could not started.");
             return;
         }
 
-        if (disposablePublish != null)
+        if (disposablePublish != null && !disposablePublish.isDisposed())
             disposablePublish.dispose();
         disposablePublish = publisher
                 .publish(AppMqttConstants.TOPIC_APP_COMMAND, AppMqttConstants.TOPIC_VALUE_APP_COMMAND_UNLOCK)
@@ -96,7 +92,7 @@ public class ShakeActivity extends AppCompatActivity implements SensorEventListe
     protected void onDestroy() {
         if (publisher != null)
             publisher.disconnect();
-        if (disposablePublish != null)
+        if (disposablePublish != null && !disposablePublish.isDisposed())
             disposablePublish.dispose();
         super.onDestroy();
     }
