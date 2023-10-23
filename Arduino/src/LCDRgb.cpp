@@ -66,9 +66,20 @@ public:
 
   void LoadConfirmNewPassScreen()
   {
-    ClearScreen();
     ShowMessage("Confirma clave:", 0);
     SetCursor(0, 1);
+  }
+
+  void LoadSucessUnlockScreen()
+  {
+    ClearScreen();
+    ShowMessage("Clave correcta", "Empuje la puerta");
+  }
+
+  void LoadOpenDoorScreen()
+  {
+    ClearScreen();
+    ShowMessage("Puerta abierta", "pase");
   }
 
   void ResetInputPassScreen()
