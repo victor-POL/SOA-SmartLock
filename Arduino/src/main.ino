@@ -309,7 +309,7 @@ transition state_table[MAX_STATES][MAX_EVENTS] =
       {None       , None                 ,  None              , TurnOffLightA       , TurnOnLightA          , ExitInputNewPass    , None            , ClearInputNewPassA  , LoadNewPassA      , ValidateNewPassA,  None                    , None          , None        , None                  , None          , None          , None                    , None          , SetNewPasswordA }, // state ConfirmacionNuevaClave
       {None       , None                 ,  None              , None                , None                  , None                , None            , None                , None              , None            ,  None                    , InvalidNewPass, ValidNewPass, None                  , None          , None          , None                    , None          , None            }, // state ValidacionNuevaClave
       {None       , None                 ,  None              , InputPassWithLight  , InputPassWithoutLight , None                , ManualUnlock    , None                , None              , None            ,  None                    , None          , None        , None                  , None          , None          , None                    , InvalidNFC    , SetNewPassword  }, // state BloqueadoEsperandoVisita
-      {None       , None                 ,  None              , TurnOffLightB       , TurnOnLightB          , ExitInputPass       , ManualUnlock    , ClearInputPass      , LoadPass          , ValidatePass    ,  None                    , None          , None        , None                  , None          , None          , None                    , InvalidNFC    , SetNewPasswordB }, // state EsperandoIngresoClave
+      {None       , None                 ,  None              , TurnOffLightB       , TurnOnLightB          , ExitInputPass       , ManualUnlock    , ClearInputPass      , LoadPass          , ValidatePass    ,  None                    , None          , None        , None                  , None          , None          , None                    , InvalidNFCA   , SetNewPasswordB }, // state EsperandoIngresoClave
       {None       , None                 ,  None              , None                , None                  , None                , None            , None                , None              , None            ,  NotifTimeoutPass        , InvalidPass   , ValidPass   , None                  , None          , None          , None                    , None          , None            }, // state ValidacionClave
       {None       , None                 ,  None              , None                , None                  , BackToLocked        , None            , None                , None              , None            ,  None                    , None          , None        , BackToLockedA         , WaitPerson    , None          , None                    , None          , None            }, // state EsperandoAperturaPuerta
       {None       , None                 ,  None              , None                , None                  , None                , None            , None                , None              , None            ,  None                    , None          , None        , BackToLockedA         , WaitPersonA   , None          , None                    , None          , None            }, // state EsperandoAperturaPuertaBoton
@@ -546,4 +546,11 @@ void SetPasswordLock()
 void InvalidNFC()
 {
   ReproduceInvalidPassSoundInBuzzer();
+  state = State::BloqueadoEsperandoVisita;
+}
+
+void InvalidNFCA()
+{
+  ReproduceInvalidPassSoundInBuzzer();
+  state = State::EsperandoIngresoClave;
 }
