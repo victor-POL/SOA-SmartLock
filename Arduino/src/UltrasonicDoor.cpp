@@ -3,8 +3,8 @@
 #define UMBRAL_TIEMPO_PUERTA_CERRADA 5000
 #define DOOR_OPEN 1
 #define DOOR_CLOSED 0
-#define UMBRAL_CAMBIO_VALOR_PUERTA 10
-#define UMBRAL_PUERTA_ABIERTA 15
+#define UMBRAL_CAMBIO_VALOR_PUERTA 4
+#define UMBRAL_PUERTA_ABIERTA 9
 
 class UltrasonicDoor : public Ultrasonic
 {
