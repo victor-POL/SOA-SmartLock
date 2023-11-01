@@ -4,8 +4,8 @@
 #define WIFI_SSID "Wokwi-GUEST"
 #define WIFI_PASSWORD ""
 #else
-#define WIFI_SSID "Telecentro-08be"
-#define WIFI_PASSWORD "4460.1222"
+#define WIFI_SSID "Vic"
+#define WIFI_PASSWORD "23456789"
 #endif
 
 // Suscribe

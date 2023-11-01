@@ -181,6 +181,7 @@ void InputPassWithoutLight()
 
 void ManualUnlock()
 {
+  ReproduceValidPassSoundInBuzzer();
   door_lock.UnlockWitoutPass();
   UnlockEntranceDoor();
   state = State::EsperandoAperturaPuertaBoton;
@@ -307,8 +308,8 @@ transition state_table[MAX_STATES][MAX_EVENTS] =
       {None       , None                 ,  None              , TurnOffLight        , TurnOnLight           , ExitInputNewPass    , None            , ClearInputNewPass   , LoadNewPass       , ValidateNewPass ,  None                    , None          , None        , None                  , None          , None          , None                    , None          , SetNewPasswordA }, // state EsperandoIngresoNuevaClave
       {None       , None                 ,  None              , TurnOffLightA       , TurnOnLightA          , ExitInputNewPass    , None            , ClearInputNewPassA  , LoadNewPassA      , ValidateNewPassA,  None                    , None          , None        , None                  , None          , None          , None                    , None          , SetNewPasswordA }, // state ConfirmacionNuevaClave
       {None       , None                 ,  None              , None                , None                  , None                , None            , None                , None              , None            ,  None                    , InvalidNewPass, ValidNewPass, None                  , None          , None          , None                    , None          , None            }, // state ValidacionNuevaClave
-      {None       , None                 ,  None              , InputPassWithLight  , InputPassWithoutLight , None                , ManualUnlock    , None                , None              , None            ,  None                    , None          , None        , None                  , None          , None          , None                    , None          , SetNewPassword  }, // state BloqueadoEsperandoVisita
-      {None       , None                 ,  None              , TurnOffLightB       , TurnOnLightB          , ExitInputPass       , ManualUnlock    , ClearInputPass      , LoadPass          , ValidatePass    ,  None                    , None          , None        , None                  , None          , None          , None                    , None          , SetNewPasswordB }, // state EsperandoIngresoClave
+      {None       , None                 ,  None              , InputPassWithLight  , InputPassWithoutLight , None                , ManualUnlock    , None                , None              , None            ,  None                    , None          , None        , None                  , None          , None          , None                    , InvalidNFC    , SetNewPassword  }, // state BloqueadoEsperandoVisita
+      {None       , None                 ,  None              , TurnOffLightB       , TurnOnLightB          , ExitInputPass       , ManualUnlock    , ClearInputPass      , LoadPass          , ValidatePass    ,  None                    , None          , None        , None                  , None          , None          , None                    , InvalidNFCA   , SetNewPasswordB }, // state EsperandoIngresoClave
       {None       , None                 ,  None              , None                , None                  , None                , None            , None                , None              , None            ,  NotifTimeoutPass        , InvalidPass   , ValidPass   , None                  , None          , None          , None                    , None          , None            }, // state ValidacionClave
       {None       , None                 ,  None              , None                , None                  , BackToLocked        , None            , None                , None              , None            ,  None                    , None          , None        , BackToLockedA         , WaitPerson    , None          , None                    , None          , None            }, // state EsperandoAperturaPuerta
       {None       , None                 ,  None              , None                , None                  , None                , None            , None                , None              , None            ,  None                    , None          , None        , BackToLockedA         , WaitPersonA   , None          , None                    , None          , None            }, // state EsperandoAperturaPuertaBoton
@@ -441,7 +442,7 @@ void ShowPasswordCharPressedOnScreen()
 
 void ShowValidPassMessageOnScreen()
 {
-  lcd.ShowMessage("Clave correcta", "Empuje la puerta");
+  lcd.LoadSucessUnlockScreen();
 }
 
 void ShutdownScreen()
@@ -528,8 +529,7 @@ void LockEntranceDoor()
 
 void ShowOpenDoorMessageOnScreen()
 {
-  lcd.TurnOnScreen();
-  lcd.ShowMessage("Puerta abierta", "pase");
+  lcd.LoadOpenDoorScreen();
 }
 
 void CancelDoorOpenTimer()
@@ -541,4 +541,16 @@ void SetPasswordLock()
 {
   door_lock.SetNewPassword(wifi.GetNewPassword());
   ReproduceValidPassSoundInBuzzer();
+}
+
+void InvalidNFC()
+{
+  ReproduceInvalidPassSoundInBuzzer();
+  state = State::BloqueadoEsperandoVisita;
+}
+
+void InvalidNFCA()
+{
+  ReproduceInvalidPassSoundInBuzzer();
+  state = State::EsperandoIngresoClave;
 }

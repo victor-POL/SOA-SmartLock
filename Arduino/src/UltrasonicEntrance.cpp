@@ -1,8 +1,8 @@
 #include "Ultrasonic.cpp"
 #include "Photoresistor.cpp"
 
-#define UMBRAL_CAMBIO_VALOR_PERSONA 10
-#define UMBRAL_PERSONA_DETECTADA 30
+#define UMBRAL_CAMBIO_VALOR_PERSONA 3
+#define UMBRAL_PERSONA_DETECTADA 20
 
 class UltrasonicEntrance : public Ultrasonic
 {

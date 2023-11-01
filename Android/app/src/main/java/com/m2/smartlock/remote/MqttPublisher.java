@@ -30,22 +30,20 @@ public class MqttPublisher {
         client.connect(options);
     }
 
-    /*public <T> void publish(String topic, T data) throws MqttException {
-        MqttMessage message = new MqttMessage(data.toString().getBytes());
-        message.setQos(QUALITY_OF_SERVICE);
-        client.publish(topic, message);
-    }*/
-
     public <T> Observable<String> publish(String topic, T data) {
         Observable<String> obs = Observable.create(emitter -> {
             try {
                 String content = data.toString();
+
                 MqttMessage message = new MqttMessage(content.getBytes());
                 message.setQos(QUALITY_OF_SERVICE);
                 client.publish(topic, message);
+
                 emitter.onNext(content);
                 emitter.onComplete();
             } catch (Exception e) {
+                Log.e(TAG, "publishing error");
+                e.printStackTrace();
                 emitter.onError(e);
             }
         });
@@ -54,7 +52,6 @@ public class MqttPublisher {
                 .doOnNext(c -> Log.d(TAG, "'" + c + "' published on topic '" + topic + "'"))
                 .doOnError(throwable -> {
                     Log.e(TAG, "message not published");
-                    throwable.printStackTrace();
                 })
                 .observeOn(AndroidSchedulers.mainThread());
     }
