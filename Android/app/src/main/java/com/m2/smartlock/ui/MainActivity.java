@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.m2.smartlock.R;
+import com.m2.smartlock.ui.shake.ShakeActivity;
 import com.m2.smartlock.utils.AppNotificationUtils;
 
 public class MainActivity extends AppCompatActivity {

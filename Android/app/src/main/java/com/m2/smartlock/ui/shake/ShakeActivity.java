@@ -1,5 +1,6 @@
-package com.m2.smartlock.ui;
+package com.m2.smartlock.ui.shake;
 
+import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -26,6 +27,7 @@ public class ShakeActivity extends AppCompatActivity implements SensorEventListe
     private MqttPublisher publisher;
     private Disposable disposablePublish;
     private SensorManager sensorManager;
+    private boolean ignoreShake = false; // disable publisher when popup is showing
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +54,11 @@ public class ShakeActivity extends AppCompatActivity implements SensorEventListe
 
     private void onShakeDetected() {
         Log.i(TAG, "onShakeDetected");
+        if (ignoreShake)
+            return;
+
         Toast.makeText(this, "Shake detectado", Toast.LENGTH_SHORT).show();
+
         if (publisher == null) {
             Log.e(TAG, "publisher could not started.");
             return;
@@ -69,20 +75,18 @@ public class ShakeActivity extends AppCompatActivity implements SensorEventListe
     }
 
     private void unlockSuccess(String updatedPassword) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this)
-                .setTitle(R.string.app_name)
-                .setMessage(R.string.unlock_success)
-                .setPositiveButton(R.string.accept, (dialog, which) -> {
-                    finish();
-                });
-        builder.create().show();
+        Intent intent = new Intent(this, ShakeSuccessActivity.class);
+        startActivity(intent);
     }
 
     private void unlockError() {
+        ignoreShake = true;
         AlertDialog.Builder builder = new AlertDialog.Builder(this)
                 .setTitle(R.string.app_name)
+                .setCancelable(false)
                 .setMessage(R.string.unlock_error)
                 .setPositiveButton(R.string.accept, (dialog, which) -> {
+                    ignoreShake = false;
                     dialog.dismiss();
                 });
         builder.create().show();

@@ -17,7 +17,6 @@
         android:theme="@style/Theme.SmartLock"
         tools:targetApi="31">
 
-
         <service android:name="com.m2.smartlock.service.AppService" />
 
         <activity
@@ -30,8 +29,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.DoorStatusActivity" />
-        <activity android:name=".ui.ShakeActivity" />
+        <activity android:name=".ui.shake.ShakeActivity" />
         <activity android:name=".ui.ChangePasswordActivity" />
+        <activity android:name=".ui.shake.ShakeSuccessActivity" />
     </application>
 
 </manifest>

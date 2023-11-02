@@ -11,4 +11,10 @@
         <item name="android:textStyle">normal</item>
     </style>
 
+    <style name="AppButtonActionStyle">
+        <item name="android:backgroundTint">?attr/colorTertiary</item>
+        <item name="android:textColor">?attr/colorOnTertiary</item>
+        <item name="android:textSize">@dimen/large_text_size</item>
+    </style>
+
 </resources>
