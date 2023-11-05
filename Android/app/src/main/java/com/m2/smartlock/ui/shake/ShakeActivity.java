@@ -7,42 +7,32 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.appbar.MaterialToolbar;
 import com.m2.smartlock.R;
-import com.m2.smartlock.remote.AppMqttConstants;
-import com.m2.smartlock.remote.MqttPublisher;
+import com.m2.smartlock.service.AppService;
+import com.m2.smartlock.ui.BaseActivity;
 
-import org.eclipse.paho.client.mqttv3.MqttException;
 
-import io.reactivex.rxjava3.disposables.Disposable;
-
-public class ShakeActivity extends AppCompatActivity implements SensorEventListener {
+public class ShakeActivity extends BaseActivity implements SensorEventListener {
 
     private static final String TAG = ShakeActivity.class.getSimpleName();
-    private MqttPublisher publisher;
-    private Disposable disposablePublish;
     private SensorManager sensorManager;
-    private boolean ignoreShake = false; // disable publisher when popup is showing
+    private ProgressBar progressBar;
+    private AlertDialog alertDialogError;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shake);
         MaterialToolbar toolbar = findViewById(R.id.toolbar);
+        progressBar = findViewById(R.id.progressBar);
         toolbar.setNavigationOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
 
-        try {
-            publisher = new MqttPublisher();
-        } catch (MqttException e) {
-            e.printStackTrace();
-            Toast.makeText(this, R.string.publisher_error, Toast.LENGTH_SHORT).show();
-            finish();
-        }
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         if (sensorManager != null) {
             Sensor accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -50,55 +40,60 @@ public class ShakeActivity extends AppCompatActivity implements SensorEventListe
                 sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
             }
         }
+        addBroadcastReceiverForConnectionLost();
+        addBroadcastReceiverForPublish();
     }
 
     private void onShakeDetected() {
         Log.i(TAG, "onShakeDetected");
-        if (ignoreShake)
+        if (progressBar.getVisibility() == View.VISIBLE)
             return;
 
-        Toast.makeText(this, "Shake detectado", Toast.LENGTH_SHORT).show();
-
-        if (publisher == null) {
-            Log.e(TAG, "publisher could not started.");
-            return;
-        }
-
-        if (disposablePublish != null && !disposablePublish.isDisposed())
-            disposablePublish.dispose();
-        disposablePublish = publisher
-                .publish(AppMqttConstants.TOPIC_APP_COMMAND, AppMqttConstants.TOPIC_VALUE_APP_COMMAND_UNLOCK)
-                .subscribe(
-                        this::unlockSuccess,
-                        throwable -> unlockError()
-                );
+        showLoading();
+        Intent intent = new Intent(this, AppService.class);
+        intent.setAction(AppService.ACTION_COMMAND);
+        startService(intent);
     }
 
-    private void unlockSuccess(String updatedPassword) {
+    private void showLoading(){
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    private void hideLoading(){
+        progressBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onPublishSuccess(String topic) {
+        if (topic.equals(AppService.ACTION_COMMAND))
+            unlockSuccess();
+    }
+
+    private void unlockSuccess() {
+        hideLoading();
         Intent intent = new Intent(this, ShakeSuccessActivity.class);
         startActivity(intent);
     }
 
-    private void unlockError() {
-        ignoreShake = true;
-        AlertDialog.Builder builder = new AlertDialog.Builder(this)
-                .setTitle(R.string.app_name)
-                .setCancelable(false)
-                .setMessage(R.string.unlock_error)
-                .setPositiveButton(R.string.accept, (dialog, which) -> {
-                    ignoreShake = false;
-                    dialog.dismiss();
-                });
-        builder.create().show();
+    @Override
+    public void onPublishError() {
+        unlockError();
     }
 
-    @Override
-    protected void onDestroy() {
-        if (publisher != null)
-            publisher.disconnect();
-        if (disposablePublish != null && !disposablePublish.isDisposed())
-            disposablePublish.dispose();
-        super.onDestroy();
+    private void unlockError() {
+        hideLoading();
+        if (alertDialogError == null){
+           AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                    .setTitle(R.string.app_name)
+                    .setCancelable(false)
+                    .setMessage(R.string.unlock_error)
+                    .setPositiveButton(R.string.accept, (dialog, which) -> {
+                        dialog.dismiss();
+                    });
+            alertDialogError = builder.create();
+        }
+        if (!alertDialogError.isShowing())
+            alertDialogError.show();
     }
 
     public void onSensorChanged(SensorEvent event) {

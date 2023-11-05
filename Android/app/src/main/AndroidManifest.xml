@@ -31,7 +31,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.DoorStatusActivity" />
+        <activity android:name=".ui.DoorStatusActivity" android:exported="false" />
         <activity android:name=".ui.shake.ShakeActivity" />
         <activity android:name=".ui.ChangePasswordActivity" />
         <activity android:name=".ui.shake.ShakeSuccessActivity" />

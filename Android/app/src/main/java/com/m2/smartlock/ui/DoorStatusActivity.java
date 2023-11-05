@@ -9,17 +9,15 @@ import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.color.MaterialColors;
 import com.m2.smartlock.R;
-import com.m2.smartlock.remote.AppMqttConstants;
-import com.m2.smartlock.remote.MqttHandler;
+import com.m2.smartlock.service.AppService;
 
-public class DoorStatusActivity extends AppCompatActivity {
+public class DoorStatusActivity extends BaseActivity {
 
-    private MqttHandler mqttHandler;
     private final DoorStatusReceiver receiver = new DoorStatusReceiver();
 
     private ImageView ivDoorStatus;
@@ -40,27 +38,25 @@ public class DoorStatusActivity extends AppCompatActivity {
         colorStatusOff = MaterialColors.getColor(this, R.attr.colorStatusOff, Color.BLACK);
         colorStatusOn = MaterialColors.getColor(this, R.attr.colorStatusOn, Color.WHITE);
 
-        mqttHandler = new MqttHandler(getApplicationContext(), DoorStatusActivity.class.getSimpleName());
-        mqttHandler.connect();
+        showLastDoorStatus();
         setupBroadcastReceiver();
-        subscribeToTopic(AppMqttConstants.TOPIC_ESP_DOOR_STATUS);
+        addBroadcastReceiverForConnectionLost();
+    }
+
+    private void showLastDoorStatus(){
+        Boolean lastDoorStatus = AppService.getLastDoorStatus();
+        if (lastDoorStatus == null)
+            tvDoorStatus.setText(R.string.door_status_init_description);
+        else
+            updateValue(lastDoorStatus);
     }
 
     private void setupBroadcastReceiver() {
         // Se asocia(registra) la accion, para que cuando el Servicio de recepcion la ejecute
         // se invoque automaticamente el OnReceive del objeto receiver
-        IntentFilter intentFilter = new IntentFilter(mqttHandler.getAction());
+        IntentFilter intentFilter = new IntentFilter(AppService.ACTION_DOOR_STATUS);
         intentFilter.addCategory(Intent.CATEGORY_DEFAULT);
-        registerReceiver(receiver, intentFilter);
-    }
-
-    private void publishMessage(String topic, String message) {
-        mqttHandler.publish(topic, message);
-    }
-
-    private void subscribeToTopic(String topic) {
-        mqttHandler.subscribe(topic);
-        tvDoorStatus.setText(R.string.door_status_init_description);
+        ContextCompat.registerReceiver(this, receiver, intentFilter,  ContextCompat.RECEIVER_NOT_EXPORTED);
     }
 
     private void updateValue(boolean open) {
@@ -71,20 +67,13 @@ public class DoorStatusActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        mqttHandler.disconnect();
         super.onDestroy();
         unregisterReceiver(receiver);
     }
 
     public class DoorStatusReceiver extends BroadcastReceiver {
         public void onReceive(Context context, Intent intent) {
-            String rawMessage = intent.getStringExtra(MqttHandler.EXTRA_RAW_VALUE);
-            if (rawMessage != null){
-                if (rawMessage.equals(AppMqttConstants.TOPIC_VALUE_ESP_DOOR_STATUS_OPEN))
-                    updateValue(true);
-                else if (rawMessage.equals(AppMqttConstants.TOPIC_VALUE_ESP_DOOR_STATUS_CLOSED))
-                    updateValue(false);
-            }
+            updateValue(intent.getBooleanExtra(AppService.EXTRA_OF_ACTION, false));
         }
     }
 

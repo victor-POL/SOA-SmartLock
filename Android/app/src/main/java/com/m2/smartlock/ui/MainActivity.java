@@ -14,7 +14,7 @@ import com.m2.smartlock.service.AppService;
 import com.m2.smartlock.ui.shake.ShakeActivity;
 import com.m2.smartlock.utils.AppNotificationUtils;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
     private Button btnTurnOnNotifications;
     private TextView tvNotificationDescription;
@@ -87,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
         btnTurnOnNotifications.setVisibility(View.GONE); // hide button
 
         AppService.start(this);
+        addBroadcastReceiverForConnectionLost();
     }
 
     @Override
