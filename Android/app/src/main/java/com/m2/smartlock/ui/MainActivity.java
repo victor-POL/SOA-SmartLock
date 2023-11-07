@@ -1,7 +1,6 @@
 package com.m2.smartlock.ui;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,10 +9,11 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.m2.smartlock.R;
+import com.m2.smartlock.service.AppService;
 import com.m2.smartlock.ui.shake.ShakeActivity;
 import com.m2.smartlock.utils.AppNotificationUtils;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
     private Button btnTurnOnNotifications;
     private TextView tvNotificationDescription;
@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
 
         setupClickableCards();
         setupNotifications();
+        addBroadcastReceiverForConnectionLost();
     }
 
     @Override
@@ -53,7 +54,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupNotifications() {
         btnTurnOnNotifications = findViewById(R.id.btnTurnOnNotifications);
-        tvNotificationDescription = findViewById(R.id.partialNotificationCard).findViewById(R.id.tvDescription);
+        tvNotificationDescription = findViewById(R.id.partialNotificationCard)
+                .findViewById(R.id.tvDescription);
+
         if (AppNotificationUtils.checkAllowedNotification(this)) {
             if (AppNotificationUtils.checkAllowedChannelNotification(this)) {
                 setupAllowedNotification();
@@ -69,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
         tvNotificationDescription.setText(R.string.notifications_description_warning);
         btnTurnOnNotifications.setOnClickListener(v -> AppNotificationUtils.requestPermission(this));
         btnTurnOnNotifications.setVisibility(View.VISIBLE);
+        AppService.startAsBackground(this);
     }
 
     private void setupNotAllowedChannelNotification() {
@@ -78,19 +82,14 @@ public class MainActivity extends AppCompatActivity {
             AppNotificationUtils.launchChannelSettings(this);
         });
         btnTurnOnNotifications.setVisibility(View.VISIBLE);
+        AppService.startAsBackground(this);
     }
 
     private void setupAllowedNotification() {
         tvNotificationDescription.setText(R.string.notifications_description);
         btnTurnOnNotifications.setOnClickListener(null);
         btnTurnOnNotifications.setVisibility(View.GONE); // hide button
-
-        // test send notification / todo remove
-        AppNotificationUtils.showNotification(
-                this,
-                getString(R.string.notify_opened_door_title),
-                getString(R.string.notify_opened_door_description)
-        );
+        AppService.startAsForeground(this);
     }
 
     @Override

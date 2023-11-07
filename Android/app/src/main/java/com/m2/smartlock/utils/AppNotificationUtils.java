@@ -24,7 +24,7 @@ import com.m2.smartlock.R;
 
 public class AppNotificationUtils {
 
-    private static int REQUEST_CODE_PERMISSION = 9;
+    private static final int REQUEST_CODE_PERMISSION = 9;
 
     public static boolean checkAllowedNotification(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -52,7 +52,7 @@ public class AppNotificationUtils {
         context.startActivity(intent);
     }
 
-    public static void launchNotificationSettings(Context context){
+    public static void launchNotificationSettings(Context context) {
         Intent intent = new Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
                 .putExtra(Settings.EXTRA_APP_PACKAGE, context.getPackageName());
         context.startActivity(intent);
@@ -99,17 +99,62 @@ public class AppNotificationUtils {
         NotificationManager notificationManager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
+        createChannel(context, notificationManager);
+
+        Notification notification = builder.build();
+        notificationManager.notify((int) System.currentTimeMillis(), notification);
+    }
+
+    public static Notification createServiceNotification(
+            Context context,
+            String title,
+            String body,
+            Class<?> serviceClass,
+            String cancelText,
+            String actionToCancel
+    ) {
+
+        Intent stopServiceIntent = new Intent(context, serviceClass);
+        stopServiceIntent.setAction(actionToCancel);
+
+        PendingIntent pendingIntent = PendingIntent
+                .getService(context, 0, stopServiceIntent, PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(
+                context,
+                context.getString(R.string.app_notification_channel_id)
+        )
+                .setSmallIcon(R.drawable.ic_app_notification)
+                .setContentTitle(title)
+                .setContentText(body)
+                .setPriority(NotificationCompat.PRIORITY_MAX)
+                .setOngoing(true)
+                .setAutoCancel(false)
+                .addAction(0, cancelText, pendingIntent);
+
+        NotificationManager notificationManager =
+                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        createChannel(context, notificationManager);
+
+        return builder.build();
+    }
+
+    public static void closeNotification(Context context, int notificationId){
+        NotificationManager notificationManager =
+                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancel(notificationId);
+    }
+
+    private static void createChannel(Context context, NotificationManager notificationManager) {
         // create channel >= API 26
         NotificationChannel channel = notificationManager.getNotificationChannel(context.getString(R.string.app_notification_channel_id));
         if (channel == null)
             channel = new NotificationChannel(
-                context.getString(R.string.app_notification_channel_id),
-                context.getString(R.string.app_notification_channel_title),
-                NotificationManager.IMPORTANCE_HIGH
-        );
+                    context.getString(R.string.app_notification_channel_id),
+                    context.getString(R.string.app_notification_channel_title),
+                    NotificationManager.IMPORTANCE_HIGH
+            );
         notificationManager.createNotificationChannel(channel);
-
-        Notification notification = builder.build();
-        notificationManager.notify((int) System.currentTimeMillis(), notification);
     }
 }

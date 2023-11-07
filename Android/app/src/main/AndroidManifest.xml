@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -17,7 +18,9 @@
         android:theme="@style/Theme.SmartLock"
         tools:targetApi="31">
 
-        <service android:name="com.m2.smartlock.service.AppService" />
+        <service
+            android:name="com.m2.smartlock.service.AppService"
+            android:exported="false" />
 
         <activity
             android:name=".ui.MainActivity"

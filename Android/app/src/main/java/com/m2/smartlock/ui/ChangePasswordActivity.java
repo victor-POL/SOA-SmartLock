@@ -1,34 +1,28 @@
 package com.m2.smartlock.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
+import android.widget.ProgressBar;
 
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.appbar.MaterialToolbar;
 import com.m2.smartlock.R;
-import com.m2.smartlock.remote.AppMqttConstants;
-import com.m2.smartlock.remote.MqttPublisher;
+import com.m2.smartlock.service.AppService;
 
-import org.eclipse.paho.client.mqttv3.MqttException;
-
-import io.reactivex.rxjava3.disposables.Disposable;
-
-public class ChangePasswordActivity extends AppCompatActivity {
+public class ChangePasswordActivity extends BaseActivity {
 
     private static final String TAG = ChangePasswordActivity.class.getSimpleName();
     private EditText etPassword;
     private Button btnSave;
-
-    private MqttPublisher publisher;
-    private Disposable disposablePublish;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,17 +33,13 @@ public class ChangePasswordActivity extends AppCompatActivity {
 
         etPassword = findViewById(R.id.etPassword);
         btnSave = findViewById(R.id.btnSave);
+        progressBar = findViewById(R.id.progressBar);
 
         setupInputPassword();
         btnSave.setOnClickListener(v -> onClickSave());
 
-        try {
-            publisher = new MqttPublisher();
-        } catch (MqttException e) {
-            e.printStackTrace();
-            Toast.makeText(this, R.string.publisher_error, Toast.LENGTH_SHORT).show();
-            finish();
-        }
+        addBroadcastReceiverForConnectionLost();
+        addBroadcastReceiverForPublish();
     }
 
     private void setupInputPassword() {
@@ -74,21 +64,34 @@ public class ChangePasswordActivity extends AppCompatActivity {
         String newPassword = etPassword.getText().toString();
         Log.d(TAG, "newPassword=" + newPassword);
 
-        if (publisher == null) {
-            Log.e(TAG, "publisher could not started.");
-            return;
-        }
-
-        if (disposablePublish != null && !disposablePublish.isDisposed())
-            disposablePublish.dispose();
-        disposablePublish = publisher.publish(AppMqttConstants.TOPIC_APP_SET_PASS, newPassword)
-                .subscribe(
-                        this::onSavePasswordSuccess,
-                        throwable -> onSavePasswordError()
-                );
+        showLoading();
+        Intent intent = new Intent(this, AppService.class);
+        intent.setAction(AppService.ACTION_SET_PASS);
+        intent.putExtra(AppService.EXTRA_OF_ACTION, newPassword);
+        startService(intent);
     }
 
-    private void onSavePasswordSuccess(String updatedPassword) {
+    private void showLoading(){
+        progressBar.setVisibility(View.VISIBLE);
+        etPassword.setEnabled(false);
+        btnSave.setEnabled(false);
+    }
+
+    private void hideLoading(){
+        progressBar.setVisibility(View.GONE);
+        etPassword.setEnabled(true);
+        String s = etPassword.getText().toString();
+        btnSave.setEnabled(!TextUtils.isEmpty(s));
+    }
+
+    @Override
+    public void onPublishSuccess(String topic) {
+        if (topic.equals(AppService.ACTION_SET_PASS))
+            onSavePasswordSuccess();
+    }
+
+    private void onSavePasswordSuccess() {
+        hideLoading();
         AlertDialog.Builder builder = new AlertDialog.Builder(this)
                 .setTitle(R.string.app_name)
                 .setMessage(R.string.save_password_success)
@@ -96,6 +99,12 @@ public class ChangePasswordActivity extends AppCompatActivity {
                     finish();
                 });
         builder.create().show();
+    }
+
+    @Override
+    public void onPublishError() {
+        hideLoading();
+        onSavePasswordError();
     }
 
     private void onSavePasswordError() {
@@ -106,14 +115,5 @@ public class ChangePasswordActivity extends AppCompatActivity {
                     dialog.dismiss();
                 });
         builder.create().show();
-    }
-
-    @Override
-    protected void onDestroy() {
-        if (publisher != null)
-            publisher.disconnect();
-        if (disposablePublish != null&& !disposablePublish.isDisposed())
-            disposablePublish.dispose();
-        super.onDestroy();
     }
 }

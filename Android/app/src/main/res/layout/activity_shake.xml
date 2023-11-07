@@ -12,6 +12,14 @@
         app:navigationIcon="@drawable/ic_back"
         app:title="@string/shake" />
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:visibility="gone" />
+
     <Space
         android:layout_width="0dp"
         android:layout_height="0dp"
