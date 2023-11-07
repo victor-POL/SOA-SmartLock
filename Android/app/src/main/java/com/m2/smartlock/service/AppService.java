@@ -218,7 +218,10 @@ public class AppService extends Service {
         );
     }
 
-    private boolean handleActionRequest(String actionReceived,@Nullable String extra){
+    private boolean handleActionRequest(@Nullable String actionReceived,@Nullable String extra){
+        if (actionReceived == null)
+            return false;
+
         if (Objects.equals(actionReceived, ACTION_STOP_FOREGROUND_SERVICE)) {
             Log.d(TAG, "disconnect service request");
             AppNotificationUtils.closeNotification(getApplicationContext(), NOTIFICATION_ID);
