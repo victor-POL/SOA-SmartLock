@@ -8,13 +8,11 @@
 #define WIFI_PASSWORD "23456789"
 #endif
 
-// Suscribe
 #define SET_PASS_TOPIC "app-setpass"
 #define COMMAND_TOPIC "app-command"
 
 #define UNLOCK_COMMAND "unlock"
 
-// Send
 #define NOTIFICATION_TOPIC "esp-notify"
 #define DOOR_STATUS_TOPIC "esp-doorstatus"
 

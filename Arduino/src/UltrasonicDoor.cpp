@@ -61,7 +61,6 @@ public:
     this->timer_closed_activated = false;
   }
 
-  // Status
   bool CheckClosedDoorTimer()
   {
     if (timer_closed_activated == true && ReachedTimeoutClosed())

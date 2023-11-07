@@ -1,4 +1,3 @@
-// Sensors
 #define ENTRANCE_SENSOR_TRIGGER_PIN 32
 #define DOOR_SENSOR_TRIGGER_PIN 33
 #define ENTRANCE_SENSOR_ECHO_PIN 34
@@ -13,7 +12,6 @@
 #define KEYPAD_COLUMN_3_PIN 27
 #define BUTTON_PIN 36
 
-// Actuators
 #define SERVO_PIN 26
 #define BUZZER_PIN 2
 #define RELAY_PIN 25

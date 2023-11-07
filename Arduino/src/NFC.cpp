@@ -1,8 +1,8 @@
 #include <MFRC522.h>
 #include "Events.h"
 
-#define SS_PIN 5   // ESP32 pin GPIO5
-#define RST_PIN 15 // ESP32 pin GPIO27
+#define SS_PIN 5
+#define RST_PIN 15
 
 extern enum Event event;
 
@@ -46,10 +46,8 @@ public:
     {
       event = Event::NFCIncorrecto;
     }
-    // Halt PICC
 
     rfid.PICC_HaltA();
-    // Stop encryption on PCD
     rfid.PCD_StopCrypto1();
 
     return true;

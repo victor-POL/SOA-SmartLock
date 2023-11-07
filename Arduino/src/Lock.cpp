@@ -7,7 +7,7 @@
 #define VALID_PASS true
 #define INVALID_PASS false
 #define UMBRAL_TIMEOUT_PUERTA 6000
-#define DEFAULT_PASSWORD "A"
+#define DEFAULT_PASSWORD "0000"
 
 extern enum Event event;
 
@@ -65,7 +65,6 @@ public:
     this->last_current_time = -1;
   }
 
-  // Actions
   void UnlockWitoutPass()
   {
     StartTimer();
@@ -73,7 +72,6 @@ public:
     this->check_timeout_puerta = true;
   }
 
-  // Pass
   void ResetPassEntered()
   {
     this->pass_entered = "";
@@ -100,7 +98,6 @@ public:
     }
   }
 
-  // Status
   bool CheckPasswordExistence()
   {
     if (this->init_success == false)
@@ -155,7 +152,6 @@ public:
     return false;
   }
 
-  // Utils
   void ChangeUnlockInProgress(bool unlock_in_progress)
   {
     this->unlock_in_progress = unlock_in_progress;

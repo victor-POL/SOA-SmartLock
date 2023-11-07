@@ -17,7 +17,7 @@ private:
 public:
   static char clientId[50];
   static WiFiClient espClient;
-  static PubSubClient client; // No la inicialices aquí
+  static PubSubClient client;
   void SetupWifi();
   static void Callback(char *topic, byte *message, unsigned int length);
   void MQTTReconnect();
