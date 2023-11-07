@@ -1,13 +1,11 @@
 #include "main.h"
 
-// Sensors
 UltrasonicEntrance entrance_sensor = UltrasonicEntrance(ENTRANCE_SENSOR_TRIGGER_PIN, ENTRANCE_SENSOR_ECHO_PIN);
 UltrasonicDoor door_sensor = UltrasonicDoor(DOOR_SENSOR_TRIGGER_PIN, DOOR_SENSOR_ECHO_PIN);
 KeyPad keypad = KeyPad();
 Button button = Button(BUTTON_PIN);
 NFC nfc = NFC();
 
-// Actuators
 MyServo entrance_door = MyServo(SERVO_PIN);
 Buzzer buzzer = Buzzer(BUZZER_PIN);
 Relay light = Relay(RELAY_PIN);
@@ -19,19 +17,15 @@ LCDRgb *LCDRgb::instance = NULL;
 LCDRgb lcd = *LCDRgb::GetInstance();
 #endif
 
-// Lock
 Lock door_lock = Lock();
 
-// Connection
 MyWifi wifi = MyWifi();
 
-// Global
 enum State state;
 enum Event event;
 bool timeout;
 long last_current_time;
 
-// Funciones para eventos
 void None() {}
 
 void CreatePass()

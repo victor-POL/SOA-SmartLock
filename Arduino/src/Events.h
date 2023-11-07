@@ -1,7 +1,6 @@
 #ifndef EVENTS_H
 #define EVENTS_H
 
-// EVENTOS
 enum Event
 {
   Continue,

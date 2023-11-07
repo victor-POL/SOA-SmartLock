@@ -49,7 +49,6 @@ public:
     this->screen.begin(LCD_COLUMNS, LCD_ROWS);
   }
 
-  // Predefinen screens
   void LoadInputPassScreen()
   {
     ClearScreen();
@@ -97,7 +96,6 @@ public:
     LoadConfirmNewPassScreen();
   }
 
-  // Messages
   void ShowKeyPressed(char key_pressed)
   {
     Print((String)key_pressed);
@@ -118,7 +116,6 @@ public:
     Print(message);
   }
 
-  // Actions
   void TurnOffScreen()
   {
     ClearScreen();
