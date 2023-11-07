@@ -121,6 +121,7 @@ public class AppService extends Service {
 
             client = new MqttClient(AppMqttConstants.BROKER_URL, AppMqttConstants.CLIENT_ID, persistence);
             client.connect(options);
+            Log.i(TAG, "connecting");
             client.setCallback(createMqttCallback());
             client.setTimeToWait(10_000);
             clientConnected = true;
@@ -152,11 +153,11 @@ public class AppService extends Service {
             @Override
             public void messageArrived(String topic, MqttMessage message) {
                 Log.i(TAG, "messageArrived");
+                String value = message.toString();
                 if (Objects.equals(topic, AppMqttConstants.TOPIC_ESP_NOTIFY) &&
-                        Objects.equals(topic, AppMqttConstants.TOPIC_VALUE_ESP_NOTIFY_DOOR_OPEN_TIMEOUT)) {
+                        Objects.equals(value, AppMqttConstants.TOPIC_VALUE_ESP_NOTIFY_DOOR_OPEN_TIMEOUT)) {
                     showNotification();
                 } else if (Objects.equals(topic, AppMqttConstants.TOPIC_ESP_DOOR_STATUS)) {
-                    String value = message.toString();
                     if (Objects.equals(value, AppMqttConstants.TOPIC_VALUE_ESP_DOOR_STATUS_OPEN)){
                         lastDoorStatus = true;
                         sendAction(ACTION_DOOR_STATUS, true);
