@@ -1,7 +1,6 @@
 package com.m2.smartlock.ui;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -27,6 +26,7 @@ public class MainActivity extends BaseActivity {
 
         setupClickableCards();
         setupNotifications();
+        addBroadcastReceiverForConnectionLost();
     }
 
     @Override
@@ -54,7 +54,9 @@ public class MainActivity extends BaseActivity {
 
     private void setupNotifications() {
         btnTurnOnNotifications = findViewById(R.id.btnTurnOnNotifications);
-        tvNotificationDescription = findViewById(R.id.partialNotificationCard).findViewById(R.id.tvDescription);
+        tvNotificationDescription = findViewById(R.id.partialNotificationCard)
+                .findViewById(R.id.tvDescription);
+
         if (AppNotificationUtils.checkAllowedNotification(this)) {
             if (AppNotificationUtils.checkAllowedChannelNotification(this)) {
                 setupAllowedNotification();
@@ -70,6 +72,7 @@ public class MainActivity extends BaseActivity {
         tvNotificationDescription.setText(R.string.notifications_description_warning);
         btnTurnOnNotifications.setOnClickListener(v -> AppNotificationUtils.requestPermission(this));
         btnTurnOnNotifications.setVisibility(View.VISIBLE);
+        AppService.startAsBackground(this);
     }
 
     private void setupNotAllowedChannelNotification() {
@@ -79,15 +82,14 @@ public class MainActivity extends BaseActivity {
             AppNotificationUtils.launchChannelSettings(this);
         });
         btnTurnOnNotifications.setVisibility(View.VISIBLE);
+        AppService.startAsBackground(this);
     }
 
     private void setupAllowedNotification() {
         tvNotificationDescription.setText(R.string.notifications_description);
         btnTurnOnNotifications.setOnClickListener(null);
         btnTurnOnNotifications.setVisibility(View.GONE); // hide button
-
-        AppService.start(this);
-        addBroadcastReceiverForConnectionLost();
+        AppService.startAsForeground(this);
     }
 
     @Override

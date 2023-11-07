@@ -28,6 +28,7 @@ public class AppService extends Service {
     private static final String TAG = AppService.class.getSimpleName();
     private static @Nullable Boolean lastDoorStatus;
     private static @Nullable Boolean clientConnected;
+    private static final String EXTRA_FOREGROUND_ENABLED = "foreground_enabled";
 
     // Actions that service send to activities
     public static final String ACTION_DOOR_STATUS = "m2.smartlock.action.door_status";
@@ -35,7 +36,7 @@ public class AppService extends Service {
     public static final String ACTION_PUBLISHED = "m2.smartlock.action.published";
 
     // Actions that service receive from activities
-    public static final String ACTION_STOP_SERVICE = "m2.smartlock.action.stop_service";
+    public static final String ACTION_STOP_FOREGROUND_SERVICE = "m2.smartlock.action.stop_f_service";
     public static final String ACTION_SET_PASS = "m2.smartlock.action.set_pass";
     public static final String ACTION_COMMAND = "m2.smartlock.action.command";
     public static final String EXTRA_OF_ACTION = "extra";
@@ -44,8 +45,15 @@ public class AppService extends Service {
     private static final int NOTIFICATION_ID = 1;
     private MqttClient client;
 
-    public static void start(Context context) {
+    public static void startAsBackground(Context context) {
         Intent serviceIntent = new Intent(context, AppService.class);
+        context.startService(serviceIntent);
+    }
+
+    // Required notification permissions
+    public static void startAsForeground(Context context) {
+        Intent serviceIntent = new Intent(context, AppService.class);
+        serviceIntent.putExtra(EXTRA_FOREGROUND_ENABLED, true);
         context.startForegroundService(serviceIntent);
     }
 
@@ -72,7 +80,8 @@ public class AppService extends Service {
         if (handleActionRequest(intent.getAction(), intent.getStringExtra(EXTRA_OF_ACTION))){
             return super.onStartCommand(intent, flags, startId);
         }
-        setup();
+
+        setup(intent.getBooleanExtra(EXTRA_FOREGROUND_ENABLED, false));
         return Service.START_STICKY;
     }
 
@@ -82,18 +91,22 @@ public class AppService extends Service {
         Log.d(TAG, "onCreate");
     }
 
-    private void setup(){
-        Notification notification = AppNotificationUtils.createServiceNotification(
-                getApplicationContext(),
-                getString(R.string.service_notification_title),
-                getString(R.string.service_notification_body),
-                AppService.class,
-                getString(R.string.service_notification_cancel),
-                ACTION_STOP_SERVICE);
-        startForeground(NOTIFICATION_ID, notification);
+    private void setup(boolean foregroundEnabled) {
+        if (foregroundEnabled) {
+            Notification notification = AppNotificationUtils.createServiceNotification(
+                    getApplicationContext(),
+                    getString(R.string.service_notification_title),
+                    getString(R.string.service_notification_body),
+                    AppService.class,
+                    getString(R.string.service_notification_cancel),
+                    ACTION_STOP_FOREGROUND_SERVICE);
+            startForeground(NOTIFICATION_ID, notification);
+        }
 
-        connect();
-        subscribe();
+        if (clientConnected == null || !clientConnected) {
+            connect();
+            subscribe();
+        }
     }
 
     private void connect() {
@@ -118,7 +131,7 @@ public class AppService extends Service {
         }
     }
 
-    private void subscribe(){
+    private void subscribe() {
         String[] topics = {AppMqttConstants.TOPIC_ESP_DOOR_STATUS, AppMqttConstants.TOPIC_ESP_NOTIFY};
         try {
             client.subscribe(topics);
@@ -205,10 +218,10 @@ public class AppService extends Service {
     }
 
     private boolean handleActionRequest(String actionReceived,@Nullable String extra){
-        if (Objects.equals(actionReceived, ACTION_STOP_SERVICE)) {
+        if (Objects.equals(actionReceived, ACTION_STOP_FOREGROUND_SERVICE)) {
             Log.d(TAG, "disconnect service request");
             AppNotificationUtils.closeNotification(getApplicationContext(), NOTIFICATION_ID);
-            stopSelf();
+            stopForeground(true);
             return true;
         }
 
@@ -249,6 +262,8 @@ public class AppService extends Service {
         super.onDestroy();
         try {
             client.disconnect();
+            clientConnected = false;
+            client = null;
         } catch (MqttException e) {
             e.printStackTrace();
         }

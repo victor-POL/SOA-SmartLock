@@ -28,11 +28,13 @@ abstract public class BaseActivity extends AppCompatActivity {
     }
 
     protected void addBroadcastReceiverForPublish(){
+        if (publishFinishedReceiver != null) return;
         publishFinishedReceiver = new PublishFinishedReceiver();
         registerReceiver(AppService.ACTION_PUBLISHED, publishFinishedReceiver);
     }
 
     protected void addBroadcastReceiverForConnectionLost(){
+        if (connectionLostReceiver != null) return;
         connectionLostReceiver = new ConnectionLostReceiver();
         registerReceiver(AppService.ACTION_CONNECTION_LOST, connectionLostReceiver);
     }
@@ -54,6 +56,10 @@ abstract public class BaseActivity extends AppCompatActivity {
     }
 
     private void onClientNotConnected(){
+        Intent intent = new Intent(this, AppService.class);
+        intent.setAction(AppService.ACTION_STOP_FOREGROUND_SERVICE);
+        startService(intent);
+
         AlertDialog.Builder builder = new AlertDialog.Builder(BaseActivity.this)
                 .setCancelable(false)
                 .setTitle(R.string.app_name)

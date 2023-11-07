@@ -43,7 +43,7 @@ public class DoorStatusActivity extends BaseActivity {
         addBroadcastReceiverForConnectionLost();
     }
 
-    private void showLastDoorStatus(){
+    private void showLastDoorStatus() {
         Boolean lastDoorStatus = AppService.getLastDoorStatus();
         if (lastDoorStatus == null)
             tvDoorStatus.setText(R.string.door_status_init_description);
