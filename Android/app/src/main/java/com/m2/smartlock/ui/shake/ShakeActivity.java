@@ -109,7 +109,7 @@ public class ShakeActivity extends BaseActivity implements SensorEventListener {
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
-        // Do something if sensor accuracy changes
+        // sensor accuracy changes
     }
 
     @Override

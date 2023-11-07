@@ -52,8 +52,6 @@ public class DoorStatusActivity extends BaseActivity {
     }
 
     private void setupBroadcastReceiver() {
-        // Se asocia(registra) la accion, para que cuando el Servicio de recepcion la ejecute
-        // se invoque automaticamente el OnReceive del objeto receiver
         IntentFilter intentFilter = new IntentFilter(AppService.ACTION_DOOR_STATUS);
         intentFilter.addCategory(Intent.CATEGORY_DEFAULT);
         ContextCompat.registerReceiver(this, receiver, intentFilter,  ContextCompat.RECEIVER_NOT_EXPORTED);
