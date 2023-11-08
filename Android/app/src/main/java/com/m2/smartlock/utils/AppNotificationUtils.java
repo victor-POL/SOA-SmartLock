@@ -98,7 +98,6 @@ public class AppNotificationUtils
 
   public static void showNotification(Context context, String title, String body)
   {
-    // intent to open activity when user click notification
     Intent intent = new Intent(context, MainActivity.class);
 
     int flags = PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT;
@@ -166,7 +165,6 @@ public class AppNotificationUtils
 
   private static void createChannel(Context context, NotificationManager notificationManager)
   {
-    // create channel >= API 26
     NotificationChannel channel = notificationManager.getNotificationChannel(context.getString(R.string.app_notification_channel_id));
     if (channel == null)
     {

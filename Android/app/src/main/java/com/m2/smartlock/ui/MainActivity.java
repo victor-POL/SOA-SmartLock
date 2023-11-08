@@ -102,7 +102,7 @@ public class MainActivity extends BaseActivity
   {
     tvNotificationDescription.setText(R.string.notifications_description);
     btnTurnOnNotifications.setOnClickListener(null);
-    btnTurnOnNotifications.setVisibility(View.GONE); // hide button
+    btnTurnOnNotifications.setVisibility(View.GONE);
     AppService.startAsForeground(this);
   }
 

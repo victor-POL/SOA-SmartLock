@@ -30,6 +30,6 @@ public class ShakeSuccessActivity extends AppCompatActivity
   {
     Intent intent = new Intent(this, MainActivity.class);
     startActivity(intent);
-    finishAffinity(); // clear back stack
+    finishAffinity();
   }
 }

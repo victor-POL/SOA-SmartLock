@@ -31,12 +31,11 @@ public class AppService extends Service
   private static @Nullable Boolean clientConnected;
   private static final String EXTRA_FOREGROUND_ENABLED = "foreground_enabled";
 
-  // Actions that service send to activities
+
   public static final String ACTION_DOOR_STATUS = "m2.smartlock.action.door_status";
   public static final String ACTION_CONNECTION_LOST = "m2.smartlock.action.connection_lost";
   public static final String ACTION_PUBLISHED = "m2.smartlock.action.published";
 
-  // Actions that service receive from activities
   public static final String ACTION_STOP_FOREGROUND_SERVICE = "m2.smartlock.action.stop_f_service";
   public static final String ACTION_SET_PASS = "m2.smartlock.action.set_pass";
   public static final String ACTION_COMMAND = "m2.smartlock.action.command";
@@ -52,7 +51,6 @@ public class AppService extends Service
     context.startService(serviceIntent);
   }
 
-  // Required notification permissions
   public static void startAsForeground(Context context)
   {
     Intent serviceIntent = new Intent(context, AppService.class);
@@ -76,7 +74,7 @@ public class AppService extends Service
   @Override
   public IBinder onBind(Intent intent)
   {
-    return null; // No external apps
+    return null;
   }
 
   @Override
@@ -135,7 +133,6 @@ public class AppService extends Service
       options.setUserName(AppMqttConstants.USER);
       options.setPassword(AppMqttConstants.PASS.toCharArray());
 
-      // Set up the persistence layer
       MemoryPersistence persistence = new MemoryPersistence();
 
       client = new MqttClient(AppMqttConstants.BROKER_URL, AppMqttConstants.CLIENT_ID, persistence);
