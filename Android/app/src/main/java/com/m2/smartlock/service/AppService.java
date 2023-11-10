@@ -90,7 +90,10 @@ public class AppService extends Service
       }
 
       setup(intent.getBooleanExtra(EXTRA_FOREGROUND_ENABLED, false));
-    } else Log.e(TAG, "intent null");
+    }
+    else {
+      Log.e(TAG, "intent null");
+    }
 
     return Service.START_STICKY;
   }
@@ -141,7 +144,8 @@ public class AppService extends Service
       client.setCallback(createMqttCallback());
       client.setTimeToWait(10_000);
       clientConnected = true;
-    } catch (MqttException e)
+    }
+    catch (MqttException e)
     {
       clientConnected = false;
       Log.e(TAG, "connect() failed");
@@ -155,7 +159,8 @@ public class AppService extends Service
     try
     {
       client.subscribe(topics);
-    } catch (MqttException e)
+    }
+    catch (MqttException e)
     {
       Log.e(TAG, "subscribe() failed");
       e.printStackTrace();
@@ -296,7 +301,8 @@ public class AppService extends Service
         MqttMessage mqttMessage = new MqttMessage(message.getBytes());
         mqttMessage.setQos(2);
         client.publish(topic, mqttMessage);
-      } catch (MqttException e)
+      }
+      catch (MqttException e)
       {
         e.printStackTrace();
       }
@@ -314,7 +320,8 @@ public class AppService extends Service
       client.disconnect();
       clientConnected = false;
       client = null;
-    } catch (MqttException e)
+    }
+    catch (MqttException e)
     {
       e.printStackTrace();
     }

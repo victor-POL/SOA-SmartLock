@@ -99,7 +99,8 @@ abstract public class BaseActivity extends AppCompatActivity
       if (topicSuccess != null)
       {
         onPublishSuccess(topicSuccess);
-      } else
+      }
+      else
       {
         onPublishError();
       }

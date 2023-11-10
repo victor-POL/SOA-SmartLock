@@ -40,7 +40,8 @@ public class MainActivity extends BaseActivity
       if (AppNotificationUtils.checkAllowedChannelNotification(this))
       {
         setupAllowedNotification();
-      } else
+      }
+      else
       {
         setupNotAllowedChannelNotification();
       }
@@ -68,11 +69,13 @@ public class MainActivity extends BaseActivity
       if (AppNotificationUtils.checkAllowedChannelNotification(this))
       {
         setupAllowedNotification();
-      } else
+      }
+      else
       {
         setupNotAllowedChannelNotification();
       }
-    } else
+    }
+    else
     {
       setupNotAllowedNotification();
     }
